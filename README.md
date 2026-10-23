@@ -1,75 +1,61 @@
-# 🥋 AIA — 60-Frame Sequential Martial Arts Animation Generator (24 FPS)
+# ⚡ AIA — AI Media & Video Generation Automation Engine
 
-Automated frame-by-frame animation generator and GitHub Actions runner workflow that produces **60 distinct, consecutive martial arts animation frames**. When played sequentially at 24 frames per second, these images form a continuous, fluid, and anatomically accurate combat scene.
-
----
-
-## 📋 Core Prompt & Action Specifications
-
-* **Character:** A single adult male with an athletic build, short dark cropped hair, wearing simple training attire (plain dark charcoal tank top and black sweatpants, barefoot) for visual continuity.
-* **Camera & Environment:** Fixed Static Medium Shot at a 45-degree three-quarter profile perspective. The background is an identical, minimalist Japanese training dojo featuring polished light-oak wooden tatami planks, paper shoji screens, and soft studio ambient lighting.
-* **Speed & Motion:** 24 Frames Per Second (2.50s total duration). Subtle speed blur trails on fast punches and roundhouse kick extensions.
-
-### Strict Chronological 4-Phase Combat Progression
-
-| Phase | Frames | Combat Action Progression |
-| :---: | :---: | :--- |
-| **1** | **Frames 01–15** | **Dynamic Stance Transition:** Begins from a relaxed upright standing posture, shifts weight rearward 70%, lowers center of gravity into a balanced, spring-loaded defensive martial arts cat/guard stance with high protective hands. |
-| **2** | **Frames 16–30** | **Forward Strike Combination:** Drives forward forcefully, launching an explosive, straight left jab with horizontal fist alignment, followed immediately by rotational hip torque into a powerful right cross punch. |
-| **3** | **Frames 31–45** | **Lead Pivot & High Roundhouse Kick:** Recoils cross punch, pivots lead left foot 90°–135° outward, rolls hips parallel to the floor, chambers the right knee, and whips a high right-legged roundhouse kick at head height with full extension. |
-| **4** | **Frames 46–60** | **Leg Re-Chamber, Spin Recovery & Settlement:** Re-chambers the kicking leg tightly at the knee, executes rotational follow-through, lands rear foot on the ball of the foot, absorbs deceleration, and settles into an immovable, balanced defensive fighting stance. |
+A high-performance repository containing automated AI generation engines and GitHub Actions cloud runner workflows for both **frame-by-frame animation** and **cinematic 1080p 60FPS video production**.
 
 ---
 
-## 📦 Output Deliverables
+## 🎬 1. MonsterVerse: Godzilla x Kong 1080p 60FPS Video Pipeline
 
-The generator produces:
-1. **60 Sequential Frames:** `output/frames/Frame_01.png` through `output/frames/Frame_60.png`
-2. **Organized 10×6 Sprite Sheet Grid:** `output/martial_arts_spritesheet.png` (5120 × 3072 px)
-3. **24 FPS Animated GIF:** `output/martial_arts_animation.gif` (duration = 41.6ms per frame, seamless infinite loop)
-4. **Interactive HTML5 Player:** `output/index.html` (timeline scrubber, 24 FPS player, slow-mo 0.25x / 0.5x, frame stepping, sprite sheet inspector)
-5. **Frame-by-Frame Kinematics Metadata:** `output/METADATA.json`
+An automated video generation engine that renders a photorealistic, high-frame-rate MonsterVerse action sequence in **Full HD 1080p (1920×1080, 16:9) at 60 Frames Per Second**.
+
+### Fed Prompt Specifications
+* **Subject & Clash:** The titanic alpha-predator King Kong (*Godzilla x Kong: The New Empire* look, coarse silver-black fur coat, weathered chest scars, and industrial yellow **B.E.A.S.T. Glove** exoskeleton) battling Godzilla (*charcoal-grey reptilian hide, jagged maple-leaf dorsal plates*) in a smoke-filled, rain-soaked Times Square, New York City.
+* **Camera Movement & Style:** Aggressive low-angle tracking shot from street level, violent handheld camera shake upon every massive B.E.A.S.T. Glove impact, dynamic close-ups of Kong’s fierce expression cut with wide anamorphic 2.39:1 letterboxed destruction shots.
+* **Lighting & Atmosphere:** Cinematic low-key twilight lighting, cracked neon billboards reflecting in wet asphalt puddles, volumetric smoke, and blue atomic energy sparks slashing across skyscrapers.
+* **Technical Output:** 1080p Full HD (1920×1080), 60.00 FPS, H.264 MP4 encoding, 16:9 aspect ratio.
+
+### Deliverables:
+* **Rendered Video File:** `output_video/godzilla_vs_kong_cinematic_1080p_60fps.mp4` (Full 1080p @ 60 FPS)
+* **Cinematic Storyboard Contact Sheet:** `output_video/godzilla_vs_kong_storyboard.png` (5-shot 1080p matrix)
+* **Interactive Video Theater:** `output_video/index.html` (Custom web theater with scene seek buttons, shot breakdowns, and prompt inspector)
+* **Metadata & Kinematics:** `output_video/METADATA.json`
+
+### Trigger the Video Workflow:
+* **Workflow File:** `.github/workflows/generate-monsterverse-video.yml`
+* **Trigger via GitHub Web UI:** Go to **Actions** &rarr; select **MonsterVerse Video Generation Pipeline (1080p 60FPS)** &rarr; click **Run workflow**.
 
 ---
 
-## ⚡ GitHub Actions Workflow
+## 🥋 2. Martial Arts 60-Frame Sequence Generator (24 FPS)
 
-The repository includes an automated workflow at `.github/workflows/generate-martial-arts.yml`.
+Generates **60 distinct, consecutive martial arts animation frames** following a strict 4-phase chronological combat progression:
+1. **Frames 01–15:** Dynamic low guard stance transition.
+2. **Frames 16–30:** Forward lunge, straight left jab into powerful right cross.
+3. **Frames 31–45:** Lead foot pivot into high right-legged roundhouse kick at head height.
+4. **Frames 46–60:** Leg re-chamber, spin recovery, and balanced settlement into defensive fighting stance.
 
-### How to Trigger the Workflow:
+### Deliverables:
+* **60 Individual Frames:** `output/frames/Frame_01.png` to `output/frames/Frame_60.png`
+* **Organized 10×6 Sprite Sheet:** `output/martial_arts_spritesheet.png`
+* **24 FPS Animated GIF:** `output/martial_arts_animation.gif`
+* **Interactive Frame Player:** `output/index.html` (timeline scrubber, slow-mo 0.25x/0.5x, frame stepping)
 
-#### Option A: Via GitHub Web Interface
-1. Go to your repository on GitHub.
-2. Click the **Actions** tab.
-3. Select **Martial Arts Animation Frame Generator** from the left sidebar.
-4. Click **Run workflow**, choose options (e.g., model `flux`, frames `60`, seed `42`), and click the green **Run workflow** button.
-
-#### Option B: Via GitHub CLI (`gh`)
-```bash
-gh workflow run generate-martial-arts.yml --ref arena/e54b5305-aia -f frames=60 -f model=flux -f seed=42
-```
-
-The workflow:
-- Sets up Python on an `ubuntu-latest` runner.
-- Executes the generator script (`scripts/generate_frames.py`).
-- Saves all 60 frames, the sprite sheet, the GIF, and the interactive web player.
-- Uploads the complete asset bundle as a downloadable GitHub Actions artifact (`martial-arts-60-frames-24fps`).
-- Automatically commits and pushes the output assets back to the branch.
+### Trigger the Animation Workflow:
+* **Workflow File:** `.github/workflows/generate-martial-arts.yml`
+* **Trigger via GitHub Web UI:** Go to **Actions** &rarr; select **Martial Arts Animation Frame Generator** &rarr; click **Run workflow**.
 
 ---
 
 ## 💻 Local Quickstart
 
-### Prerequisites
-- Python 3.10+
-- `pip install pillow requests`
-
-### Run Generator Locally
 ```bash
-# Generate complete 60-frame sequence and sprite sheet
-python3 scripts/generate_frames.py --frames 60 --output output
+# Install dependencies
+pip install pillow requests imageio imageio-ffmpeg numpy
 
-# Open the interactive player in your browser
-python3 -m http.server 8080 -d output
+# Generate MonsterVerse 1080p 60fps video & storyboard
+python3 scripts/generate_video.py --duration 10 --fps 60 --width 1920 --height 1080 --output output_video
+
+# Launch local preview theater
+python3 -m http.server 3000 --bind 0.0.0.0 -d output_video
 ```
-Then navigate to `http://localhost:8080` in your web browser.
+Open `http://localhost:3000` to watch the 1080p 60FPS video in the interactive theater!

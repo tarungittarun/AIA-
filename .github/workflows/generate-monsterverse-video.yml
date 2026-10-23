@@ -1,0 +1,95 @@
+name: MonsterVerse Video Generation Pipeline (1080p 60FPS)
+
+on:
+  push:
+    branches:
+      - 'arena/**'
+      - 'main'
+    paths:
+      - '.github/workflows/generate-monsterverse-video.yml'
+      - 'scripts/generate_video.py'
+  workflow_dispatch:
+    inputs:
+      duration:
+        description: 'Video duration in seconds (60 frames per second)'
+        required: true
+        default: '10'
+      fps:
+        description: 'Frame rate for fluid action'
+        required: true
+        default: '60'
+      use_ai:
+        description: 'Query free AI video/image generator endpoint'
+        required: true
+        default: true
+        type: boolean
+      cinematic_prompt:
+        description: 'Full MonsterVerse action prompt'
+        required: false
+        default: 'Cinematic, 1080p, 60fps, photorealistic MonsterVerse action sequence. The titanic alpha-predator King Kong—matching his exact look from Godzilla x Kong: The New Empire, complete with a thick, coarse silver-black fur coat, battle-scarred weathered chest, and his high-tech yellow B.E.A.S.T. Glove exoskeleton locked onto his right arm—is brutally beating Godzilla in the middle of a smoke-filled New York City. Godzilla features his definitive MonsterVerse appearance: an enormous, charcoal-grey reptilian build with rough, bark-like hide and massive, jagged, maple-leaf-shaped dorsal plates. The scene is set in Times Square during a rainy twilight, with neon billboards cracked and flickering, casting deep hues of blue, magenta, and amber across the titans. Kong leverages his agility and immense martial strength, utilizing the industrial B.E.A.S.T. Glove to throw heavy, mechanical-enhanced punches that crack Godzilla’s thick atomic scales. Godzilla roars in agony, spitting sparks of blue atomic energy that wildly slash across the surrounding skyscrapers, causing concrete debris and shattered glass to rain down in hyper-realistic, high-frame-rate detail. Camera Movement & Style: Aggressive, low-angle tracking shots that look like they are filmed from the ground by a terrified onlooker. Frequent handheld camera shakes with every massive impact. Dynamic close-ups of Kong’s fierce, determined facial expression, cut with wide anamorphic shots showcasing the sheer scale of the destruction. Lighting & Atmosphere: Cinematic low-key lighting, heavy atmospheric smoke, volumetric dust clouds, realistic rain interacting with the monsters skin, and dynamic lens flares from the neon signs. Technical Specs: Ultra-detailed 8K textures scaled to 1080p, 60 frames per second, flawless motion blur, hyper-realistic physics, 50-second continuous action pacing. --ar 16:9'
+
+permissions:
+  contents: write
+
+jobs:
+  render-monsterverse-video:
+    name: Generate 1080p 60FPS MonsterVerse Video
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Video & Image Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pillow requests imageio imageio-ffmpeg numpy
+
+      - name: Execute MonsterVerse 1080p 60FPS Video Pipeline
+        run: |
+          USE_AI_FLAG=""
+          if [ "${{ github.event.inputs.use_ai }}" = "true" ] || [ "${{ github.event_name }}" = "push" ]; then
+            USE_AI_FLAG="--use-ai"
+          fi
+
+          DURATION="${{ github.event.inputs.duration || '10' }}"
+          FPS="${{ github.event.inputs.fps || '60' }}"
+
+          echo "🎬 Running MonsterVerse Video Engine:"
+          echo "   Duration: ${DURATION}s"
+          echo "   FPS:      ${FPS} fps"
+          echo "   Target:   1080p (1920x1080, 16:9)"
+
+          python scripts/generate_video.py \
+            --duration "$DURATION" \
+            --fps "$FPS" \
+            --width 1920 \
+            --height 1080 \
+            --output output_video \
+            $USE_AI_FLAG
+
+      - name: Upload 1080p 60FPS Video & Storyboard Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: monsterverse-1080p-60fps-video-bundle
+          path: output_video/
+          retention-days: 30
+
+      - name: Commit and Push Output Media to Repository
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add output_video/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "feat(video): rendered 1080p 60fps MonsterVerse sequence & storyboard [skip ci]"
+            git push origin HEAD:${{ github.ref }}
+          fi

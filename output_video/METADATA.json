@@ -1,0 +1,54 @@
+{
+  "title": "Godzilla x Kong: Battle for New York",
+  "specs": {
+    "resolution": "1920x1080",
+    "aspect_ratio": "16:9",
+    "fps": 60,
+    "duration_seconds": 10,
+    "total_frames": 600,
+    "codec": "H.264 (libx264)",
+    "file_size_mb": 18.98
+  },
+  "scenes": [
+    {
+      "id": "shot_01",
+      "title": "The Clash in Rainy Times Square",
+      "timecode": "00:00 - 00:10",
+      "camera": "Aggressive low-angle tracking shot from street level",
+      "description": "Rain-slicked Times Square at twilight. Neon billboards flicker in magenta and cyan through heavy smoke. Kong with the high-tech yellow B.E.A.S.T. Glove locks eyes with Godzilla.",
+      "ai_prompt": "Cinematic 1080p 60fps movie still, Godzilla x Kong: The New Empire action scene. King Kong with silver-black fur and high-tech yellow industrial B.E.A.S.T. Glove on right arm facing Godzilla in Times Square New York at rainy twilight, cracked neon billboards, wet asphalt reflections, atmospheric smoke, volumetric lighting, photorealistic 8k, anamorphic lens --ar 16:9"
+    },
+    {
+      "id": "shot_02",
+      "title": "B.E.A.S.T. Glove Heavy Impact",
+      "timecode": "00:10 - 00:20",
+      "camera": "Dynamic close-up with violent impact shake",
+      "description": "Kong leverages mechanical hydraulic torque from the yellow B.E.A.S.T. Glove, landing a thunderous right hook that cracks Godzilla's charcoal-grey atomic scales with golden electrical arcs.",
+      "ai_prompt": "Cinematic close-up action still, King Kong roaring furiously, punching Godzilla with high-tech yellow B.E.A.S.T. Glove exoskeleton, mechanical hydraulics, cracked scales, spark explosion, rain falling, Times Square neon blur, photorealistic MonsterVerse movie quality, 8k --ar 16:9"
+    },
+    {
+      "id": "shot_03",
+      "title": "Agonized Atomic Roar & Skyscraper Destruction",
+      "timecode": "00:20 - 00:30",
+      "camera": "Low-angle tilted perspective of towering titans",
+      "description": "Godzilla roars in agony, dorsal plates flashing blinding cyan. Blue atomic energy wildly slashes across skyscrapers, sending tons of concrete and shattered glass raining downward.",
+      "ai_prompt": "Godzilla roaring upward in agony, charcoal-grey reptilian hide, glowing cyan blue atomic breath energy discharging into New York skyscrapers, shattered glass and concrete debris falling, King Kong nearby, rainy twilight, cinematic low-key lighting, photorealistic, 8k --ar 16:9"
+    },
+    {
+      "id": "shot_04",
+      "title": "Handheld Onlooker Perspective & Combination",
+      "timecode": "00:30 - 00:40",
+      "camera": "Shaky handheld ground-level camera as if filmed by terrified citizen",
+      "description": "Kong unleashes a rapid martial arts combination, utilizing his agility to dodge an atomic tail swipe while hammering Godzilla's jaw with repeated hydraulic strikes.",
+      "ai_prompt": "Handheld ground-level cinematic shot of King Kong brutally fighting Godzilla in street of New York City, heavy rain streaks, smoke and volumetric dust, neon reflections, ultra-realistic motion blur, movie cinematography, 8k --ar 16:9"
+    },
+    {
+      "id": "shot_05",
+      "title": "Anamorphic Wide Titan Dominion",
+      "timecode": "00:40 - 00:50",
+      "camera": "Ultra-wide anamorphic tracking crane shot",
+      "description": "Times Square in smoldering ruins. Twilight rain washes over Kong standing tall, steam rising from his yellow B.E.A.S.T. Glove, as Godzilla reels in the smoke.",
+      "ai_prompt": "Wide anamorphic establishing shot of devastated Times Square New York City in rain, King Kong standing victorious with glowing yellow B.E.A.S.T. Glove, Godzilla in background, atmospheric smoke, neon lens flare, cinematic masterpiece, 8k --ar 16:9"
+    }
+  ]
+}
