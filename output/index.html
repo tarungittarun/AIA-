@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIA — 60-Frame Martial Arts Fight Sequence (24 FPS)</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --border: #30363d;
+      --accent: #f78166;
+      --primary: #58a6ff;
+      --success: #2ea043;
+      --text: #c9d1d9;
+      --text-bright: #f0f6fc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px;
+    }
+    .header {
+      text-align: center;
+      max-width: 900px;
+      margin-bottom: 24px;
+    }
+    .header h1 {
+      font-size: 28px;
+      color: var(--text-bright);
+      margin-bottom: 8px;
+    }
+    .header p {
+      color: #8b949e;
+      font-size: 15px;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(247, 129, 102, 0.15);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .container {
+      width: 100%;
+      max-width: 980px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .viewer-panel {
+      position: relative;
+      background: #000;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-height: 540px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .viewer-panel img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .controls {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: var(--card);
+    }
+    .phase-indicator {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .phase-segment {
+      flex: 1;
+      padding: 8px 4px;
+      text-align: center;
+      background: #21262d;
+      color: #8b949e;
+      transition: all 0.2s;
+    }
+    .phase-segment.active {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+    }
+    .timeline {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .timeline input[type=range] {
+      flex: 1;
+      accent-color: var(--accent);
+      height: 6px;
+      cursor: pointer;
+    }
+    .btn-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    button {
+      background: #21262d;
+      color: var(--text-bright);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    button:hover {
+      background: #30363d;
+    }
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    button.primary:hover {
+      background: #e56d53;
+    }
+    select {
+      background: #21262d;
+      color: var(--text-bright);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .frame-info {
+      background: #0d1117;
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .frame-info strong {
+      color: var(--text-bright);
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: #0d1117;
+    }
+    .tab {
+      padding: 12px 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: #8b949e;
+      border-bottom: 2px solid transparent;
+    }
+    .tab.active {
+      color: var(--text-bright);
+      border-bottom: 2px solid var(--accent);
+      background: var(--card);
+    }
+    .tab-content {
+      display: none;
+      padding: 20px;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .spritesheet-img {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="badge">AIA SEQUENCE GENERATOR</div>
+    <h1>Martial Arts Fight Sequence (60 Frames @ 24 FPS)</h1>
+    <p>Chronological 4-phase combat sequence: Stance Transition &rarr; Jab & Cross &rarr; High Roundhouse Kick &rarr; Defensive Guard Settlement</p>
+  </div>
+
+  <div class="container">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('player')">Interactive Player</div>
+      <div class="tab" onclick="switchTab('spritesheet')">Sprite Sheet Grid (10x6)</div>
+      <div class="tab" onclick="switchTab('gif')">Rendered GIF</div>
+    </div>
+
+    <!-- PLAYER TAB -->
+    <div id="tab-player" class="tab-content active" style="padding:0;">
+      <div class="viewer-panel">
+        <img id="main-frame" src="frames/Frame_01.png" alt="Animation Frame">
+      </div>
+
+      <div class="controls">
+        <div class="phase-indicator">
+          <div id="p1-box" class="phase-segment active">Phase 1: Stance (1–15)</div>
+          <div id="p2-box" class="phase-segment">Phase 2: Strike (16–30)</div>
+          <div id="p3-box" class="phase-segment">Phase 3: Kick (31–45)</div>
+          <div id="p4-box" class="phase-segment">Phase 4: Settle (46–60)</div>
+        </div>
+
+        <div class="timeline">
+          <span id="cur-time">0.00s</span>
+          <input type="range" id="frame-scrubber" min="1" max="60" value="1" oninput="onScrub(this.value)">
+          <span id="tot-time">2.50s</span>
+        </div>
+
+        <div class="btn-row">
+          <div class="btn-group">
+            <button id="btn-play" class="primary" onclick="togglePlay()">&#9658; Play</button>
+            <button onclick="step(-1)">&#9664; Prev Frame</button>
+            <button onclick="step(1)">Next Frame &#9654;</button>
+          </div>
+
+          <div class="btn-group">
+            <label for="speed-sel" style="font-size:13px; color:#8b949e;">Speed:</label>
+            <select id="speed-sel" onchange="changeSpeed(this.value)">
+              <option value="0.25">0.25x (Slow-Mo)</option>
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1.0x (24 FPS)</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2.0x</option>
+            </select>
+            <button onclick="downloadCurrentFrame()">Download Frame</button>
+          </div>
+        </div>
+
+        <div class="frame-info">
+          <div style="margin-bottom:6px;">
+            <strong id="frame-num-label">Frame 01 / 60</strong>
+            <span id="phase-label" style="color:var(--accent); margin-left:12px; font-weight:600;">Phase 1</span>
+          </div>
+          <div id="action-desc" style="color:var(--text);">Relaxed upright standing posture, feet shoulder-width apart.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPRITESHEET TAB -->
+    <div id="tab-spritesheet" class="tab-content">
+      <p style="margin-bottom:12px; font-size:14px; color:#8b949e;">All 60 chronological animation frames arranged in a 10-column by 6-row matrix:</p>
+      <img src="martial_arts_spritesheet.png" class="spritesheet-img" alt="Martial Arts Spritesheet">
+    </div>
+
+    <!-- GIF TAB -->
+    <div id="tab-gif" class="tab-content">
+      <p style="margin-bottom:12px; font-size:14px; color:#8b949e;">Looping GIF animation rendered natively at 24 FPS:</p>
+      <img src="martial_arts_animation.gif" style="max-width:512px; display:block; margin:0 auto; border-radius:8px; border:1px solid var(--border);" alt="Martial Arts Looping GIF">
+    </div>
+  </div>
+
+  <script>
+    const totalFrames = 60;
+    const baseFps = 24;
+    let currentFrame = 1;
+    let isPlaying = false;
+    let timer = null;
+    let playbackSpeed = 1.0;
+
+    const frameDescriptions = ["Relaxed upright standing posture, feet shoulder-width, arms naturally at sides, focused forward gaze.", "Slight initial dip of knees, hands beginning to rise towards waist level, relaxed inhale.", "Knees bending further, core engages, hands open and moving upward toward chest.", "Weight shifts slightly back onto heels, right foot begins sliding rearward, hands curling into loose fists.", "Right foot sliding back 10 inches, torso angling 45 degrees, lead left hand rising to guard.", "Right foot steps back into orthodox split stance, chin beginning to tuck safely behind shoulder.", "Weight settling 60% on rear right leg, left foot stays forward on the ball of the foot.", "Both hands raised into defensive posture: left hand lead guard, right hand at right cheek.", "Center of gravity lowers smoothly, knees bending deeper into dynamic martial arts stance.", "Rear right leg bent at 120 degrees, torso compact, elbows tucked close to ribcage for defense.", "Stance deepens further into low guard cat stance, weight shifting 70% to rear leg.", "Lead left toe tapping floor lightly, core braced, eyes locked on opponent line.", "Shoulders relax into coiled tension, rear fist shielding jawline, lead hand active and measuring distance.", "Controlled exhale, body settles into peak low defensive martial arts guard.", "Solid, dynamic low martial arts guard stance fully established, spring-loaded for forward entry.", "Rear leg drives forward explosively, initiating forward step, lead left foot lunges forward.", "Lead foot plants forward, left shoulder begins internal rotation, left elbow uncoiling.", "Left fist shoots forward along centerline, rotating from vertical to horizontal with subtle motion blur.", "Left jab extending outward rapidly, speed streak, right fist glued tightly to jawline.", "Left arm near full extension, shoulder raised shielding left jaw, chin tucked down firmly.", "Peak impact point of straight left jab: full arm extension, horizontal fist, hips locked into line.", "Beginning snappy retraction of left jab, lead elbow pulling back quickly along punching path.", "Left hand retracting past midpoint, rear right heel lifts, right hip begins forward rotation.", "Left hand returns to high guard at left cheek, rear right hip drives forward with rotational torque.", "Right shoulder rotates forward, right fist begins launching straight down the pipe.", "Right cross punching forward, explosive hip turn, rear foot pivoting on toes.", "Right arm reaches 80% extension, horizontal fist corkscrewing forward with dynamic motion blur.", "Peak impact point of powerful right cross: full extension, rear shoulder pushed forward, maximum hip drive.", "Moment of peak impact held, torso aligned, front knee bracing the entire kinetic chain.", "Kinetic recoil begins: right arm starts snappy retraction, weight transferring into lead left foot.", "Right punch pulls back to guard, lead left foot opens outward at 45-degree angle.", "Left foot pivots outward to 90 degrees, weight shifting completely onto lead left leg.", "Rear right knee drives upward and inward, chambering tight against the chest.", "Left pivot foot turns to 135 degrees, hips begin rolling over parallel to the floor.", "Right hip fully turns over horizontally, right knee pointed directly at head-height target line.", "Torso leans back counter-balancing the kick, right leg begins whipping outward from knee.", "Lower right leg whipping outward in a circular arc, right foot pointed, subtle speed blur.", "Right kicking leg extending at 45 degrees on its upward rotational trajectory.", "Right leg reaches 90% extension at head height, left guard hand protecting temple.", "Peak roundhouse kick: right leg fully extended horizontally at high head height, instep striking, flawless alignment.", "Full extension sustained at strike apex, hip completely rolled, powerful martial arts posture.", "Follow-through momentum carries the kick cleanly through the target line.", "Strike completes its arc, right knee begins actively snapping and bending back.", "Right kicking leg re-chambering back toward the hip, controlling rotational inertia.", "Right knee bent back at 90 degrees, torso beginning to return upright.", "Right knee chambers tightly back, momentum driving rotational recovery spin.", "Torso rotates back facing forward, right leg descending in controlled arc toward the floor.", "Continuous rotational follow-through, right foot sweeping downward smoothly.", "Right foot passes the midline, hips leveling back out with the shoulders.", "Right foot touches down rearward on the ball of the foot, absorbing rotational energy.", "Both feet make full contact with floor, weight redistributing 50-50 across both legs.", "Torso squares back to orthodox 45-degree combat angle, hands returning to chest height.", "Knees bend slightly, lowering center of gravity to absorb deceleration.", "Left hand extends forward in active parry position, right hand guards temple and jaw.", "Elbows tuck back into defensive frame, core stabilizes against rebound motion.", "Shoulders drop slightly, controlled exhale, martial arts alignment sharpening.", "Footwork micro-adjusts into wide, grounded, balanced defensive fighting stance.", "Chin tucked safely, piercing focused gaze locked forward at eye level.", "Final kinetic stabilization: perfectly still, calm, coiled, and ready for action.", "Settled, immovable balanced defensive fighting stance; complete martial arts sequence concluded."];
+
+    function updateView() {
+      const padNum = String(currentFrame).padStart(2, '0');
+      document.getElementById('main-frame').src = 'frames/Frame_' + padNum + '.png';
+      document.getElementById('frame-scrubber').value = currentFrame;
+      document.getElementById('frame-num-label').innerText = 'Frame ' + padNum + ' / 60';
+      document.getElementById('cur-time').innerText = ((currentFrame - 1) / baseFps).toFixed(2) + 's';
+      document.getElementById('action-desc').innerText = frameDescriptions[currentFrame - 1];
+
+      // Update Phase Indicators
+      const p = currentFrame <= 15 ? 1 : currentFrame <= 30 ? 2 : currentFrame <= 45 ? 3 : 4;
+      document.getElementById('phase-label').innerText = 'Phase ' + p;
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById('p' + i + '-box').classList.toggle('active', i === p);
+      }
+    }
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      const btn = document.getElementById('btn-play');
+      if (isPlaying) {
+        btn.innerHTML = '&#10074;&#10074; Pause';
+        btn.classList.remove('primary');
+        startLoop();
+      } else {
+        btn.innerHTML = '&#9658; Play';
+        btn.classList.add('primary');
+        clearInterval(timer);
+      }
+    }
+
+    function startLoop() {
+      clearInterval(timer);
+      const intervalMs = (1000 / baseFps) / playbackSpeed;
+      timer = setInterval(() => {
+        currentFrame++;
+        if (currentFrame > totalFrames) currentFrame = 1;
+        updateView();
+      }, intervalMs);
+    }
+
+    function step(delta) {
+      if (isPlaying) togglePlay();
+      currentFrame += delta;
+      if (currentFrame < 1) currentFrame = totalFrames;
+      if (currentFrame > totalFrames) currentFrame = 1;
+      updateView();
+    }
+
+    function onScrub(val) {
+      if (isPlaying) togglePlay();
+      currentFrame = parseInt(val);
+      updateView();
+    }
+
+    function changeSpeed(val) {
+      playbackSpeed = parseFloat(val);
+      if (isPlaying) startLoop();
+    }
+
+    function downloadCurrentFrame() {
+      const padNum = String(currentFrame).padStart(2, '0');
+      const a = document.createElement('a');
+      a.href = 'frames/Frame_' + padNum + '.png';
+      a.download = 'Frame_' + padNum + '.png';
+      a.click();
+    }
+
+    function switchTab(name) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      if (name === 'player') {
+        document.querySelectorAll('.tab')[0].classList.add('active');
+        document.getElementById('tab-player').classList.add('active');
+      } else if (name === 'spritesheet') {
+        document.querySelectorAll('.tab')[1].classList.add('active');
+        document.getElementById('tab-spritesheet').classList.add('active');
+      } else if (name === 'gif') {
+        document.querySelectorAll('.tab')[2].classList.add('active');
+        document.getElementById('tab-gif').classList.add('active');
+      }
+    }
+
+    // Preload image cache for butter-smooth scrubbing
+    for (let i = 1; i <= totalFrames; i++) {
+      const img = new Image();
+      img.src = 'frames/Frame_' + String(i).padStart(2, '0') + '.png';
+    }
+
+    updateView();
+  </script>
+</body>
+</html>

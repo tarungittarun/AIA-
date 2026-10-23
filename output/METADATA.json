@@ -1,0 +1,438 @@
+{
+  "timestamp": 1792782389.5770056,
+  "total_frames": 60,
+  "fps": 24,
+  "duration_seconds": 2.5,
+  "dimensions": [
+    512,
+    512
+  ],
+  "phases": {
+    "1": "Phase 1: Stance Transition (Frames 1-15)",
+    "2": "Phase 2: Jab & Cross Strike Combination (Frames 16-30)",
+    "3": "Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45)",
+    "4": "Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60)"
+  },
+  "frames": [
+    {
+      "frame": 1,
+      "filename": "Frame_01.png",
+      "phase": 1,
+      "action": "Relaxed upright standing posture, feet shoulder-width, arms naturally at sides, focused forward gaze.",
+      "prompt": "Martial arts animation frame 01 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Relaxed upright standing posture, feet shoulder-width, arms naturally at sides, focused forward gaze. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 2,
+      "filename": "Frame_02.png",
+      "phase": 1,
+      "action": "Slight initial dip of knees, hands beginning to rise towards waist level, relaxed inhale.",
+      "prompt": "Martial arts animation frame 02 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Slight initial dip of knees, hands beginning to rise towards waist level, relaxed inhale. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 3,
+      "filename": "Frame_03.png",
+      "phase": 1,
+      "action": "Knees bending further, core engages, hands open and moving upward toward chest.",
+      "prompt": "Martial arts animation frame 03 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Knees bending further, core engages, hands open and moving upward toward chest. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 4,
+      "filename": "Frame_04.png",
+      "phase": 1,
+      "action": "Weight shifts slightly back onto heels, right foot begins sliding rearward, hands curling into loose fists.",
+      "prompt": "Martial arts animation frame 04 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Weight shifts slightly back onto heels, right foot begins sliding rearward, hands curling into loose fists. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 5,
+      "filename": "Frame_05.png",
+      "phase": 1,
+      "action": "Right foot sliding back 10 inches, torso angling 45 degrees, lead left hand rising to guard.",
+      "prompt": "Martial arts animation frame 05 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right foot sliding back 10 inches, torso angling 45 degrees, lead left hand rising to guard. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 6,
+      "filename": "Frame_06.png",
+      "phase": 1,
+      "action": "Right foot steps back into orthodox split stance, chin beginning to tuck safely behind shoulder.",
+      "prompt": "Martial arts animation frame 06 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right foot steps back into orthodox split stance, chin beginning to tuck safely behind shoulder. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 7,
+      "filename": "Frame_07.png",
+      "phase": 1,
+      "action": "Weight settling 60% on rear right leg, left foot stays forward on the ball of the foot.",
+      "prompt": "Martial arts animation frame 07 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Weight settling 60% on rear right leg, left foot stays forward on the ball of the foot. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 8,
+      "filename": "Frame_08.png",
+      "phase": 1,
+      "action": "Both hands raised into defensive posture: left hand lead guard, right hand at right cheek.",
+      "prompt": "Martial arts animation frame 08 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Both hands raised into defensive posture: left hand lead guard, right hand at right cheek. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 9,
+      "filename": "Frame_09.png",
+      "phase": 1,
+      "action": "Center of gravity lowers smoothly, knees bending deeper into dynamic martial arts stance.",
+      "prompt": "Martial arts animation frame 09 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Center of gravity lowers smoothly, knees bending deeper into dynamic martial arts stance. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 10,
+      "filename": "Frame_10.png",
+      "phase": 1,
+      "action": "Rear right leg bent at 120 degrees, torso compact, elbows tucked close to ribcage for defense.",
+      "prompt": "Martial arts animation frame 10 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Rear right leg bent at 120 degrees, torso compact, elbows tucked close to ribcage for defense. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 11,
+      "filename": "Frame_11.png",
+      "phase": 1,
+      "action": "Stance deepens further into low guard cat stance, weight shifting 70% to rear leg.",
+      "prompt": "Martial arts animation frame 11 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Stance deepens further into low guard cat stance, weight shifting 70% to rear leg. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 12,
+      "filename": "Frame_12.png",
+      "phase": 1,
+      "action": "Lead left toe tapping floor lightly, core braced, eyes locked on opponent line.",
+      "prompt": "Martial arts animation frame 12 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Lead left toe tapping floor lightly, core braced, eyes locked on opponent line. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 13,
+      "filename": "Frame_13.png",
+      "phase": 1,
+      "action": "Shoulders relax into coiled tension, rear fist shielding jawline, lead hand active and measuring distance.",
+      "prompt": "Martial arts animation frame 13 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Shoulders relax into coiled tension, rear fist shielding jawline, lead hand active and measuring distance. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 14,
+      "filename": "Frame_14.png",
+      "phase": 1,
+      "action": "Controlled exhale, body settles into peak low defensive martial arts guard.",
+      "prompt": "Martial arts animation frame 14 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Controlled exhale, body settles into peak low defensive martial arts guard. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 15,
+      "filename": "Frame_15.png",
+      "phase": 1,
+      "action": "Solid, dynamic low martial arts guard stance fully established, spring-loaded for forward entry.",
+      "prompt": "Martial arts animation frame 15 of 60, Phase 1: Stance Transition (Frames 1-15). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Solid, dynamic low martial arts guard stance fully established, spring-loaded for forward entry. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 16,
+      "filename": "Frame_16.png",
+      "phase": 2,
+      "action": "Rear leg drives forward explosively, initiating forward step, lead left foot lunges forward.",
+      "prompt": "Martial arts animation frame 16 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Rear leg drives forward explosively, initiating forward step, lead left foot lunges forward. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 17,
+      "filename": "Frame_17.png",
+      "phase": 2,
+      "action": "Lead foot plants forward, left shoulder begins internal rotation, left elbow uncoiling.",
+      "prompt": "Martial arts animation frame 17 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Lead foot plants forward, left shoulder begins internal rotation, left elbow uncoiling. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 18,
+      "filename": "Frame_18.png",
+      "phase": 2,
+      "action": "Left fist shoots forward along centerline, rotating from vertical to horizontal with subtle motion blur.",
+      "prompt": "Martial arts animation frame 18 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Left fist shoots forward along centerline, rotating from vertical to horizontal with subtle motion blur. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 19,
+      "filename": "Frame_19.png",
+      "phase": 2,
+      "action": "Left jab extending outward rapidly, speed streak, right fist glued tightly to jawline.",
+      "prompt": "Martial arts animation frame 19 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Left jab extending outward rapidly, speed streak, right fist glued tightly to jawline. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 20,
+      "filename": "Frame_20.png",
+      "phase": 2,
+      "action": "Left arm near full extension, shoulder raised shielding left jaw, chin tucked down firmly.",
+      "prompt": "Martial arts animation frame 20 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Left arm near full extension, shoulder raised shielding left jaw, chin tucked down firmly. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 21,
+      "filename": "Frame_21.png",
+      "phase": 2,
+      "action": "Peak impact point of straight left jab: full arm extension, horizontal fist, hips locked into line.",
+      "prompt": "Martial arts animation frame 21 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Peak impact point of straight left jab: full arm extension, horizontal fist, hips locked into line. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 22,
+      "filename": "Frame_22.png",
+      "phase": 2,
+      "action": "Beginning snappy retraction of left jab, lead elbow pulling back quickly along punching path.",
+      "prompt": "Martial arts animation frame 22 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Beginning snappy retraction of left jab, lead elbow pulling back quickly along punching path. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 23,
+      "filename": "Frame_23.png",
+      "phase": 2,
+      "action": "Left hand retracting past midpoint, rear right heel lifts, right hip begins forward rotation.",
+      "prompt": "Martial arts animation frame 23 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Left hand retracting past midpoint, rear right heel lifts, right hip begins forward rotation. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 24,
+      "filename": "Frame_24.png",
+      "phase": 2,
+      "action": "Left hand returns to high guard at left cheek, rear right hip drives forward with rotational torque.",
+      "prompt": "Martial arts animation frame 24 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Left hand returns to high guard at left cheek, rear right hip drives forward with rotational torque. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 25,
+      "filename": "Frame_25.png",
+      "phase": 2,
+      "action": "Right shoulder rotates forward, right fist begins launching straight down the pipe.",
+      "prompt": "Martial arts animation frame 25 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right shoulder rotates forward, right fist begins launching straight down the pipe. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 26,
+      "filename": "Frame_26.png",
+      "phase": 2,
+      "action": "Right cross punching forward, explosive hip turn, rear foot pivoting on toes.",
+      "prompt": "Martial arts animation frame 26 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right cross punching forward, explosive hip turn, rear foot pivoting on toes. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 27,
+      "filename": "Frame_27.png",
+      "phase": 2,
+      "action": "Right arm reaches 80% extension, horizontal fist corkscrewing forward with dynamic motion blur.",
+      "prompt": "Martial arts animation frame 27 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right arm reaches 80% extension, horizontal fist corkscrewing forward with dynamic motion blur. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 28,
+      "filename": "Frame_28.png",
+      "phase": 2,
+      "action": "Peak impact point of powerful right cross: full extension, rear shoulder pushed forward, maximum hip drive.",
+      "prompt": "Martial arts animation frame 28 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Peak impact point of powerful right cross: full extension, rear shoulder pushed forward, maximum hip drive. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 29,
+      "filename": "Frame_29.png",
+      "phase": 2,
+      "action": "Moment of peak impact held, torso aligned, front knee bracing the entire kinetic chain.",
+      "prompt": "Martial arts animation frame 29 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Moment of peak impact held, torso aligned, front knee bracing the entire kinetic chain. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 30,
+      "filename": "Frame_30.png",
+      "phase": 2,
+      "action": "Kinetic recoil begins: right arm starts snappy retraction, weight transferring into lead left foot.",
+      "prompt": "Martial arts animation frame 30 of 60, Phase 2: Jab & Cross Strike Combination (Frames 16-30). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Kinetic recoil begins: right arm starts snappy retraction, weight transferring into lead left foot. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 31,
+      "filename": "Frame_31.png",
+      "phase": 3,
+      "action": "Right punch pulls back to guard, lead left foot opens outward at 45-degree angle.",
+      "prompt": "Martial arts animation frame 31 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right punch pulls back to guard, lead left foot opens outward at 45-degree angle. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 32,
+      "filename": "Frame_32.png",
+      "phase": 3,
+      "action": "Left foot pivots outward to 90 degrees, weight shifting completely onto lead left leg.",
+      "prompt": "Martial arts animation frame 32 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Left foot pivots outward to 90 degrees, weight shifting completely onto lead left leg. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 33,
+      "filename": "Frame_33.png",
+      "phase": 3,
+      "action": "Rear right knee drives upward and inward, chambering tight against the chest.",
+      "prompt": "Martial arts animation frame 33 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Rear right knee drives upward and inward, chambering tight against the chest. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 34,
+      "filename": "Frame_34.png",
+      "phase": 3,
+      "action": "Left pivot foot turns to 135 degrees, hips begin rolling over parallel to the floor.",
+      "prompt": "Martial arts animation frame 34 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Left pivot foot turns to 135 degrees, hips begin rolling over parallel to the floor. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 35,
+      "filename": "Frame_35.png",
+      "phase": 3,
+      "action": "Right hip fully turns over horizontally, right knee pointed directly at head-height target line.",
+      "prompt": "Martial arts animation frame 35 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right hip fully turns over horizontally, right knee pointed directly at head-height target line. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 36,
+      "filename": "Frame_36.png",
+      "phase": 3,
+      "action": "Torso leans back counter-balancing the kick, right leg begins whipping outward from knee.",
+      "prompt": "Martial arts animation frame 36 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Torso leans back counter-balancing the kick, right leg begins whipping outward from knee. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 37,
+      "filename": "Frame_37.png",
+      "phase": 3,
+      "action": "Lower right leg whipping outward in a circular arc, right foot pointed, subtle speed blur.",
+      "prompt": "Martial arts animation frame 37 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Lower right leg whipping outward in a circular arc, right foot pointed, subtle speed blur. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 38,
+      "filename": "Frame_38.png",
+      "phase": 3,
+      "action": "Right kicking leg extending at 45 degrees on its upward rotational trajectory.",
+      "prompt": "Martial arts animation frame 38 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right kicking leg extending at 45 degrees on its upward rotational trajectory. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 39,
+      "filename": "Frame_39.png",
+      "phase": 3,
+      "action": "Right leg reaches 90% extension at head height, left guard hand protecting temple.",
+      "prompt": "Martial arts animation frame 39 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right leg reaches 90% extension at head height, left guard hand protecting temple. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 40,
+      "filename": "Frame_40.png",
+      "phase": 3,
+      "action": "Peak roundhouse kick: right leg fully extended horizontally at high head height, instep striking, flawless alignment.",
+      "prompt": "Martial arts animation frame 40 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Peak roundhouse kick: right leg fully extended horizontally at high head height, instep striking, flawless alignment. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 41,
+      "filename": "Frame_41.png",
+      "phase": 3,
+      "action": "Full extension sustained at strike apex, hip completely rolled, powerful martial arts posture.",
+      "prompt": "Martial arts animation frame 41 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Full extension sustained at strike apex, hip completely rolled, powerful martial arts posture. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 42,
+      "filename": "Frame_42.png",
+      "phase": 3,
+      "action": "Follow-through momentum carries the kick cleanly through the target line.",
+      "prompt": "Martial arts animation frame 42 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Follow-through momentum carries the kick cleanly through the target line. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 43,
+      "filename": "Frame_43.png",
+      "phase": 3,
+      "action": "Strike completes its arc, right knee begins actively snapping and bending back.",
+      "prompt": "Martial arts animation frame 43 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Strike completes its arc, right knee begins actively snapping and bending back. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 44,
+      "filename": "Frame_44.png",
+      "phase": 3,
+      "action": "Right kicking leg re-chambering back toward the hip, controlling rotational inertia.",
+      "prompt": "Martial arts animation frame 44 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right kicking leg re-chambering back toward the hip, controlling rotational inertia. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 45,
+      "filename": "Frame_45.png",
+      "phase": 3,
+      "action": "Right knee bent back at 90 degrees, torso beginning to return upright.",
+      "prompt": "Martial arts animation frame 45 of 60, Phase 3: Lead Pivot & High Roundhouse Kick (Frames 31-45). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right knee bent back at 90 degrees, torso beginning to return upright. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 46,
+      "filename": "Frame_46.png",
+      "phase": 4,
+      "action": "Right knee chambers tightly back, momentum driving rotational recovery spin.",
+      "prompt": "Martial arts animation frame 46 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right knee chambers tightly back, momentum driving rotational recovery spin. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 47,
+      "filename": "Frame_47.png",
+      "phase": 4,
+      "action": "Torso rotates back facing forward, right leg descending in controlled arc toward the floor.",
+      "prompt": "Martial arts animation frame 47 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Torso rotates back facing forward, right leg descending in controlled arc toward the floor. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 48,
+      "filename": "Frame_48.png",
+      "phase": 4,
+      "action": "Continuous rotational follow-through, right foot sweeping downward smoothly.",
+      "prompt": "Martial arts animation frame 48 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Continuous rotational follow-through, right foot sweeping downward smoothly. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 49,
+      "filename": "Frame_49.png",
+      "phase": 4,
+      "action": "Right foot passes the midline, hips leveling back out with the shoulders.",
+      "prompt": "Martial arts animation frame 49 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right foot passes the midline, hips leveling back out with the shoulders. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 50,
+      "filename": "Frame_50.png",
+      "phase": 4,
+      "action": "Right foot touches down rearward on the ball of the foot, absorbing rotational energy.",
+      "prompt": "Martial arts animation frame 50 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Right foot touches down rearward on the ball of the foot, absorbing rotational energy. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 51,
+      "filename": "Frame_51.png",
+      "phase": 4,
+      "action": "Both feet make full contact with floor, weight redistributing 50-50 across both legs.",
+      "prompt": "Martial arts animation frame 51 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Both feet make full contact with floor, weight redistributing 50-50 across both legs. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 52,
+      "filename": "Frame_52.png",
+      "phase": 4,
+      "action": "Torso squares back to orthodox 45-degree combat angle, hands returning to chest height.",
+      "prompt": "Martial arts animation frame 52 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Torso squares back to orthodox 45-degree combat angle, hands returning to chest height. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 53,
+      "filename": "Frame_53.png",
+      "phase": 4,
+      "action": "Knees bend slightly, lowering center of gravity to absorb deceleration.",
+      "prompt": "Martial arts animation frame 53 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Knees bend slightly, lowering center of gravity to absorb deceleration. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 54,
+      "filename": "Frame_54.png",
+      "phase": 4,
+      "action": "Left hand extends forward in active parry position, right hand guards temple and jaw.",
+      "prompt": "Martial arts animation frame 54 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Left hand extends forward in active parry position, right hand guards temple and jaw. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 55,
+      "filename": "Frame_55.png",
+      "phase": 4,
+      "action": "Elbows tuck back into defensive frame, core stabilizes against rebound motion.",
+      "prompt": "Martial arts animation frame 55 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Elbows tuck back into defensive frame, core stabilizes against rebound motion. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 56,
+      "filename": "Frame_56.png",
+      "phase": 4,
+      "action": "Shoulders drop slightly, controlled exhale, martial arts alignment sharpening.",
+      "prompt": "Martial arts animation frame 56 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Shoulders drop slightly, controlled exhale, martial arts alignment sharpening. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 57,
+      "filename": "Frame_57.png",
+      "phase": 4,
+      "action": "Footwork micro-adjusts into wide, grounded, balanced defensive fighting stance.",
+      "prompt": "Martial arts animation frame 57 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Footwork micro-adjusts into wide, grounded, balanced defensive fighting stance. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 58,
+      "filename": "Frame_58.png",
+      "phase": 4,
+      "action": "Chin tucked safely, piercing focused gaze locked forward at eye level.",
+      "prompt": "Martial arts animation frame 58 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Chin tucked safely, piercing focused gaze locked forward at eye level. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 59,
+      "filename": "Frame_59.png",
+      "phase": 4,
+      "action": "Final kinetic stabilization: perfectly still, calm, coiled, and ready for action.",
+      "prompt": "Martial arts animation frame 59 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Final kinetic stabilization: perfectly still, calm, coiled, and ready for action. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    },
+    {
+      "frame": 60,
+      "filename": "Frame_60.png",
+      "phase": 4,
+      "action": "Settled, immovable balanced defensive fighting stance; complete martial arts sequence concluded.",
+      "prompt": "Martial arts animation frame 60 of 60, Phase 4: Leg Re-chamber, Spin Recovery & Guard Stance (Frames 46-60). Subject: athletic adult male martial artist, short black hair, wearing plain dark charcoal tank top and black sweatpants, barefoot. Action: Settled, immovable balanced defensive fighting stance; complete martial arts sequence concluded. Camera: static medium shot, side 45-degree three-quarter perspective, fixed eye-level camera. Environment: minimalist Japanese training dojo, polished light oak wood floor, white paper shoji screens, soft natural diffused studio light. Frame continuity: consistent character facial features, muscular physique, identical studio background, smooth motion progression."
+    }
+  ]
+}

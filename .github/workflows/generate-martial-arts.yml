@@ -1,0 +1,103 @@
+name: Martial Arts Animation Frame Generator
+
+on:
+  push:
+    branches:
+      - 'arena/**'
+      - 'main'
+    paths:
+      - '.github/workflows/generate-martial-arts.yml'
+      - 'scripts/**'
+  workflow_dispatch:
+    inputs:
+      frames:
+        description: 'Number of sequential frames to generate'
+        required: true
+        default: '60'
+      model:
+        description: 'AI model to use (flux or turbo)'
+        required: true
+        default: 'flux'
+        type: choice
+        options:
+          - flux
+          - turbo
+      seed:
+        description: 'Random seed for visual consistency'
+        required: true
+        default: '42'
+      use_ai:
+        description: 'Query free AI generator endpoint for frames'
+        required: true
+        default: true
+        type: boolean
+      custom_prompt:
+        description: 'Prompt specification (core martial arts combination)'
+        required: false
+        default: 'Generate a sequential, frame-by-frame martial arts animation sequence consisting of 60 distinct, consecutive images. When played in sequence at 24 frames per second, these images must form a continuous, fluid, and anatomically accurate martial arts fight scene.'
+
+permissions:
+  contents: write
+
+jobs:
+  generate-animation-frames:
+    name: Generate 60-Frame Martial Arts Sequence (24 FPS)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pillow requests
+
+      - name: Run Martial Arts Animation Sequence Generator
+        run: |
+          USE_AI_FLAG=""
+          if [ "${{ github.event.inputs.use_ai }}" = "true" ] || [ "${{ github.event_name }}" = "push" ]; then
+            USE_AI_FLAG="--use-ai"
+          fi
+
+          FRAMES="${{ github.event.inputs.frames || '60' }}"
+          MODEL="${{ github.event.inputs.model || 'flux' }}"
+          SEED="${{ github.event.inputs.seed || '42' }}"
+
+          echo "🥋 Running generator with:"
+          echo "   Frames: $FRAMES"
+          echo "   Model:  $MODEL"
+          echo "   Seed:   $SEED"
+
+          python scripts/generate_frames.py \
+            --frames "$FRAMES" \
+            --model "$MODEL" \
+            --seed "$SEED" \
+            --output output \
+            $USE_AI_FLAG
+
+      - name: Upload Artifacts (60 Frames, Sprite Sheet, GIF, HTML Player)
+        uses: actions/upload-artifact@v4
+        with:
+          name: martial-arts-60-frames-24fps
+          path: output/
+          retention-days: 30
+
+      - name: Commit and Push Output Assets to Repository
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add output/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "feat(animation): generated 60 martial arts frames & sprite sheet (24 FPS) [skip ci]"
+            git push origin HEAD:${{ github.ref }}
+          fi
