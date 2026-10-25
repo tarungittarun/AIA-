@@ -618,7 +618,7 @@ class CalculatorQa:
                 "sha256": digest,
             },
             "device": {
-                "emulator_api": 34,
+                "emulator_api": 30,
                 "screen": f"{self.device._width}x{self.device._height}",
                 "scope": "Calculator feature only",
             },
