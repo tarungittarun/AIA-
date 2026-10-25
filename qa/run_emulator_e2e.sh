@@ -68,9 +68,15 @@ if [[ ! -x "$EMULATOR_BIN" ]]; then
 fi
 
 emulator_args=(-avd "$AVD_NAME" -port 5554 -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect)
-if [[ ! -r /dev/kvm || ! -w /dev/kvm ]]; then
+if [[ -r /dev/kvm && -w /dev/kvm ]]; then
+  emulator_args+=(-accel on)
+  acceleration="KVM hardware acceleration enabled"
+else
   emulator_args+=(-accel off)
+  acceleration="KVM unavailable; using software acceleration"
 fi
+printf 'Emulator acceleration: %s\n' "$acceleration" | tee -a "$BOOT_LOG"
+echo "::notice title=Android emulator acceleration::$acceleration"
 printf 'Launching: %q ' "$EMULATOR_BIN" "${emulator_args[@]}" | tee -a "$BOOT_LOG"
 echo | tee -a "$BOOT_LOG"
 "$EMULATOR_BIN" "${emulator_args[@]}" >"$EMULATOR_LOG" 2>&1 &

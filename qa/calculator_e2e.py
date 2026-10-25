@@ -560,6 +560,66 @@ class CalculatorQa:
                 comment=self.reference["note"],
             )
 
+    def _capture_install_diagnostics(self, attempt: int, error: Exception) -> Path:
+        lines = [f"APK install attempt {attempt} failed: {type(error).__name__}: {error}"]
+        probes = (
+            ("adb get-state", ("get-state",), 15),
+            ("boot completed", ("shell", "getprop", "sys.boot_completed"), 15),
+            ("PackageManager package list", ("shell", "cmd", "package", "list", "packages"), 15),
+            ("recent logcat", ("logcat", "-d", "-t", "1000"), 45),
+        )
+        for title, args, timeout in probes:
+            lines.append(f"\n--- {title} ---")
+            try:
+                lines.append(self.device.adb(*args, timeout=timeout, check=False))
+            except Exception as probe_error:
+                lines.append(f"Diagnostic command failed: {type(probe_error).__name__}: {probe_error}")
+        path = self.report_dir / f"apk-install-attempt-{attempt}-diagnostics.txt"
+        path.write_text("\n".join(lines), encoding="utf-8")
+        return path
+
+    def _install_apk(self) -> None:
+        last_error: Exception | None = None
+        for attempt in range(1, 3):
+            try:
+                self.device.adb(
+                    "install", "--no-streaming", "-r", str(self.apk), timeout=600
+                )
+                print("::notice title=APK installation::The exact calculator APK installed successfully.", flush=True)
+                return
+            except Exception as error:
+                last_error = error
+                diagnostic_path = self._capture_install_diagnostics(attempt, error)
+                print(
+                    f"::warning title=APK installation attempt {attempt}::Install failed; "
+                    f"emulator diagnostics saved to {diagnostic_path}.",
+                    flush=True,
+                )
+                if attempt == 2:
+                    break
+
+                # ADB can lose the PackageManager binder while the emulator is
+                # under load. Confirm that it responds again before one retry.
+                for probe in range(1, 13):
+                    try:
+                        packages = self.device.adb(
+                            "shell", "cmd", "package", "list", "packages",
+                            timeout=15, check=False,
+                        )
+                    except Exception:
+                        packages = ""
+                    if any(line.startswith("package:") for line in packages.splitlines()):
+                        print(
+                            f"::notice title=Android package manager recovered::"
+                            f"PackageManager responded before install retry {probe}.",
+                            flush=True,
+                        )
+                        break
+                    time.sleep(5)
+                time.sleep(5)
+
+        raise QaError(f"APK installation failed after two attempts: {last_error}") from last_error
+
     def run(self) -> int:
         if not self.apk.is_file():
             raise QaError(f"APK not found: {self.apk}")
@@ -567,7 +627,7 @@ class CalculatorQa:
         if digest != EXPECTED_APK_SHA256:
             raise QaError(f"APK SHA-256 mismatch: expected {EXPECTED_APK_SHA256}, got {digest}")
 
-        self.device.adb("install", "--no-streaming", "-r", str(self.apk), timeout=600)
+        self._install_apk()
         self.device.adb("shell", "pm", "clear", self.package, timeout=30, check=False)
         self.device.navigate_to_calculator(self.package)
         self.device.screenshot("evidence/initial-calculator-screen.png")
