@@ -39,6 +39,8 @@ fail_with_diagnostics() {
     timeout 15 adb -s "$SERIAL" shell getprop init.svc.bootanim 2>&1 || true
     echo "Recent emulator output:"
     tail -n 60 "$EMULATOR_LOG" 2>/dev/null || true
+    echo "Recent PackageManager probe:"
+    tail -n 20 "$REPORT_DIR/package-manager-probe.log" 2>/dev/null || true
   } >> "$BOOT_LOG"
   local one_line
   one_line="$(tail -n 25 "$BOOT_LOG" | tr '\n' ' ' | sed 's/%/%25/g; s/\r/%0D/g; s/::/%3A%3A/g')"
@@ -115,9 +117,29 @@ if [[ "$booted" != true ]]; then
   fail_with_diagnostics "Android API 30 did not finish booting within 20 minutes"
 fi
 
-# Allow the framework and input service to settle after sys.boot_completed=1.
-sleep 8
+# sys.boot_completed may be set before PackageManager publishes its binder service.
+# Wait explicitly for it before adb install; this avoids the intermittent
+# "cmd: Can't find service: package" failure seen on the first manual-boot run.
 export ANDROID_SERIAL="$SERIAL"
+package_manager_ready=false
+for attempt in $(seq 1 90); do
+  if timeout 8 adb -s "$SERIAL" shell cmd package list packages \
+      > "$REPORT_DIR/package-manager-probe.log" 2>&1 \
+      && ! grep -qi "can't find service: package" "$REPORT_DIR/package-manager-probe.log"; then
+    package_manager_ready=true
+    printf '%s package-manager-ready attempt=%s\n' "$(date -u +%FT%TZ)" "$attempt" >> "$BOOT_LOG"
+    echo "::notice title=Android package manager ready::PackageManager responded after $attempt readiness probes."
+    break
+  fi
+  printf '%s package-manager-not-ready attempt=%s\n' "$(date -u +%FT%TZ)" "$attempt" >> "$BOOT_LOG"
+  sleep 5
+done
+if [[ "$package_manager_ready" != true ]]; then
+  fail_with_diagnostics "Android booted but PackageManager did not become available within the readiness window"
+fi
+
+# Allow the framework and input service to settle after PackageManager is ready.
+sleep 5
 adb -s "$SERIAL" shell input keyevent 82 >> "$BOOT_LOG" 2>&1 || echo "Screen-unlock keyevent unavailable; continuing." >> "$BOOT_LOG"
 adb -s "$SERIAL" shell settings put global window_animation_scale 0 >> "$BOOT_LOG" 2>&1 || true
 adb -s "$SERIAL" shell settings put global transition_animation_scale 0 >> "$BOOT_LOG" 2>&1 || true

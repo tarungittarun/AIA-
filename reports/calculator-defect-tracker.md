@@ -2,12 +2,12 @@
 
 **Report ID:** `CALC-QA-2026-10-25-01`
 **Prepared:** 25 October 2026 (Asia/Kolkata)
-**Status:** Preliminary — no UI tests executed; six Actions attempts failed before app execution; manual Ubuntu API 30 emulator retry queued
+**Status:** Preliminary — no calculator UI cases executed; latest run booted the emulator but PackageManager was unavailable at APK install; readiness retry queued
 **Scope:** Calculator feature only. Other MySpace/TicTic features are explicitly out of scope.
 
 ## 1. Executive summary
 
-The supplied APK was identified and pinned by immutable Git blob and SHA-256. The linked TicTic source branch's latest Android CI run passed its source-contract, Gradle unit-test/build, and lint jobs. That run did **not** launch an emulator or exercise calculator UI flows. Six Actions attempts in this QA branch have not reached the Python UI test script. [Run 40204124011](https://github.com/tarungittarun/AIA-/actions/runs/40204124011) timed out waiting for emulator boot; [run 40205135030](https://github.com/tarungittarun/AIA-/actions/runs/40205135030) ended in emulator setup with shell exit code 2; [run 40206626414](https://github.com/tarungittarun/AIA-/actions/runs/40206626414) timed out on Apple Silicon; [run 40208505722](https://github.com/tarungittarun/AIA-/actions/runs/40208505722) failed during APK retrieval with curl exit code 56 before starting an emulator; [run 40208720426](https://github.com/tarungittarun/AIA-/actions/runs/40208720426) timed out booting the API 30 ARM emulator; and [run 40210565671](https://github.com/tarungittarun/AIA-/actions/runs/40210565671) failed during emulator setup when ADB exited with code 224. No application-level pass/fail result is claimed. The workflow now uses a custom Ubuntu emulator bootstrap that captures startup diagnostics and waits for Android boot completion before invoking the UI harness.
+The supplied APK was identified and pinned by immutable Git blob and SHA-256. The linked TicTic source branch's latest Android CI run passed its source-contract, Gradle unit-test/build, and lint jobs. That run did **not** launch an emulator or exercise calculator UI flows. Seven Actions attempts in this QA branch have not executed calculator test cases. Earlier runs `40204124011`, `40205135030`, `40206626414`, `40208505722`, `40208720426`, and `40210565671` cover emulator boot/setup and one APK-retrieval failure. The latest [run 40211691552](https://github.com/tarungittarun/AIA-/actions/runs/40211691552) successfully reported API 30 emulator boot, but installation then failed with `cmd: Can't find service: package`; Android's PackageManager binder was not yet available. No calculator functional result or Google-app comparison is claimed. The custom bootstrap now waits for PackageManager readiness before installing the exact APK.
 
 Static review of the calculator's result-to-expression path identified two reproducible-looking calculation risks: a rounded display result is reused during chained arithmetic, and a result rendered in scientific notation is not supported as a numeric literal by the input parser. These are **source-confirmed risks, not yet device-confirmed observations**. The workflow is configured to install the exact APK into a disposable Android emulator and exercise the calculator UI; neither attempt reached the Python UI harness, so no per-run test report or screenshot evidence has been generated.
 
@@ -104,7 +104,7 @@ The linked repository's `APPS.md` says the calculator was compared feature-by-fe
 | Field | Assessment |
 |---|---|
 | **Type** | Test environment blocker |
-| **Status** | Open / not assessed — emulator did not boot |
+| **Status** | Open / not assessed — APK installation failed before the package scan |
 | **Product defect?** | No — this records a limitation of the comparison environment, not a MySpace app bug |
 
 The official package `com.google.android.calculator` was not available in the local sandbox, and no official Google Calculator APK was obtained. The emulator workflow checks the exact package at runtime. If it is absent, it records the live comparison as `BLOCKED` while still running deterministic arithmetic/UI checks against expected values. The old AOSP calculator is not treated as equivalent to the current official Google Calculator.
@@ -118,51 +118,51 @@ The official package `com.google.android.calculator` was not available in the lo
 | Field | Assessment |
 |---|---|
 | **Type** | Test coverage gap |
-| **Status** | Mitigation added; five emulator setup failures and one APK retrieval failure; custom Ubuntu API 30 retry pending |
+| **Status** | Mitigation added; six emulator setup/install failures and one APK retrieval failure; PackageManager readiness retry pending |
 | **Product defect?** | No — infrastructure finding |
 
-The linked branch's latest CI run passed its build/test checks but does not install the release APK in an emulator or exercise the suite navigation and calculator UI. This branch adds a separate Android Emulator Actions workflow. It pins the supplied APK by blob and SHA-256, uses an API 30 `google_apis` x86_64 emulator, tests calculator flows only, and uploads a Markdown/JSON run report plus screenshots/UI dumps for 30 days. Five emulator setup attempts failed before the Python test harness ran: two Ubuntu/API 34 attempts, two Apple Silicon/API 34 and 30 attempts, and one Ubuntu/API 30 attempt that ended with ADB exit code 224. A separate APK retrieval attempt failed with curl exit code 56 before emulator startup. The workflow now checks out the immutable TicTic source commit and APK path, verifies SHA-256, and replaces the opaque emulator action with a custom API 30 `google_apis` x86_64 bootstrap that saves emulator/boot diagnostics.
+The linked branch's latest CI run passed its build/test checks but does not install the release APK in an emulator or exercise the suite navigation and calculator UI. This branch adds a separate Android Emulator Actions workflow. It pins the supplied APK by blob and SHA-256, uses an API 30 `google_apis` x86_64 emulator, tests calculator flows only, and uploads a Markdown/JSON run report plus screenshots/UI dumps for 30 days. Five emulator setup attempts failed before the Python test harness ran: two Ubuntu/API 34 attempts, two Apple Silicon/API 34 and 30 attempts, and one Ubuntu/API 30 attempt that ended with ADB exit code 224. A separate APK retrieval attempt failed with curl exit code 56 before emulator startup. A sixth emulator run booted API 30 successfully but APK installation failed because PackageManager was not yet registered. The workflow checks out the immutable TicTic source commit, verifies SHA-256, and uses a custom API 30 `google_apis` x86_64 bootstrap; the latest change waits for `cmd package list packages` to succeed before installing the APK.
 
-### QA-003 — Actions setup failures before calculator execution
+### QA-003 — Actions setup and PackageManager readiness failures
 
 | Field | Assessment |
 |---|---|
 | **Type** | Test infrastructure / artifact retrieval |
-| **Status** | Open — manual Ubuntu API 30 x86_64 retry pending |
-| **Runs / jobs** | [40204124011](https://github.com/tarungittarun/AIA-/actions/runs/40204124011), job `121201302193`; [40205135030](https://github.com/tarungittarun/AIA-/actions/runs/40205135030), job `121204338761`; [40206626414](https://github.com/tarungittarun/AIA-/actions/runs/40206626414), job `121208834615`; [40208505722](https://github.com/tarungittarun/AIA-/actions/runs/40208505722), job `121214502041`; [40208720426](https://github.com/tarungittarun/AIA-/actions/runs/40208720426), job `121215155606`; [40210565671](https://github.com/tarungittarun/AIA-/actions/runs/40210565671), job `121220690836` |
-| **Product defect?** | No — none of these runs reached calculator UI execution |
+| **Status** | Open — PackageManager readiness wait added; retry pending |
+| **Runs / jobs** | [40204124011](https://github.com/tarungittarun/AIA-/actions/runs/40204124011), job `121201302193`; [40205135030](https://github.com/tarungittarun/AIA-/actions/runs/40205135030), job `121204338761`; [40206626414](https://github.com/tarungittarun/AIA-/actions/runs/40206626414), job `121208834615`; [40208505722](https://github.com/tarungittarun/AIA-/actions/runs/40208505722), job `121214502041`; [40208720426](https://github.com/tarungittarun/AIA-/actions/runs/40208720426), job `121215155606`; [40210565671](https://github.com/tarungittarun/AIA-/actions/runs/40210565671), job `121220690836`; [40211691552](https://github.com/tarungittarun/AIA-/actions/runs/40211691552), job `121224080079` |
+| **Product defect?** | No — no calculator test case ran |
 
-**Observed:** Five emulator setup attempts ended before the custom test script. The first Ubuntu/API 34 run and both Apple Silicon boot attempts (API 34 and API 30) reported `Timeout waiting for emulator to boot`; the second Ubuntu/API 34 run ended with shell exit code 2; the Ubuntu/API 30 Google APIs run ended with ADB exit code 224. A separate run failed earlier while retrieving the APK from the GitHub API (`curl` exit code 56), so no emulator started. APK checkout and SHA-256/ZIP verification succeeded in the other five runs. Upload steps found no UI report files; the Python harness did not run. Detailed runner logs were not retrievable here, so the precise cause of the exit-code failures remains unknown.
+**Observed:** Five emulator attempts failed before app installation. The first Ubuntu/API 34 run and both Apple Silicon boot attempts (API 34 and API 30) timed out; the second Ubuntu/API 34 run ended with shell exit code 2; the Ubuntu/API 30 action run ended with ADB exit code 224. A separate attempt failed before emulator startup while retrieving the APK (`curl` exit code 56). The latest custom-bootstrap run did report API 30 boot completion, but `adb install` failed with `cmd: Can't find service: package`; the PackageManager binder was not available yet. The exact APK checkout and SHA-256/ZIP verification succeeded. No calculator screen or Google-reference package scan ran.
 
-**Action:** The first Ubuntu attempt used the action's 600-second boot wait; the second used 1,200 seconds and removed redundant `-wipe-data`. Apple Silicon API 34 and API 30 boot attempts timed out, and Ubuntu API 30 failed inside the action's ADB setup. APK retrieval now uses a sparse checkout of the immutable TicTic source commit, followed by SHA-256 and ZIP-integrity verification. The workflow replaces the opaque emulator action with a custom API 30 `google_apis` x86_64 bootstrap that saves emulator and boot-status logs, waits for `sys.boot_completed`, allows the framework to settle, then runs the calculator-only harness. If it fails, startup diagnostics are uploaded and surfaced in a check annotation; direct Google comparison remains blocked unless the exact package is present.
+**Action:** The workflow now uses a custom API 30 `google_apis` x86_64 emulator launcher and captures emulator/boot logs. It waits for both `sys.boot_completed=1` and a successful `cmd package list packages` probe before installing the APK; this addresses the latest observed race where Android reported boot completion before PackageManager was published. The latest error and probe output are included in the Actions check annotations/artifact. Direct Google comparison remains blocked until the exact package is present and the emulator can run tests.
 
 **Comment log**
 
-- **2026-10-25 — QA:** All six failures were before calculator UI execution. No calculator pass, failure, or Google-package availability should be inferred from these runs.
+- **2026-10-25 — QA:** Seven Actions attempts have produced no calculator test-case result. The latest reached emulator boot but failed before APK installation completed; no app-level pass/fail should be inferred.
 
 ## 5. Functional test matrix
 
-The harness is `qa/calculator_e2e.py`. Each device test is written to the workflow's generated run report. No application test ran in the six completed attempts (`40204124011`, `40205135030`, `40206626414`, `40208505722`, `40208720426`, and `40210565671`): each failed before the custom UI script. The custom API 30 Ubuntu emulator retry is pending. A Google reference `BLOCKED` result is not counted as a MySpace functional pass.
+The harness is `qa/calculator_e2e.py`. Each device test is written to the workflow's generated run report. No calculator test case ran in any of the seven completed attempts (`40204124011`, `40205135030`, `40206626414`, `40208505722`, `40208720426`, `40210565671`, and `40211691552`). The latest reached emulator boot but APK installation failed before app launch; the PackageManager readiness retry is pending. A Google reference `BLOCKED` result is not counted as a MySpace functional pass.
 
 | Test ID | Scenario | Expected result | Current status |
 |---|---|---|---|
-| TC-CALC-001 | Operator precedence: `2 + 3 × 4` | `14` | Not run — pre-test workflow setup failed in the prior runs; custom API 30 Ubuntu emulator retry pending (see QA-003) |
-| TC-CALC-002 | Parentheses: `(2 + 3) × 4` | `20` | Not run — pre-test workflow setup failed in the prior runs; custom API 30 Ubuntu emulator retry pending (see QA-003) |
-| TC-CALC-003 | Decimal addition: `0.1 + 0.2` | `0.3` | Not run — pre-test workflow setup failed in the prior runs; custom API 30 Ubuntu emulator retry pending (see QA-003) |
-| TC-CALC-004 | Contextual percentage: `200 + 10%` | `220` | Not run — pre-test workflow setup failed in the prior runs; custom API 30 Ubuntu emulator retry pending (see QA-003) |
-| TC-CALC-005 | Scientific square root: `√(9)` | `3` | Not run — pre-test workflow setup failed in the prior runs; custom API 30 Ubuntu emulator retry pending (see QA-003) |
-| TC-CALC-006 | Degree-mode sine: `sin(30)` | `0.5` | Not run — pre-test workflow setup failed in the prior runs; custom API 30 Ubuntu emulator retry pending (see QA-003) |
-| TC-CALC-007 | History persists after process restart and restores an entry | `1+1` and `2` visible/selectable | Not run — pre-test workflow setup failed in the prior runs; custom API 30 Ubuntu emulator retry pending (see QA-003) |
-| TC-CALC-008 | Chaining: `1 ÷ 3 = × 3 =` | `1` | Not run — pre-test workflow setup failed in the prior runs; custom API 30 Ubuntu emulator retry pending (see QA-003); linked to CALC-001 |
-| TC-CALC-009 | Scientific result continuation: `10^15 = + 1 =` | Continues without parser/validator error | Not run — pre-test workflow setup failed in the prior runs; custom API 30 Ubuntu emulator retry pending (see QA-003); linked to CALC-002 |
-| TC-CALC-010 | Live official Google Calculator comparison | Common precedence case run in `com.google.android.calculator` | Not run — pre-test workflow setup failed in the prior runs; custom API 30 Ubuntu emulator retry pending (see QA-003); may be blocked |
+| TC-CALC-001 | Operator precedence: `2 + 3 × 4` | `14` | Not run — APK install failed because PackageManager was not ready in run `40211691552`; readiness retry pending (see QA-003) |
+| TC-CALC-002 | Parentheses: `(2 + 3) × 4` | `20` | Not run — APK install failed because PackageManager was not ready in run `40211691552`; readiness retry pending (see QA-003) |
+| TC-CALC-003 | Decimal addition: `0.1 + 0.2` | `0.3` | Not run — APK install failed because PackageManager was not ready in run `40211691552`; readiness retry pending (see QA-003) |
+| TC-CALC-004 | Contextual percentage: `200 + 10%` | `220` | Not run — APK install failed because PackageManager was not ready in run `40211691552`; readiness retry pending (see QA-003) |
+| TC-CALC-005 | Scientific square root: `√(9)` | `3` | Not run — APK install failed because PackageManager was not ready in run `40211691552`; readiness retry pending (see QA-003) |
+| TC-CALC-006 | Degree-mode sine: `sin(30)` | `0.5` | Not run — APK install failed because PackageManager was not ready in run `40211691552`; readiness retry pending (see QA-003) |
+| TC-CALC-007 | History persists after process restart and restores an entry | `1+1` and `2` visible/selectable | Not run — APK install failed because PackageManager was not ready in run `40211691552`; readiness retry pending (see QA-003) |
+| TC-CALC-008 | Chaining: `1 ÷ 3 = × 3 =` | `1` | Not run — APK install failed because PackageManager was not ready in run `40211691552`; readiness retry pending (see QA-003); linked to CALC-001 |
+| TC-CALC-009 | Scientific result continuation: `10^15 = + 1 =` | Continues without parser/validator error | Not run — APK install failed because PackageManager was not ready in run `40211691552`; readiness retry pending (see QA-003); linked to CALC-002 |
+| TC-CALC-010 | Live official Google Calculator comparison | Common precedence case run in `com.google.android.calculator` | Not run — APK install failed because PackageManager was not ready in run `40211691552`; readiness retry pending (see QA-003); may be blocked |
 
 The workflow also saves screenshots and UI hierarchy XML under the artifact's `evidence/` directory, including on failed cases. The workflow fails on MySpace functional `FAIL`/`ERROR` results; blocked Google-reference availability is separately reported.
 
 ## 6. CI evidence and limitations
 
 - **Existing upstream result:** [TicTic Android CI run 40201068395](https://github.com/tarungittarun/TicTic/actions/runs/40201068395), commit `76f03909ea8bd11c9c4fed83c8e3d7279e3fc9c9`, concluded success. Its source-contract and Android build/unit-test steps are evidence of source-level CI health only, not APK runtime behavior.
-- **New workflow:** `.github/workflows/calculator-apk-e2e.yml` checks out TicTic at pinned commit `76f03909ea8bd11c9c4fed83c8e3d7279e3fc9c9` with a sparse checkout for the exact APK, verifies SHA-256 and ZIP integrity, then runs the calculator-only harness on an API 30 `google_apis` x86_64 emulator. Five emulator setup attempts and one APK retrieval attempt failed before app installation. The current configuration retries on Ubuntu; the UI harness has not yet run.
+- **New workflow:** `.github/workflows/calculator-apk-e2e.yml` checks out TicTic at pinned commit `76f03909ea8bd11c9c4fed83c8e3d7279e3fc9c9` with a sparse checkout for the exact APK, verifies SHA-256 and ZIP integrity, then runs the calculator-only harness on an API 30 `google_apis` x86_64 emulator. Five emulator setup attempts, one PackageManager readiness failure, and one APK retrieval failure have prevented calculator test cases. The current configuration retries on Ubuntu with a PackageManager readiness probe; no calculator test case has run yet.
 - **Local execution limitation:** The review sandbox did not have Android SDK/ADB/emulator tooling or KVM, so no local device E2E was possible. GitHub Actions is the execution target.
 - **Google comparator limitation:** An API 30 `google_apis` system image is requested (without the Play Store), so Google Calculator availability is not assumed. The workflow checks for the exact `com.google.android.calculator` package and will not silently substitute a non-Google app.
 - **No false pass claim:** This report separates static analysis, expected-value assertions, actual emulator results, and live Google comparison. Only the latter two can establish runtime observations.
