@@ -2,12 +2,12 @@
 
 **Report ID:** `CALC-QA-2026-10-25-01`
 **Prepared:** 25 October 2026 (Asia/Kolkata)
-**Status:** Preliminary — three emulator attempts failed before UI tests; API 30 Apple Silicon retry queued
+**Status:** Preliminary — no UI tests executed; emulator setup and APK download have failed across four Actions attempts; source-checkout retry queued
 **Scope:** Calculator feature only. Other MySpace/TicTic features are explicitly out of scope.
 
 ## 1. Executive summary
 
-The supplied APK was identified and pinned by immutable Git blob and SHA-256. The linked TicTic source branch's latest Android CI run passed its source-contract, Gradle unit-test/build, and lint jobs. That run did **not** launch an emulator or exercise calculator UI flows. Three Actions attempts in this QA branch failed before the test script ran: [run 40204124011](https://github.com/tarungittarun/AIA-/actions/runs/40204124011) reported `Timeout waiting for emulator to boot`, [run 40205135030](https://github.com/tarungittarun/AIA-/actions/runs/40205135030) ended inside emulator setup with shell exit code 2, and [run 40206626414](https://github.com/tarungittarun/AIA-/actions/runs/40206626414) again timed out waiting for emulator boot on Apple Silicon. No application-level pass/fail result is claimed. The next attempt changes the Android image to API 30, which is broadly supported for ARM emulators.
+The supplied APK was identified and pinned by immutable Git blob and SHA-256. The linked TicTic source branch's latest Android CI run passed its source-contract, Gradle unit-test/build, and lint jobs. That run did **not** launch an emulator or exercise calculator UI flows. Four Actions attempts in this QA branch have not reached the Python UI test script. [Run 40204124011](https://github.com/tarungittarun/AIA-/actions/runs/40204124011) timed out waiting for emulator boot; [run 40205135030](https://github.com/tarungittarun/AIA-/actions/runs/40205135030) ended in emulator setup with shell exit code 2; [run 40206626414](https://github.com/tarungittarun/AIA-/actions/runs/40206626414) again timed out on Apple Silicon; and [run 40208505722](https://github.com/tarungittarun/AIA-/actions/runs/40208505722) failed during APK retrieval with curl exit code 56 before starting the emulator. No application-level pass/fail result is claimed. The workflow now checks out the exact source commit containing the APK (instead of downloading the Git blob through curl) before the next emulator attempt.
 
 Static review of the calculator's result-to-expression path identified two reproducible-looking calculation risks: a rounded display result is reused during chained arithmetic, and a result rendered in scientific notation is not supported as a numeric literal by the input parser. These are **source-confirmed risks, not yet device-confirmed observations**. The workflow is configured to install the exact APK into a disposable Android emulator and exercise the calculator UI; neither attempt reached the Python UI harness, so no per-run test report or screenshot evidence has been generated.
 
@@ -118,51 +118,51 @@ The official package `com.google.android.calculator` was not available in the lo
 | Field | Assessment |
 |---|---|
 | **Type** | Test coverage gap |
-| **Status** | Mitigation added; three emulator setup failures; API 30 macOS retry pending |
+| **Status** | Mitigation added; three emulator setup failures and one APK retrieval failure; source-checkout retry pending |
 | **Product defect?** | No — infrastructure finding |
 
-The linked branch's latest CI run passed its build/test checks but does not install the release APK in an emulator or exercise the suite navigation and calculator UI. This branch adds a separate Android Emulator Actions workflow. It pins the supplied APK by blob and SHA-256, requests an API 30 Google Play emulator, tests calculator flows only, and uploads a Markdown/JSON run report plus screenshots/UI dumps for 30 days. Two Ubuntu attempts and one Apple Silicon API 34 attempt failed before the Python test harness ran; the first and third timed out waiting for emulator boot, while the second ended with shell exit code 2 during emulator setup. The workflow now retries on an Apple Silicon macOS runner using the API 30 arm64 Google Play image.
+The linked branch's latest CI run passed its build/test checks but does not install the release APK in an emulator or exercise the suite navigation and calculator UI. This branch adds a separate Android Emulator Actions workflow. It pins the supplied APK by blob and SHA-256, requests an API 30 Google Play emulator, tests calculator flows only, and uploads a Markdown/JSON run report plus screenshots/UI dumps for 30 days. Three emulator attempts failed before the Python test harness ran (two Ubuntu setup failures and one Apple Silicon API 34 boot timeout). A fourth run failed while downloading the APK from the GitHub API (`curl` exit code 56), so the emulator did not start. The workflow now uses a sparse checkout of the immutable TicTic source commit and APK path, then verifies the APK SHA-256 before attempting the API 30 arm64 Google Play emulator.
 
-### QA-003 — Android emulator setup failure in GitHub Actions
+### QA-003 — Actions setup failures before calculator execution
 
 | Field | Assessment |
 |---|---|
-| **Type** | Test infrastructure failure |
-| **Status** | Open — API 30 ARM emulator retry pending |
-| **Runs / jobs** | [40204124011](https://github.com/tarungittarun/AIA-/actions/runs/40204124011), job `121201302193`; [40205135030](https://github.com/tarungittarun/AIA-/actions/runs/40205135030), job `121204338761`; [40206626414](https://github.com/tarungittarun/AIA-/actions/runs/40206626414), job `121208834615` |
-| **Product defect?** | No — the test harness never reached app installation or UI execution |
+| **Type** | Test infrastructure / artifact retrieval |
+| **Status** | Open — source-checkout retry pending |
+| **Runs / jobs** | [40204124011](https://github.com/tarungittarun/AIA-/actions/runs/40204124011), job `121201302193`; [40205135030](https://github.com/tarungittarun/AIA-/actions/runs/40205135030), job `121204338761`; [40206626414](https://github.com/tarungittarun/AIA-/actions/runs/40206626414), job `121208834615`; [40208505722](https://github.com/tarungittarun/AIA-/actions/runs/40208505722), job `121214502041` |
+| **Product defect?** | No — none of these runs reached app installation or UI execution |
 
-**Observed:** All three `reactivecircus/android-emulator-runner` steps ended before the custom test script. The first Ubuntu run and the Apple Silicon API 34 run reported `Timeout waiting for emulator to boot`; the second Ubuntu run produced a shell exit-code-2 annotation. APK download and SHA-256 verification succeeded in each run. Upload steps found no report files, confirming that the Python UI harness did not run. Detailed runner logs were not retrievable in this environment, so the second failure's precise root cause is unknown.
+**Observed:** The first Ubuntu run and the Apple Silicon API 34 run timed out waiting for emulator boot; the second Ubuntu run ended in emulator setup with shell exit code 2. The fourth run failed earlier while retrieving the APK from the GitHub API (`curl` exit code 56), so its emulator did not start. APK hash/integrity verification succeeded in the first three runs. All four upload steps found no test report files; the Python UI harness did not run. Detailed runner logs were not retrievable here, so the precise cause of the second Ubuntu setup failure remains unknown.
 
-**Action:** The initial Ubuntu attempt used the action's 600-second boot wait. The next Ubuntu attempt used 1,200 seconds and removed the redundant `-wipe-data` option, but still failed before the test script. The Apple Silicon API 34 attempt also timed out. The next configuration uses the `macos-15` Apple Silicon runner with an API 30 `arm64-v8a` Google Play system image, a target level supported by a broader range of ARM emulator images. If it also fails, capture runner diagnostics and use a known-supported `google_apis` image for functional E2E while keeping official Google Calculator comparison blocked unless the exact package is present.
+**Action:** The initial Ubuntu attempt used the action's 600-second boot wait. The second used 1,200 seconds and removed redundant `-wipe-data`; it still failed before tests. The Apple Silicon API 34 attempt also timed out. After the API 30 run's curl failure, APK retrieval was changed to a sparse checkout of the immutable TicTic source commit, followed by local SHA-256 and ZIP-integrity verification. The next emulator attempt uses `macos-15`, API 30, `arm64-v8a`, and the Google Play system image. If that also fails, capture runner diagnostics and use a known-supported `google_apis` image for functional E2E while keeping the official Google Calculator comparison blocked unless the exact package is present.
 
 **Comment log**
 
-- **2026-10-25 — QA:** All three failures are infrastructure/setup outcomes only. No calculator pass, failure, or Google-package availability should be inferred from these runs.
+- **2026-10-25 — QA:** All four failures are before-app setup outcomes only. No calculator pass, failure, or Google-package availability should be inferred from these runs.
 
 ## 5. Functional test matrix
 
-The harness is `qa/calculator_e2e.py`. Each device test is written to the workflow's generated run report. No application test ran in the three completed attempts (`40204124011`, `40205135030`, and `40206626414`): all failed before the custom UI script. The API 30 macOS retry is pending. A Google reference `BLOCKED` result is not counted as a MySpace functional pass.
+The harness is `qa/calculator_e2e.py`. Each device test is written to the workflow's generated run report. No application test ran in the four completed attempts (`40204124011`, `40205135030`, `40206626414`, and `40208505722`): each failed before the custom UI script. The source-checkout/API 30 macOS retry is pending. A Google reference `BLOCKED` result is not counted as a MySpace functional pass.
 
 | Test ID | Scenario | Expected result | Current status |
 |---|---|---|---|
-| TC-CALC-001 | Operator precedence: `2 + 3 × 4` | `14` | Not run — emulator setup failed in runs `40204124011`, `40205135030`, and `40206626414`; API 30 macOS retry pending |
-| TC-CALC-002 | Parentheses: `(2 + 3) × 4` | `20` | Not run — emulator setup failed in runs `40204124011`, `40205135030`, and `40206626414`; API 30 macOS retry pending |
-| TC-CALC-003 | Decimal addition: `0.1 + 0.2` | `0.3` | Not run — emulator setup failed in runs `40204124011`, `40205135030`, and `40206626414`; API 30 macOS retry pending |
-| TC-CALC-004 | Contextual percentage: `200 + 10%` | `220` | Not run — emulator setup failed in runs `40204124011`, `40205135030`, and `40206626414`; API 30 macOS retry pending |
-| TC-CALC-005 | Scientific square root: `√(9)` | `3` | Not run — emulator setup failed in runs `40204124011`, `40205135030`, and `40206626414`; API 30 macOS retry pending |
-| TC-CALC-006 | Degree-mode sine: `sin(30)` | `0.5` | Not run — emulator setup failed in runs `40204124011`, `40205135030`, and `40206626414`; API 30 macOS retry pending |
-| TC-CALC-007 | History persists after process restart and restores an entry | `1+1` and `2` visible/selectable | Not run — emulator setup failed in runs `40204124011`, `40205135030`, and `40206626414`; API 30 macOS retry pending |
-| TC-CALC-008 | Chaining: `1 ÷ 3 = × 3 =` | `1` | Not run — emulator setup failed in runs `40204124011`, `40205135030`, and `40206626414`; API 30 macOS retry pending; linked to CALC-001 |
-| TC-CALC-009 | Scientific result continuation: `10^15 = + 1 =` | Continues without parser/validator error | Not run — emulator setup failed in runs `40204124011`, `40205135030`, and `40206626414`; API 30 macOS retry pending; linked to CALC-002 |
-| TC-CALC-010 | Live official Google Calculator comparison | Common precedence case run in `com.google.android.calculator` | Not run — emulator setup failed in runs `40204124011`, `40205135030`, and `40206626414`; API 30 macOS retry pending; may be blocked |
+| TC-CALC-001 | Operator precedence: `2 + 3 × 4` | `14` | Not run — pre-test workflow setup failed in the prior runs; source-checkout/API 30 macOS retry pending (see QA-003) |
+| TC-CALC-002 | Parentheses: `(2 + 3) × 4` | `20` | Not run — pre-test workflow setup failed in the prior runs; source-checkout/API 30 macOS retry pending (see QA-003) |
+| TC-CALC-003 | Decimal addition: `0.1 + 0.2` | `0.3` | Not run — pre-test workflow setup failed in the prior runs; source-checkout/API 30 macOS retry pending (see QA-003) |
+| TC-CALC-004 | Contextual percentage: `200 + 10%` | `220` | Not run — pre-test workflow setup failed in the prior runs; source-checkout/API 30 macOS retry pending (see QA-003) |
+| TC-CALC-005 | Scientific square root: `√(9)` | `3` | Not run — pre-test workflow setup failed in the prior runs; source-checkout/API 30 macOS retry pending (see QA-003) |
+| TC-CALC-006 | Degree-mode sine: `sin(30)` | `0.5` | Not run — pre-test workflow setup failed in the prior runs; source-checkout/API 30 macOS retry pending (see QA-003) |
+| TC-CALC-007 | History persists after process restart and restores an entry | `1+1` and `2` visible/selectable | Not run — pre-test workflow setup failed in the prior runs; source-checkout/API 30 macOS retry pending (see QA-003) |
+| TC-CALC-008 | Chaining: `1 ÷ 3 = × 3 =` | `1` | Not run — pre-test workflow setup failed in the prior runs; source-checkout/API 30 macOS retry pending (see QA-003); linked to CALC-001 |
+| TC-CALC-009 | Scientific result continuation: `10^15 = + 1 =` | Continues without parser/validator error | Not run — pre-test workflow setup failed in the prior runs; source-checkout/API 30 macOS retry pending (see QA-003); linked to CALC-002 |
+| TC-CALC-010 | Live official Google Calculator comparison | Common precedence case run in `com.google.android.calculator` | Not run — pre-test workflow setup failed in the prior runs; source-checkout/API 30 macOS retry pending (see QA-003); may be blocked |
 
 The workflow also saves screenshots and UI hierarchy XML under the artifact's `evidence/` directory, including on failed cases. The workflow fails on MySpace functional `FAIL`/`ERROR` results; blocked Google-reference availability is separately reported.
 
 ## 6. CI evidence and limitations
 
 - **Existing upstream result:** [TicTic Android CI run 40201068395](https://github.com/tarungittarun/TicTic/actions/runs/40201068395), commit `76f03909ea8bd11c9c4fed83c8e3d7279e3fc9c9`, concluded success. Its source-contract and Android build/unit-test steps are evidence of source-level CI health only, not APK runtime behavior.
-- **New workflow:** `.github/workflows/calculator-apk-e2e.yml` downloads the exact Git blob and verifies SHA-256. Three emulator attempts failed before app installation; the current configuration retries on Apple Silicon macOS with an API 30 Google Play image. The UI harness has not yet run.
+- **New workflow:** `.github/workflows/calculator-apk-e2e.yml` checks out TicTic at pinned commit `76f03909ea8bd11c9c4fed83c8e3d7279e3fc9c9` with a sparse checkout for the exact APK, verifies SHA-256 and ZIP integrity, then runs the calculator-only harness on an API 30 Google Play emulator. Three emulator attempts and one APK retrieval attempt failed before app installation. The current configuration retries on Apple Silicon macOS; the UI harness has not yet run.
 - **Local execution limitation:** The review sandbox did not have Android SDK/ADB/emulator tooling or KVM, so no local device E2E was possible. GitHub Actions is the execution target.
 - **Google comparator limitation:** A Google Play emulator image is requested, but it is not assumed to contain Google Calculator. The workflow checks package availability and will not silently substitute a non-Google app.
 - **No false pass claim:** This report separates static analysis, expected-value assertions, actual emulator results, and live Google comparison. Only the latter two can establish runtime observations.
