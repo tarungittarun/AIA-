@@ -62,23 +62,16 @@ jobs:
           echo "APK_PATH=$apk" >> "$GITHUB_ENV"
           echo "Verified APK SHA-256: ff52331518b71a153abf6ef76c964538044121230e1ae87d2855e535a94e0a23"
 
-      - name: Run calculator UI tests in an isolated emulator
-        uses: reactivecircus/android-emulator-runner@v2
+      - name: Set up Android SDK tools
+        uses: android-actions/setup-android@v3
         with:
-          api-level: 30
-          target: google_apis
-          arch: x86_64
-          profile: pixel_2
-          force-avd-creation: true
-          emulator-boot-timeout: 1200
-          disable-animations: true
-          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect
-          script: |
-            mkdir -p reports/e2e
-            python3 -u qa/calculator_e2e.py \
-              --apk "$APK_PATH" \
-              --package app.space.one \
-              --report-dir reports/e2e
+          packages: platform-tools
+          accept-android-sdk-licenses: true
+          log-accepted-android-sdk-licenses: false
+
+      - name: Boot Android 11 emulator and run calculator UI tests
+        shell: bash
+        run: bash qa/run_emulator_e2e.sh
 
       - name: Upload test report, screenshots, and UI dumps
         if: always()
