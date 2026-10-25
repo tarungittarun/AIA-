@@ -2,14 +2,14 @@
 
 **Report ID:** `CALC-QA-2026-10-25-01`
 **Prepared:** 25 October 2026 (Asia/Kolkata)
-**Status:** Preliminary — emulator E2E workflow configured; first run pending
+**Status:** Preliminary — first Actions attempt failed during emulator setup; UI tests not run; longer boot retry queued
 **Scope:** Calculator feature only. Other MySpace/TicTic features are explicitly out of scope.
 
 ## 1. Executive summary
 
-The supplied APK was identified and pinned by immutable Git blob and SHA-256. The linked TicTic source branch's latest Android CI run passed its source-contract, Gradle unit-test/build, and lint jobs. That run did **not** launch an emulator or exercise calculator UI flows.
+The supplied APK was identified and pinned by immutable Git blob and SHA-256. The linked TicTic source branch's latest Android CI run passed its source-contract, Gradle unit-test/build, and lint jobs. That run did **not** launch an emulator or exercise calculator UI flows. The first Actions attempt in this QA branch (run [40204124011](https://github.com/tarungittarun/AIA-/actions/runs/40204124011)) failed before test execution with `Timeout waiting for emulator to boot`; the test script never started and no UI result is claimed. The emulator boot wait has been extended for a retry.
 
-Static review of the calculator's result-to-expression path identified two reproducible-looking calculation risks: a rounded display result is reused during chained arithmetic, and a result rendered in scientific notation is not supported as a numeric literal by the input parser. These are **source-confirmed risks, not yet device-confirmed observations**. The newly added GitHub Actions workflow installs the exact APK into a disposable Android emulator and exercises the calculator UI; the per-run report and evidence are uploaded as an Actions artifact.
+Static review of the calculator's result-to-expression path identified two reproducible-looking calculation risks: a rounded display result is reused during chained arithmetic, and a result rendered in scientific notation is not supported as a numeric literal by the input parser. These are **source-confirmed risks, not yet device-confirmed observations**. The GitHub Actions workflow is configured to install the exact APK into a disposable Android emulator and exercise the calculator UI; the first attempt ended during emulator setup, so the per-run UI report and evidence have not yet been generated.
 
 A live side-by-side comparison with the official Google Calculator is **not yet established**. The public emulator image may not include `com.google.android.calculator`; the workflow checks for that exact package and records `BLOCKED` if it is absent. No third-party Google Calculator APK mirror is used. Expected arithmetic values are useful functional oracles, but they are not represented here as a live Google-app comparison.
 
@@ -104,7 +104,7 @@ The linked repository's `APPS.md` says the calculator was compared feature-by-fe
 | Field | Assessment |
 |---|---|
 | **Type** | Test environment blocker |
-| **Status** | Open / pending emulator run |
+| **Status** | Open / not assessed — emulator did not boot |
 | **Product defect?** | No — this records a limitation of the comparison environment, not a MySpace app bug |
 
 The official package `com.google.android.calculator` was not available in the local sandbox, and no official Google Calculator APK was obtained. The emulator workflow checks the exact package at runtime. If it is absent, it records the live comparison as `BLOCKED` while still running deterministic arithmetic/UI checks against expected values. The old AOSP calculator is not treated as equivalent to the current official Google Calculator.
@@ -118,27 +118,44 @@ The official package `com.google.android.calculator` was not available in the lo
 | Field | Assessment |
 |---|---|
 | **Type** | Test coverage gap |
-| **Status** | Mitigation added in this QA branch |
+| **Status** | Mitigation added; first emulator boot timed out before tests; retry pending |
 | **Product defect?** | No — infrastructure finding |
 
-The linked branch's latest CI run passed its build/test checks but does not install the release APK in an emulator or exercise the suite navigation and calculator UI. This branch adds a separate Android Emulator Actions workflow. It pins the supplied APK by blob and SHA-256, uses an API 34 emulator, tests calculator flows only, and uploads a Markdown/JSON run report plus screenshots/UI dumps for 30 days.
+The linked branch's latest CI run passed its build/test checks but does not install the release APK in an emulator or exercise the suite navigation and calculator UI. This branch adds a separate Android Emulator Actions workflow. It pins the supplied APK by blob and SHA-256, requests an API 34 Google Play emulator, tests calculator flows only, and uploads a Markdown/JSON run report plus screenshots/UI dumps for 30 days. The first attempt timed out waiting for the emulator to boot, before the Python test harness ran; the job reported that no report files existed. The boot wait is now 1,200 seconds and the workflow will retry.
+
+### QA-003 — Android emulator boot timeout in GitHub Actions
+
+| Field | Assessment |
+|---|---|
+| **Type** | Test infrastructure failure |
+| **Status** | Open — timeout increased; retry pending |
+| **Run / job** | [40204124011](https://github.com/tarungittarun/AIA-/actions/runs/40204124011), job `121201302193` |
+| **Product defect?** | No — the test harness never reached app installation or UI execution |
+
+**Observed:** The `reactivecircus/android-emulator-runner` step ended with `Timeout waiting for emulator to boot.` APK download and SHA-256 verification succeeded beforehand. The test script and Google Calculator package scan did not run; the upload step therefore found no report files.
+
+**Action:** Increased the emulator boot timeout from the action's 600-second default to 1,200 seconds and removed the redundant `-wipe-data` option because the workflow creates a fresh AVD for each run. If the retry also fails, switch to the lighter `google_apis` system image to obtain functional APK E2E coverage, and keep official Google Calculator comparison explicitly blocked unless `com.google.android.calculator` is actually available.
+
+**Comment log**
+
+- **2026-10-25 — QA:** GitHub check annotation confirms the boot timeout. No app-level pass/fail should be inferred from this run.
 
 ## 5. Functional test matrix
 
-The harness is `qa/calculator_e2e.py`. Each device test is written to the workflow's generated run report and its status is **pending until the first Actions run completes**. A Google reference `BLOCKED` result is not counted as a MySpace functional pass.
+The harness is `qa/calculator_e2e.py`. Each device test is written to the workflow's generated run report. No application test ran in the first Actions attempt: emulator boot timed out in run `40204124011`; the retry is pending. A Google reference `BLOCKED` result is not counted as a MySpace functional pass.
 
 | Test ID | Scenario | Expected result | Current status |
 |---|---|---|---|
-| TC-CALC-001 | Operator precedence: `2 + 3 × 4` | `14` | Pending first emulator run |
-| TC-CALC-002 | Parentheses: `(2 + 3) × 4` | `20` | Pending first emulator run |
-| TC-CALC-003 | Decimal addition: `0.1 + 0.2` | `0.3` | Pending first emulator run |
-| TC-CALC-004 | Contextual percentage: `200 + 10%` | `220` | Pending first emulator run |
-| TC-CALC-005 | Scientific square root: `√(9)` | `3` | Pending first emulator run |
-| TC-CALC-006 | Degree-mode sine: `sin(30)` | `0.5` | Pending first emulator run |
-| TC-CALC-007 | History persists after process restart and restores an entry | `1+1` and `2` visible/selectable | Pending first emulator run |
-| TC-CALC-008 | Chaining: `1 ÷ 3 = × 3 =` | `1` | Pending first emulator run; linked to CALC-001 |
-| TC-CALC-009 | Scientific result continuation: `10^15 = + 1 =` | Continues without parser/validator error | Pending first emulator run; linked to CALC-002 |
-| TC-CALC-010 | Live official Google Calculator comparison | Common precedence case run in `com.google.android.calculator` | Pending package detection; may be blocked |
+| TC-CALC-001 | Operator precedence: `2 + 3 × 4` | `14` | Not run — emulator boot timeout in run `40204124011`; retry pending |
+| TC-CALC-002 | Parentheses: `(2 + 3) × 4` | `20` | Not run — emulator boot timeout in run `40204124011`; retry pending |
+| TC-CALC-003 | Decimal addition: `0.1 + 0.2` | `0.3` | Not run — emulator boot timeout in run `40204124011`; retry pending |
+| TC-CALC-004 | Contextual percentage: `200 + 10%` | `220` | Not run — emulator boot timeout in run `40204124011`; retry pending |
+| TC-CALC-005 | Scientific square root: `√(9)` | `3` | Not run — emulator boot timeout in run `40204124011`; retry pending |
+| TC-CALC-006 | Degree-mode sine: `sin(30)` | `0.5` | Not run — emulator boot timeout in run `40204124011`; retry pending |
+| TC-CALC-007 | History persists after process restart and restores an entry | `1+1` and `2` visible/selectable | Not run — emulator boot timeout in run `40204124011`; retry pending |
+| TC-CALC-008 | Chaining: `1 ÷ 3 = × 3 =` | `1` | Not run — emulator boot timeout in run `40204124011`; retry pending; linked to CALC-001 |
+| TC-CALC-009 | Scientific result continuation: `10^15 = + 1 =` | Continues without parser/validator error | Not run — emulator boot timeout in run `40204124011`; retry pending; linked to CALC-002 |
+| TC-CALC-010 | Live official Google Calculator comparison | Common precedence case run in `com.google.android.calculator` | Not run — emulator boot timeout in run `40204124011`; retry pending; may be blocked |
 
 The workflow also saves screenshots and UI hierarchy XML under the artifact's `evidence/` directory, including on failed cases. The workflow fails on MySpace functional `FAIL`/`ERROR` results; blocked Google-reference availability is separately reported.
 
