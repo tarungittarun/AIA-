@@ -96,8 +96,8 @@ fi
 
 emulator_args=(-avd "$AVD_NAME" -port 5554 -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect)
 if [[ "$(uname -s)" == "Darwin" ]]; then
-  emulator_args+=(-accel auto)
-  acceleration="Apple Hypervisor requested with automatic software fallback"
+  emulator_args+=(-accel off)
+  acceleration="software acceleration forced; hosted runner does not support HVF"
 elif [[ -r /dev/kvm && -w /dev/kvm ]]; then
   emulator_args+=(-accel on)
   acceleration="KVM hardware acceleration enabled"
