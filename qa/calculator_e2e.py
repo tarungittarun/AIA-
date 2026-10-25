@@ -78,7 +78,20 @@ class AndroidUi:
         return (int(match.group(1)), int(match.group(2))) if match else (1080, 1920)
 
     def launch(self, package: str) -> None:
-        self.adb("shell", "monkey", "-p", package, "-c", "android.intent.category.LAUNCHER", "1")
+        try:
+            self.adb(
+                "shell", "monkey", "-p", package, "-c", "android.intent.category.LAUNCHER", "1",
+                timeout=180,
+            )
+        except subprocess.TimeoutExpired:
+            # On software-accelerated emulators Monkey can outlive its adb shell
+            # timeout even though the Activity launch has already been delivered.
+            # Continue to inspect the UI; navigation assertions decide if launch worked.
+            print(
+                f"::warning title=Android app launch::Monkey launch timed out for {package}; "
+                "continuing to inspect the device UI.",
+                flush=True,
+            )
         time.sleep(2.0)
         self._last_tree = None
 
