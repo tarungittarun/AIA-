@@ -18,8 +18,8 @@ concurrency:
 
 jobs:
   android-emulator-e2e:
-    name: MySpace Calculator on Android 14 emulator
-    runs-on: ubuntu-24.04
+    name: MySpace Calculator on Android 14 emulator (Apple Silicon)
+    runs-on: macos-15
     timeout-minutes: 45
     steps:
       - name: Check out the QA harness
@@ -40,8 +40,20 @@ jobs:
             --header 'X-GitHub-Api-Version: 2022-11-28' \
             'https://api.github.com/repos/tarungittarun/TicTic/git/blobs/944ac047b622521a6d751db673bcd8cf74c6965f' \
             --output "$apk"
-          echo 'ff52331518b71a153abf6ef76c964538044121230e1ae87d2855e535a94e0a23  '"$apk" | sha256sum --check
-          unzip -t "$apk" >/dev/null
+          python3 - "$apk" <<'PY'
+          import hashlib, sys, zipfile
+          apk = sys.argv[1]
+          expected = 'ff52331518b71a153abf6ef76c964538044121230e1ae87d2855e535a94e0a23'
+          with open(apk, 'rb') as stream:
+              actual = hashlib.file_digest(stream, 'sha256').hexdigest()
+          if actual != expected:
+              raise SystemExit(f'SHA-256 mismatch: expected {expected}, got {actual}')
+          with zipfile.ZipFile(apk) as archive:
+              bad_member = archive.testzip()
+          if bad_member:
+              raise SystemExit(f'APK ZIP integrity error at {bad_member}')
+          print(f'Verified APK SHA-256: {actual}')
+          PY
           echo "APK_PATH=$apk" >> "$GITHUB_ENV"
           echo "Verified APK SHA-256: ff52331518b71a153abf6ef76c964538044121230e1ae87d2855e535a94e0a23"
 
@@ -50,7 +62,7 @@ jobs:
         with:
           api-level: 34
           target: google_apis_playstore
-          arch: x86_64
+          arch: arm64-v8a
           profile: pixel_2
           force-avd-creation: true
           emulator-boot-timeout: 1200
