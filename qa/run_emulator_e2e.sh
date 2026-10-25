@@ -17,13 +17,15 @@ fi
 
 AVD_NAME="calculator-qa"
 SERIAL="emulator-5554"
+ANDROID_API="${ANDROID_API:-34}"
 HOST_ARCH="$(uname -m)"
 if [[ "$HOST_ARCH" == "arm64" || "$HOST_ARCH" == "aarch64" ]]; then
   EMULATOR_ABI="arm64-v8a"
 else
   EMULATOR_ABI="x86_64"
 fi
-IMAGE="system-images;android-30;google_apis;$EMULATOR_ABI"
+IMAGE="system-images;android-${ANDROID_API};google_apis;$EMULATOR_ABI"
+PLATFORM_PACKAGE="platforms;android-${ANDROID_API}"
 EMULATOR_LOG="$REPORT_DIR/emulator.log"
 BOOT_LOG="$REPORT_DIR/boot-status.log"
 APK_PATH="${APK_PATH:?APK_PATH was not exported by the verification step}"
@@ -77,10 +79,10 @@ fail_with_diagnostics() {
 }
 
 # The setup action accepts SDK licenses and adds sdkmanager/avdmanager to PATH.
-# Install only the API 30 image and emulator binary needed for this APK's minSdk 26.
+# Install the selected Google APIs image and emulator binary; the APK minSdk is 26.
 {
-  echo "Installing emulator and $IMAGE"
-  sdkmanager --install emulator platform-tools platforms\;android-30 "$IMAGE"
+  echo "Installing emulator, $PLATFORM_PACKAGE, and $IMAGE"
+  sdkmanager --install emulator platform-tools "$PLATFORM_PACKAGE" "$IMAGE"
 } 2>&1 | tee "$REPORT_DIR/sdkmanager.log"
 
 export ANDROID_AVD_HOME="${ANDROID_AVD_HOME:-$HOME/.android/avd}"
@@ -150,7 +152,7 @@ for attempt in $(seq 1 300); do
 done
 
 if [[ "$booted" != true ]]; then
-  fail_with_diagnostics "Android API 30 did not finish booting within 20 minutes"
+  fail_with_diagnostics "Android API $ANDROID_API did not finish booting within 20 minutes"
 fi
 
 # sys.boot_completed may be set before PackageManager publishes its binder service.
@@ -180,7 +182,7 @@ adb -s "$SERIAL" shell input keyevent 82 >> "$BOOT_LOG" 2>&1 || echo "Screen-unl
 adb -s "$SERIAL" shell settings put global window_animation_scale 0 >> "$BOOT_LOG" 2>&1 || true
 adb -s "$SERIAL" shell settings put global transition_animation_scale 0 >> "$BOOT_LOG" 2>&1 || true
 adb -s "$SERIAL" shell settings put global animator_duration_scale 0 >> "$BOOT_LOG" 2>&1 || true
-printf '::notice title=Android emulator ready::API 30 x86_64 boot completed; running calculator-only UI tests.\n'
+printf '::notice title=Android emulator ready::API %s %s boot completed; running calculator-only UI tests.\n' "$ANDROID_API" "$EMULATOR_ABI"
 
 python3 -u "$ROOT/qa/calculator_e2e.py" \
   --apk "$APK_PATH" \
