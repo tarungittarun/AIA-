@@ -1,0 +1,6 @@
+# Runtime-generated Android E2E reports, screenshots, and UI hierarchy dumps
+/reports/e2e/
+
+# Python bytecode from the lightweight QA harness
+__pycache__/
+*.py[cod]
