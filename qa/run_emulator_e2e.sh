@@ -17,10 +17,33 @@ fi
 
 AVD_NAME="calculator-qa"
 SERIAL="emulator-5554"
-IMAGE="system-images;android-30;google_apis;x86_64"
+HOST_ARCH="$(uname -m)"
+if [[ "$HOST_ARCH" == "arm64" || "$HOST_ARCH" == "aarch64" ]]; then
+  EMULATOR_ABI="arm64-v8a"
+else
+  EMULATOR_ABI="x86_64"
+fi
+IMAGE="system-images;android-30;google_apis;$EMULATOR_ABI"
 EMULATOR_LOG="$REPORT_DIR/emulator.log"
 BOOT_LOG="$REPORT_DIR/boot-status.log"
 APK_PATH="${APK_PATH:?APK_PATH was not exported by the verification step}"
+
+# Use Python's subprocess timeout so the same bootstrap works on Linux and
+# macOS (the latter does not ship GNU `timeout`). Output remains attached to the
+# caller's streams, including any surrounding redirections.
+run_timeout() {
+  local seconds="$1"
+  shift
+  python3 - "$seconds" "$@" <<'PYTHON_TIMEOUT'
+import subprocess
+import sys
+try:
+    result = subprocess.run(sys.argv[2:], timeout=float(sys.argv[1]), check=False)
+except subprocess.TimeoutExpired:
+    raise SystemExit(124)
+raise SystemExit(result.returncode)
+PYTHON_TIMEOUT
+}
 
 fail_with_diagnostics() {
   local reason="$1"
@@ -28,15 +51,19 @@ fail_with_diagnostics() {
     echo "Failure: $reason"
     echo "Runner: $(uname -a)"
     echo "ANDROID_HOME=$SDK_ROOT"
-    echo "KVM: $(if [[ -r /dev/kvm && -w /dev/kvm ]]; then echo available; else echo unavailable; fi)"
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+      echo "Accelerator: Apple Hypervisor Framework"
+    else
+      echo "KVM: $(if [[ -r /dev/kvm && -w /dev/kvm ]]; then echo available; else echo unavailable; fi)"
+    fi
     echo "ADB devices:"
     adb devices -l 2>&1 || true
     echo "Emulator state:"
     adb -s "$SERIAL" get-state 2>&1 || true
     echo "sys.boot_completed:"
-    timeout 15 adb -s "$SERIAL" shell getprop sys.boot_completed 2>&1 || true
+    run_timeout 15 adb -s "$SERIAL" shell getprop sys.boot_completed 2>&1 || true
     echo "init.svc.bootanim:"
-    timeout 15 adb -s "$SERIAL" shell getprop init.svc.bootanim 2>&1 || true
+    run_timeout 15 adb -s "$SERIAL" shell getprop init.svc.bootanim 2>&1 || true
     echo "Recent emulator output:"
     tail -n 60 "$EMULATOR_LOG" 2>/dev/null || true
     echo "Recent PackageManager probe:"
@@ -68,7 +95,10 @@ if [[ ! -x "$EMULATOR_BIN" ]]; then
 fi
 
 emulator_args=(-avd "$AVD_NAME" -port 5554 -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect)
-if [[ -r /dev/kvm && -w /dev/kvm ]]; then
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  emulator_args+=(-accel on)
+  acceleration="Apple Hypervisor Framework acceleration enabled"
+elif [[ -r /dev/kvm && -w /dev/kvm ]]; then
   emulator_args+=(-accel on)
   acceleration="KVM hardware acceleration enabled"
 else
@@ -97,7 +127,7 @@ cleanup() {
 trap cleanup EXIT
 
 adb start-server >> "$BOOT_LOG" 2>&1 || true
-if ! timeout 180 adb -s "$SERIAL" wait-for-device >> "$BOOT_LOG" 2>&1; then
+if ! run_timeout 180 adb -s "$SERIAL" wait-for-device >> "$BOOT_LOG" 2>&1; then
   fail_with_diagnostics "ADB did not see $SERIAL within 180 seconds"
 fi
 
@@ -106,8 +136,8 @@ for attempt in $(seq 1 300); do
   if ! kill -0 "$EMULATOR_PID" 2>/dev/null; then
     fail_with_diagnostics "Emulator process exited before Android boot completed"
   fi
-  state="$(timeout 15 adb -s "$SERIAL" get-state 2>/dev/null || true)"
-  boot="$(timeout 15 adb -s "$SERIAL" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' || true)"
+  state="$(run_timeout 15 adb -s "$SERIAL" get-state 2>/dev/null || true)"
+  boot="$(run_timeout 15 adb -s "$SERIAL" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' || true)"
   printf '%s attempt=%s state=%s sys.boot_completed=%s\n' "$(date -u +%FT%TZ)" "$attempt" "$state" "$boot" >> "$BOOT_LOG"
   if [[ "$state" == "device" && "$boot" == "1" ]]; then
     booted=true
@@ -129,7 +159,7 @@ fi
 export ANDROID_SERIAL="$SERIAL"
 package_manager_ready=false
 for attempt in $(seq 1 90); do
-  if timeout 8 adb -s "$SERIAL" shell cmd package list packages \
+  if run_timeout 8 adb -s "$SERIAL" shell cmd package list packages \
       > "$REPORT_DIR/package-manager-probe.log" 2>&1 \
       && ! grep -qi "can't find service: package" "$REPORT_DIR/package-manager-probe.log"; then
     package_manager_ready=true
