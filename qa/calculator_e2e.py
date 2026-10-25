@@ -567,7 +567,7 @@ class CalculatorQa:
         if digest != EXPECTED_APK_SHA256:
             raise QaError(f"APK SHA-256 mismatch: expected {EXPECTED_APK_SHA256}, got {digest}")
 
-        self.device.adb("install", "-r", str(self.apk), timeout=180)
+        self.device.adb("install", "--no-streaming", "-r", str(self.apk), timeout=600)
         self.device.adb("shell", "pm", "clear", self.package, timeout=30, check=False)
         self.device.navigate_to_calculator(self.package)
         self.device.screenshot("evidence/initial-calculator-screen.png")
