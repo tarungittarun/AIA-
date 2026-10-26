@@ -376,7 +376,10 @@ class AndroidUi:
         last_labels: list[str] = []
         while time.monotonic() < deadline:
             candidates = self._matching_nodes(label, partial)
-            if self._ocr_mode and self._grid_identity(label):
+            if self._grid_identity(label):
+                # Key labels can also appear in the editable display (notably "0"
+                # immediately after AC). Restrict keypad taps to the lower control
+                # region for both hierarchy and OCR trees.
                 candidates = [
                     node for node in candidates
                     if (point := bounds_center(node.attrib.get("bounds", "")))
@@ -391,14 +394,14 @@ class AndroidUi:
                     point = bounds_center(node.attrib.get("bounds", ""))
                     if point:
                         self.adb("shell", "input", "tap", str(point[0]), str(point[1]))
-                        time.sleep(0.18)
+                        time.sleep(0.35)
                         self._last_tree = None
                         return
             if self._ocr_mode:
                 point = self._ocr_grid_point(label)
                 if point:
                     self.adb("shell", "input", "tap", str(point[0]), str(point[1]))
-                    time.sleep(0.18)
+                    time.sleep(0.35)
                     self._last_tree = None
                     return
             self._last_tree = None
@@ -578,6 +581,20 @@ class AndroidUi:
                 return True
         return False
 
+    @staticmethod
+    def normalize_expression(text: str) -> str:
+        return re.sub(r"\s+", "", clean(text)).replace("−", "-")
+
+    def expression_visible(self, expected: str) -> bool:
+        target = self.normalize_expression(expected)
+        return any(self.normalize_expression(text) == target for text in self.display_texts())
+
+    def close_history_if_open(self) -> None:
+        labels = self.labels()
+        if "Close history" in labels:
+            self.tap_label("Close history", timeout=2.0)
+            time.sleep(0.35)
+
     def details(self) -> dict[str, Any]:
         return {
             "display_text": self.display_texts(),
@@ -623,6 +640,13 @@ class CalculatorQa:
         }
         self.results.append(row)
         print(f"[{status}] {test_id} — {title}: {comment or actual or expected}", flush=True)
+        # Keep each case outcome visible in GitHub's check annotations, even if
+        # downloading the large evidence artifact later fails.
+        notice = clean(
+            f"{status}; expected={expected}; actual={actual}; comment={comment}"
+        )[:1200]
+        notice = notice.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+        print(f"::notice title={test_id}::{notice}", flush=True)
 
     def run_case(
         self,
@@ -636,10 +660,27 @@ class CalculatorQa:
     ) -> None:
         screenshot = ""
         try:
+            self.device.close_history_if_open()
             if scientific:
                 self.device.ensure_scientific_panel()
             self.device.tap_label("AC")
             self.device.press_sequence(keys)
+            expected_expression = "".join(keys)
+            typed = self.device.display_texts()
+            if not self.device.expression_visible(expected_expression):
+                screenshot = self.device.screenshot(f"evidence/{test_id.lower()}-input-mismatch.png")
+                self.add_result(
+                    test_id, title, "ERROR",
+                    f"Input expression {expected_expression!r}, then result {expected!r}",
+                    " | ".join(typed),
+                    comment=(
+                        "Input precondition failed: the visible expression did not match the "
+                        "key sequence, so the calculation was not evaluated. This is an input/UI "
+                        "automation finding, not a confirmed arithmetic defect."
+                    ),
+                    evidence=screenshot,
+                )
+                return
             self.device.key("=")
             time.sleep(0.4)
             actual = self.device.display_texts()
@@ -672,8 +713,13 @@ class CalculatorQa:
         test_id = "TC-CALC-008"
         title = "Chained calculations retain unrounded precision"
         try:
+            self.device.close_history_if_open()
             self.device.tap_label("AC")
             self.device.press_sequence(["1", "÷", "3"])
+            if not self.device.expression_visible("1÷3"):
+                raise QaError(
+                    f"Input precondition failed for 1÷3; display={self.device.display_texts()!r}"
+                )
             self.device.key("=")
             time.sleep(0.3)
             first = self.device.display_texts()
@@ -711,9 +757,14 @@ class CalculatorQa:
         test_id = "TC-CALC-009"
         title = "Scientific-notation result can be used in the next expression"
         try:
+            self.device.close_history_if_open()
             self.device.ensure_scientific_panel()
             self.device.tap_label("AC")
             self.device.press_sequence(["1", "0", "^", "1", "5"])
+            if not self.device.expression_visible("10^15"):
+                raise QaError(
+                    f"Input precondition failed for 10^15; display={self.device.display_texts()!r}"
+                )
             self.device.key("=")
             time.sleep(0.25)
             first = self.device.display_texts()
@@ -757,13 +808,45 @@ class CalculatorQa:
         test_id = "TC-CALC-007"
         title = "History persists after activity restart and can restore an expression"
         try:
+            self.device.close_history_if_open()
             self.device.tap_label("AC")
             self.device.press_sequence(["1", "+", "1"])
+            typed = self.device.display_texts()
+            if not self.device.expression_visible("1+1"):
+                screenshot = self.device.screenshot("evidence/tc-calc-007-input-mismatch.png")
+                self.add_result(
+                    test_id, title, "ERROR", "Enter 1+1 = 2, then persist and restore it",
+                    " | ".join(typed),
+                    comment=(
+                        "Input precondition failed before equals: visible expression was not 1+1, "
+                        "so history durability was not evaluated. This is not a confirmed product defect."
+                    ),
+                    evidence=screenshot,
+                )
+                return
             self.device.key("=")
-            time.sleep(0.25)
+            # SharedPreferences.apply() updates memory immediately and flushes to
+            # disk asynchronously. Allow the slow, software-rendered ATD enough
+            # time to finish that write before deliberately killing the process.
+            time.sleep(1.5)
+            before_restart = self.device.display_texts()
+            if not self.device.result_visible("2"):
+                screenshot = self.device.screenshot("evidence/tc-calc-007-before-restart.png")
+                self.add_result(
+                    test_id, title, "ERROR", "1+1 evaluates to 2 before process restart",
+                    " | ".join(before_restart),
+                    comment=(
+                        "The expression did not visibly produce 2 before force-stop; persistence "
+                        "was not evaluated. Check the expression/input path before diagnosing history."
+                    ),
+                    evidence=screenshot,
+                )
+                return
             self.device.force_stop(self.package)
             self.device.navigate_to_calculator(self.package)
+            time.sleep(0.75)
             self.device.tap_label("History")
+            time.sleep(0.45)
             history_texts = self.device.labels()
             screenshot = self.device.screenshot("evidence/tc-calc-007-history.png")
             found = any("1+1" in text.replace(" ", "") for text in history_texts) and any(
@@ -771,21 +854,32 @@ class CalculatorQa:
             )
             if found:
                 # Tap the stored expression to verify the history item restores a
-                # usable calculation, not just a static text row.
+                # usable expression, not just a static text row.
                 self.device.tap_label("1+1")
-                time.sleep(0.25)
+                time.sleep(0.35)
                 restored = self.device.display_texts()
-                self.add_result(
-                    test_id, title, "PASS", "History shows 1+1 = 2 and restores the expression",
-                    "history=" + " | ".join(history_texts) + "; restored=" + " | ".join(restored),
-                    comment="The history entry survived process restart and was selectable.",
-                    evidence=screenshot,
-                )
+                if self.device.expression_visible("1+1"):
+                    self.add_result(
+                        test_id, title, "PASS", "History shows 1+1 = 2 and restores the expression",
+                        "history=" + " | ".join(history_texts) + "; restored=" + " | ".join(restored),
+                        comment="The history entry survived process restart and restored its expression.",
+                        evidence=screenshot,
+                    )
+                else:
+                    self.add_result(
+                        test_id, title, "FAIL", "History restores the 1+1 expression",
+                        "history=" + " | ".join(history_texts) + "; restored=" + " | ".join(restored),
+                        comment="The persisted 1+1 = 2 entry was visible but did not restore its expression.",
+                        evidence=screenshot,
+                    )
             else:
                 self.add_result(
                     test_id, title, "FAIL", "History shows 1+1 = 2 after restart",
                     " | ".join(history_texts),
-                    comment="The expected persisted entry was not found in the visible history panel.",
+                    comment=(
+                        "The expected entry was not found after restart. Before restart the display was "
+                        f"{before_restart!r}; visible history labels were {history_texts!r}."
+                    ),
                     evidence=screenshot,
                 )
         except Exception as exc:
@@ -795,6 +889,17 @@ class CalculatorQa:
                 test_id, title, "ERROR", "Persisted and selectable 1+1 history entry", "",
                 comment=f"{type(exc).__name__}: {exc}; hierarchy={hierarchy}", evidence=screenshot,
             )
+        finally:
+            # A history assertion failure must not strand later calculator tests
+            # on the sheet where the keypad is hidden.
+            try:
+                self.device.close_history_if_open()
+            except Exception as close_error:
+                print(
+                    f"::warning title=History cleanup::Could not close History sheet: "
+                    f"{type(close_error).__name__}: {close_error}",
+                    flush=True,
+                )
 
     def check_google_reference(self) -> None:
         packages = self.device.adb("shell", "pm", "list", "packages", check=False)
@@ -994,6 +1099,13 @@ class CalculatorQa:
         self._write_step_summary(report)
 
         failures = [r for r in self.results if r["status"] in ("FAIL", "ERROR")]
+        summary_notice = ", ".join(
+            f"{status}={count}" for status, count in sorted(status_counts.items())
+        ) or "no test results"
+        summary_notice = clean(
+            f"{summary_notice}; Google reference={self.reference['status']}"
+        ).replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+        print(f"::notice title=Calculator QA summary::{summary_notice}", flush=True)
         for result in failures:
             message = clean(result["comment"]).replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
             print(f"::error title={result['id']}::{message}", flush=True)

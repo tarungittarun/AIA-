@@ -6,8 +6,8 @@ on:
     paths:
       - .github/workflows/calculator-apk-e2e.yml
       - qa/calculator_e2e.py
+      - qa/test_calculator_e2e.py
       - qa/run_emulator_e2e.sh
-      - reports/calculator-defect-tracker.md
   workflow_dispatch:
 
 permissions:
@@ -30,6 +30,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Unit-test the calculator QA harness
+        run: python3 -m unittest discover -s qa -p 'test_*.py'
 
       - name: Install screenshot OCR fallback
         shell: bash
