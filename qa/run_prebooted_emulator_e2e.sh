@@ -44,7 +44,9 @@ run_suite() {
   if [[ -n "$cases" ]]; then
     args+=(--cases "$cases")
   fi
-  echo "=== Running $label ($package) ==="
+  echo "=== Running $label ($package), cases: ${cases:-all} ==="
+  printf '::notice title=%s test selection::package=%s; cases=%s\n' \
+    "$label" "$package" "${cases:-all}"
   "${args[@]}"
 }
 

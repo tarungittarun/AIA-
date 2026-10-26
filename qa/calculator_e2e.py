@@ -1004,14 +1004,18 @@ class CalculatorQa:
             self.device.key("=")
             time.sleep(0.35)
             actual = self.device.display_texts()
-            if any(self.device.normalize_expression(value).endswith("+1") for value in actual):
+            normalized = [v.replace("E", "e").replace("−", "-") for v in actual]
+            visible_error = any("error" in v.casefold() for v in normalized)
+            if (
+                any(self.device.normalize_expression(value).endswith("+1") for value in actual)
+                and not visible_error
+            ):
                 raise QaError(f"Equals did not commit the +1 continuation; display={actual!r}")
             screenshot = self.device.screenshot("evidence/tc-calc-009-target.png")
             # If the exponent literal was accepted, the display should no longer be
             # exactly the preceding 1e+15 result; an error is also a failed chain.
-            normalized = [v.replace("E", "e").replace("−", "-") for v in actual]
             unchanged = any(v.strip() in ("1e+15", "1E+15") for v in normalized)
-            error = any("error" in v.casefold() for v in normalized)
+            error = visible_error
             if not unchanged and not error:
                 self.add_result(
                     test_id, title, "PASS", "10^15 + 1 is evaluated after the displayed 1e+15 result",

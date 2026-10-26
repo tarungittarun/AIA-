@@ -19,6 +19,52 @@ from calculator_e2e import (
 
 
 class AndroidUiHarnessTests(unittest.TestCase):
+    def test_scientific_notation_parser_error_is_a_product_failure(self) -> None:
+        class ErrorDevice:
+            normalize_expression = staticmethod(AndroidUi.normalize_expression)
+
+            def __init__(self) -> None:
+                self.display_calls = 0
+
+            def close_history_if_open(self) -> None:
+                pass
+
+            def ensure_scientific_panel(self) -> None:
+                pass
+
+            def tap_label(self, label: str) -> None:
+                pass
+
+            def press_sequence(self, keys: list[str]) -> None:
+                pass
+
+            def expression_visible(self, expected: str) -> bool:
+                return expected == "10^15"
+
+            def key(self, key: str) -> None:
+                pass
+
+            def display_texts(self) -> list[str]:
+                self.display_calls += 1
+                if self.display_calls == 1:
+                    return ["1e+15"]
+                return ["1e+15+1", "Error"]
+
+            def expression_suffix_visible(self, suffix: str) -> bool:
+                return suffix == "+1"
+
+            def screenshot(self, name: str) -> str:
+                return name
+
+        qa = object.__new__(CalculatorQa)
+        qa.device = ErrorDevice()
+        qa.results = []
+        with redirect_stdout(io.StringIO()), patch("calculator_e2e.time.sleep", return_value=None):
+            qa.run_exponent_chain()
+
+        self.assertEqual(qa.results[0]["status"], "FAIL")
+        self.assertIn("Error", qa.results[0]["actual"])
+
     def test_exact_myspace_and_standalone_apk_hashes_are_pinned(self) -> None:
         self.assertEqual(
             EXPECTED_APK_SHA256_BY_PACKAGE[DEFAULT_PACKAGE],
