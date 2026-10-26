@@ -1399,8 +1399,12 @@ class CalculatorQa:
         summary_notice = ", ".join(
             f"{status}={count}" for status, count in sorted(status_counts.items())
         ) or "no test results"
+        case_summary = ", ".join(
+            f"{result['id']}={result['status']}" for result in self.results
+        ) or "no case results"
         summary_notice = clean(
-            f"{summary_notice}; Google reference={self.reference['status']}"
+            f"{summary_notice}; Google reference={self.reference['status']}; "
+            f"cases: {case_summary}"
         ).replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
         print(f"::notice title=Calculator QA summary::{summary_notice}", flush=True)
         for result in failures:
