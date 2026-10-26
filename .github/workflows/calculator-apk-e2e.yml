@@ -34,11 +34,11 @@ jobs:
           - shard: 2
             title: Scientific, history, and replay
             cases: TC-CALC-005,TC-CALC-006,TC-CALC-007
-            standalone_cases: ''
+            standalone_cases: TC-CALC-004,TC-CALC-005,TC-CALC-006,TC-CALC-007
           - shard: 3
             title: Precision, limits, and reference probe
             cases: TC-CALC-008,TC-CALC-009,TC-CALC-010
-            standalone_cases: TC-CALC-001,TC-CALC-002,TC-CALC-003,TC-CALC-004,TC-CALC-005,TC-CALC-006,TC-CALC-007,TC-CALC-008,TC-CALC-009
+            standalone_cases: TC-CALC-001,TC-CALC-002,TC-CALC-003,TC-CALC-008,TC-CALC-009
 
     steps:
       - name: Check out the QA harness
