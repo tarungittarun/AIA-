@@ -7,10 +7,28 @@ import xml.etree.ElementTree as ET
 from contextlib import redirect_stdout
 from unittest.mock import patch
 
-from calculator_e2e import AndroidUi, CALCULATOR_TEST_IDS, CalculatorQa, QaError
+from calculator_e2e import (
+    AndroidUi,
+    CALCULATOR_TEST_IDS,
+    DEFAULT_PACKAGE,
+    EXPECTED_APK_SHA256_BY_PACKAGE,
+    STANDALONE_PACKAGE,
+    CalculatorQa,
+    QaError,
+)
 
 
 class AndroidUiHarnessTests(unittest.TestCase):
+    def test_exact_myspace_and_standalone_apk_hashes_are_pinned(self) -> None:
+        self.assertEqual(
+            EXPECTED_APK_SHA256_BY_PACKAGE[DEFAULT_PACKAGE],
+            "629442fc1d54508690f8c75664ea8be7611fef14a74f4edcf6f2bd1cab40068d",
+        )
+        self.assertEqual(
+            EXPECTED_APK_SHA256_BY_PACKAGE[STANDALONE_PACKAGE],
+            "342f51bdbb12539f44971fc945d427714ac8cf74bf01a7fa8fccf02660e1f3fa",
+        )
+
     def test_zero_key_tap_ignores_the_editable_display_copy(self) -> None:
         root = ET.fromstring(
             '<hierarchy>'

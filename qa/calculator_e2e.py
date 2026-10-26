@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Black-box UI QA for the calculator in the supplied MySpace APK.
+"""Black-box UI QA for the pinned MySpace and standalone MyCalc APKs.
 
 The test runs only against the Calculator feature. It prefers a compressed
 UIAutomator hierarchy and adb input; if Android kills UiAutomation, screenshots
@@ -22,8 +22,13 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any, Iterable
 
-EXPECTED_APK_SHA256 = "bcdd1de4606348d1e318452002f9f9a4c28bc464af1fabeb9941ee22891da02a"
 DEFAULT_PACKAGE = "app.space.one"
+STANDALONE_PACKAGE = "app.space.calc"
+EXPECTED_APK_SHA256 = "629442fc1d54508690f8c75664ea8be7611fef14a74f4edcf6f2bd1cab40068d"
+EXPECTED_APK_SHA256_BY_PACKAGE = {
+    DEFAULT_PACKAGE: EXPECTED_APK_SHA256,
+    STANDALONE_PACKAGE: "342f51bdbb12539f44971fc945d427714ac8cf74bf01a7fa8fccf02660e1f3fa",
+}
 GOOGLE_CALCULATOR_PACKAGE = "com.google.android.calculator"
 CALCULATOR_TEST_IDS = tuple(f"TC-CALC-{number:03d}" for number in range(1, 11))
 
@@ -1299,8 +1304,11 @@ class CalculatorQa:
         if not self.apk.is_file():
             raise QaError(f"APK not found: {self.apk}")
         digest = hashlib.sha256(self.apk.read_bytes()).hexdigest()
-        if digest != EXPECTED_APK_SHA256:
-            raise QaError(f"APK SHA-256 mismatch: expected {EXPECTED_APK_SHA256}, got {digest}")
+        expected_digest = EXPECTED_APK_SHA256_BY_PACKAGE.get(self.package)
+        if expected_digest is None:
+            raise QaError(f"No pinned APK hash is configured for package {self.package}")
+        if digest != expected_digest:
+            raise QaError(f"APK SHA-256 mismatch for {self.package}: expected {expected_digest}, got {digest}")
 
         self._install_apk()
         # Let Android finish post-install package bookkeeping before app launch; this
@@ -1356,8 +1364,9 @@ class CalculatorQa:
         for result in self.results:
             status_counts[result["status"]] = status_counts.get(result["status"], 0) + 1
         apk_size = self.apk.stat().st_size
+        app_label = "MySpace" if self.package == DEFAULT_PACKAGE else "Standalone MyCalc"
         report = {
-            "report_title": "MySpace Calculator APK E2E QA Run",
+            "report_title": f"{app_label} Calculator APK E2E QA Run",
             "created_utc": utc_now(),
             "artifact": {
                 "file": self.apk.name,
@@ -1400,7 +1409,7 @@ class CalculatorQa:
     def _write_markdown(self, path: Path, report: dict[str, Any]) -> None:
         summary = report["summary"]
         lines = [
-            "# MySpace Calculator APK — E2E Run Report",
+            f"# {report['report_title']}",
             "",
             f"- **Generated (UTC):** {report['created_utc']}",
             f"- **APK:** `{report['artifact']['file']}` ({report['artifact']['size_bytes']:,} bytes)",
@@ -1442,7 +1451,7 @@ class CalculatorQa:
             return
         summary = report["summary"]
         lines = [
-            "# MySpace Calculator APK E2E QA",
+            f"# {report['report_title']}",
             "",
             f"APK SHA-256: `{report['artifact']['sha256']}`  ",
             f"Google reference: **{report['google_reference']['status']}** — {report['google_reference']['note']}",

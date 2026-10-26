@@ -1,4 +1,4 @@
-name: Calculator APK v3.12.19 (56) E2E QA
+name: MySpace v3.12.21-58 Test Guide E2E QA
 
 on:
   push:
@@ -7,39 +7,39 @@ on:
       - .github/workflows/calculator-apk-e2e.yml
       - qa/calculator_e2e.py
       - qa/test_calculator_e2e.py
-      - qa/run_emulator_e2e.sh
+      - qa/run_prebooted_emulator_e2e.sh
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: calculator-apk-e2e-${{ github.ref }}
+  group: myspace-guide-apk-e2e-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  android-emulator-e2e:
-    name: ${{ matrix.test_case }} replica ${{ matrix.replica }} on Android 14 ATD (Google APIs)
+  android-guide-e2e:
+    name: Guide shard ${{ matrix.shard }} — ${{ matrix.title }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 75
     strategy:
       fail-fast: false
-      max-parallel: 20
+      max-parallel: 3
       matrix:
-        test_case:
-          - TC-CALC-001
-          - TC-CALC-002
-          - TC-CALC-003
-          - TC-CALC-004
-          - TC-CALC-005
-          - TC-CALC-006
-          - TC-CALC-007
-          - TC-CALC-008
-          - TC-CALC-009
-          - TC-CALC-010
-        replica:
-          - 1
-          - 2
+        include:
+          - shard: 1
+            title: Arithmetic and core input
+            cases: TC-CALC-001,TC-CALC-002,TC-CALC-003,TC-CALC-004
+            standalone_cases: ''
+          - shard: 2
+            title: Scientific, history, and replay
+            cases: TC-CALC-005,TC-CALC-006,TC-CALC-007
+            standalone_cases: ''
+          - shard: 3
+            title: Precision, limits, and reference probe
+            cases: TC-CALC-008,TC-CALC-009,TC-CALC-010
+            standalone_cases: TC-CALC-001,TC-CALC-002,TC-CALC-003,TC-CALC-004,TC-CALC-005,TC-CALC-006,TC-CALC-007,TC-CALC-008,TC-CALC-009
+
     steps:
       - name: Check out the QA harness
         uses: actions/checkout@v4
@@ -66,56 +66,83 @@ jobs:
             echo "::warning::Screenshot OCR fallback unavailable because Tesseract is missing."
           fi
 
-      - name: Check out exact source commit containing APK v3.12.19-56
+      - name: Check out pinned source, guide, and both APKs
         uses: actions/checkout@v4
         with:
           repository: tarungittarun/TicTic
-          ref: c083d6ff68572e6d3b9be854d5eb0d0c59e91e23
+          ref: e0bc02e191e6f793a40f23d0a07705a75396468e
           path: linked-source
-          sparse-checkout: artifacts/MySpace-v3.12.19-56-lite-dist.apk
+          sparse-checkout: |
+            TEST-GUIDE.md
+            artifacts/MySpace-v3.12.21-58-lite-dist.apk
+            artifacts/MyCalc-v1.0.19-20.apk
           sparse-checkout-cone-mode: false
           persist-credentials: false
 
-      - name: Verify exact supplied APK v3.12.19-56
+      - name: Verify pinned guide and APK identities
         shell: bash
         run: |
           set -euo pipefail
-          apk="$GITHUB_WORKSPACE/linked-source/artifacts/MySpace-v3.12.19-56-lite-dist.apk"
-          python3 - "$apk" <<'PY'
-          import hashlib, sys, zipfile
-          apk = sys.argv[1]
-          expected = 'bcdd1de4606348d1e318452002f9f9a4c28bc464af1fabeb9941ee22891da02a'
-          with open(apk, 'rb') as stream:
-              actual = hashlib.file_digest(stream, 'sha256').hexdigest()
-          if actual != expected:
-              raise SystemExit(f'SHA-256 mismatch: expected {expected}, got {actual}')
-          with zipfile.ZipFile(apk) as archive:
-              bad_member = archive.testzip()
-          if bad_member:
-              raise SystemExit(f'APK ZIP integrity error at {bad_member}')
-          print(f'Verified APK SHA-256: {actual}')
+          python3 - "$GITHUB_WORKSPACE/linked-source" <<'PY'
+          import hashlib
+          import pathlib
+          import sys
+          import zipfile
+
+          root = pathlib.Path(sys.argv[1])
+          expected = {
+              'TEST-GUIDE.md': '8ea903e7bca901acfe5151c6b665b84f066be7a7e340684f5afff001429943f4',
+              'artifacts/MySpace-v3.12.21-58-lite-dist.apk': '629442fc1d54508690f8c75664ea8be7611fef14a74f4edcf6f2bd1cab40068d',
+              'artifacts/MyCalc-v1.0.19-20.apk': '342f51bdbb12539f44971fc945d427714ac8cf74bf01a7fa8fccf02660e1f3fa',
+          }
+          for relative, expected_sha256 in expected.items():
+              path = root / relative
+              actual = hashlib.sha256(path.read_bytes()).hexdigest()
+              if actual != expected_sha256:
+                  raise SystemExit(f'{relative} SHA-256 mismatch: expected {expected_sha256}, got {actual}')
+              if path.suffix == '.apk':
+                  with zipfile.ZipFile(path) as archive:
+                      bad_member = archive.testzip()
+                  if bad_member:
+                      raise SystemExit(f'{relative} ZIP integrity error at {bad_member}')
+              print(f'Verified {relative}: SHA-256 {actual}')
           PY
-          echo "APK_PATH=$apk" >> "$GITHUB_ENV"
-          echo "Verified APK SHA-256: bcdd1de4606348d1e318452002f9f9a4c28bc464af1fabeb9941ee22891da02a"
+          echo "APK_PATH=$GITHUB_WORKSPACE/linked-source/artifacts/MySpace-v3.12.21-58-lite-dist.apk" >> "$GITHUB_ENV"
+          echo "EXTRA_APK_PATH=$GITHUB_WORKSPACE/linked-source/artifacts/MyCalc-v1.0.19-20.apk" >> "$GITHUB_ENV"
+          {
+            echo '### Pinned inputs verified'
+            echo '- Guide: `TEST-GUIDE.md` (source commit `e0bc02e191e6f793a40f23d0a07705a75396468e`)'
+            echo '- MySpace: `3.12.21` / code `58` / package `app.space.one`'
+            echo '- Standalone MyCalc: `1.0.19` / code `20` / package `app.space.calc`'
+          } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Set up Android SDK tools
-        uses: android-actions/setup-android@v3
-        with:
-          packages: platform-tools
-          accept-android-sdk-licenses: true
-          log-accepted-android-sdk-licenses: false
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
 
-      - name: Boot Android 14 emulator and run ${{ matrix.test_case }} replica ${{ matrix.replica }}
-        shell: bash
+      - name: Boot Android 14 and run guide shard ${{ matrix.shard }}
+        uses: ReactiveCircus/android-emulator-runner@v2
         env:
-          CALCULATOR_CASES: ${{ matrix.test_case }}
-        run: bash qa/run_emulator_e2e.sh
+          SHARD: ${{ matrix.shard }}
+          CALCULATOR_CASES: ${{ matrix.cases }}
+          EXTRA_CALCULATOR_CASES: ${{ matrix.standalone_cases }}
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          cores: 4
+          ram-size: 3072M
+          disable-animations: true
+          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect
+          script: bash qa/run_prebooted_emulator_e2e.sh
 
-      - name: Upload ${{ matrix.test_case }} replica ${{ matrix.replica }} report, screenshots, and UI dumps
+      - name: Upload shard ${{ matrix.shard }} evidence and JSON results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: calculator-e2e-v3.12.19-${{ matrix.test_case }}-replica-${{ matrix.replica }}-${{ github.run_number }}
-          path: reports/e2e/
+          name: myspace-guide-v3.12.21-shard-${{ matrix.shard }}-${{ github.run_number }}
+          path: reports/e2e/guide-shard-${{ matrix.shard }}/
           if-no-files-found: warn
-          retention-days: 30
+          retention-days: 60
