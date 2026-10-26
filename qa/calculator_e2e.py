@@ -371,7 +371,14 @@ class AndroidUi:
             if self._visible(node) and self._node_matches(node, label, partial)
         ]
 
-    def tap_label(self, label: str, *, partial: bool = False, timeout: float = 1.2) -> None:
+    def tap_label(
+        self,
+        label: str,
+        *,
+        partial: bool = False,
+        timeout: float = 1.2,
+        capture_display: bool = False,
+    ) -> list[str] | None:
         deadline = time.monotonic() + timeout
         last_labels: list[str] = []
         while time.monotonic() < deadline:
@@ -386,24 +393,29 @@ class AndroidUi:
                     and point[1] >= int(self._height * 0.40)
                 ]
             last_labels = self.labels()
+            before = self.display_texts() if capture_display else None
             if candidates:
                 # Prefer a directly clickable control; tapping a non-clickable label
                 # still works for cards whose parent owns the click listener.
-                candidates.sort(key=lambda n: n.attrib.get("clickable", "false").lower() != "true")
+                candidates.sort(key=lambda n: (
+                    n.attrib.get("clickable", "false").lower() != "true",
+                    "edittext" in n.attrib.get("class", "").casefold(),
+                    -((bounds_center(n.attrib.get("bounds", "")) or (0, 0))[1]),
+                ))
                 for node in candidates:
                     point = bounds_center(node.attrib.get("bounds", ""))
                     if point:
                         self.adb("shell", "input", "tap", str(point[0]), str(point[1]))
                         time.sleep(0.35)
                         self._last_tree = None
-                        return
+                        return before
             if self._ocr_mode:
                 point = self._ocr_grid_point(label)
                 if point:
                     self.adb("shell", "input", "tap", str(point[0]), str(point[1]))
                     time.sleep(0.35)
                     self._last_tree = None
-                    return
+                    return before
             self._last_tree = None
             time.sleep(0.15)
         raise QaError(f"Could not find tappable UI label {label!r}; visible labels: {last_labels}")
@@ -504,6 +516,32 @@ class AndroidUi:
             f"Screenshot={screenshot}; hierarchy={hierarchy}; visible labels={self.labels()}"
         )
 
+    def ensure_basic_panel(self) -> None:
+        labels = self.labels()
+        close_labels = [
+            label for label in labels
+            if "close the extra keys" in label.casefold()
+            or "close extra keys" in label.casefold()
+        ]
+        if close_labels:
+            self.tap_label(close_labels[0])
+            self._scientific_open = False
+            time.sleep(0.35)
+            return
+        has_scientific_keys = any(
+            self._label_equivalent(label, "sin(")
+            or self._label_equivalent(label, "√(")
+            for label in labels
+        )
+        if has_scientific_keys:
+            if self._ocr_mode:
+                self._scientific_open = True
+                self._toggle_chevron_with_ocr()
+                self._scientific_open = False
+                return
+            raise QaError(f"Scientific panel is open but its close control is missing: {labels}")
+        self._scientific_open = False
+
     def ensure_scientific_panel(self) -> None:
         if self._scientific_open:
             return
@@ -534,7 +572,24 @@ class AndroidUi:
 
     def key(self, key: str) -> None:
         label = "( )" if key in ("(", ")") else key
-        self.tap_label(label, timeout=1.5)
+        before = self.tap_label(label, timeout=1.5, capture_display=(key == "0"))
+        if key != "0" or before is None:
+            return
+
+        # The screen's empty-expression placeholder is also "0", so that single
+        # first-zero tap has no visible delta. Every later zero must change the
+        # expression; wait briefly for the UI instead of silently proceeding when
+        # the tap was ignored or hit a duplicate display label.
+        displayed = [value for value in before if value.casefold() != "calculator"]
+        if displayed in ([], ["0"]):
+            return
+        deadline = time.monotonic() + 1.5
+        while time.monotonic() < deadline:
+            after = self.display_texts()
+            if after != before:
+                return
+            time.sleep(0.15)
+        raise QaError(f"Key '0' did not change the visible expression; display remained {before!r}")
 
     def press_sequence(self, keys: Iterable[str]) -> None:
         for key in keys:
@@ -589,6 +644,13 @@ class AndroidUi:
         target = self.normalize_expression(expected)
         return any(self.normalize_expression(text) == target for text in self.display_texts())
 
+    def expression_suffix_visible(self, suffix: str) -> bool:
+        target = self.normalize_expression(suffix)
+        return any(
+            self.normalize_expression(text).endswith(target)
+            for text in self.display_texts()
+        )
+
     def close_history_if_open(self) -> None:
         labels = self.labels()
         if "Close history" in labels:
@@ -618,6 +680,7 @@ class CalculatorQa:
             "package": None,
             "note": "",
         }
+        self.installed_packages: set[str] = set()
 
     def add_result(
         self,
@@ -663,6 +726,8 @@ class CalculatorQa:
             self.device.close_history_if_open()
             if scientific:
                 self.device.ensure_scientific_panel()
+            else:
+                self.device.ensure_basic_panel()
             self.device.tap_label("AC")
             self.device.press_sequence(keys)
             expected_expression = "".join(keys)
@@ -685,6 +750,22 @@ class CalculatorQa:
             time.sleep(0.4)
             actual = self.device.display_texts()
             screenshot = self.device.screenshot(f"evidence/{test_id.lower()}-target.png")
+            expected_normalized = self.device.normalize_expression(expected_expression)
+            if any(
+                self.device.normalize_expression(value) == expected_normalized
+                for value in actual
+            ):
+                self.add_result(
+                    test_id, title, "ERROR",
+                    f"Committed result {expected!r} for {expected_expression!r}",
+                    " | ".join(actual),
+                    comment=(
+                        "Equals did not commit the calculation: the input expression is still visible. "
+                        "A matching '= result' preview is not counted as a completed evaluation."
+                    ),
+                    evidence=screenshot,
+                )
+                return
             if self.device.result_visible(expected):
                 self.add_result(
                     test_id, title, "PASS", expected,
@@ -714,6 +795,7 @@ class CalculatorQa:
         title = "Chained calculations retain unrounded precision"
         try:
             self.device.close_history_if_open()
+            self.device.ensure_basic_panel()
             self.device.tap_label("AC")
             self.device.press_sequence(["1", "÷", "3"])
             if not self.device.expression_visible("1÷3"):
@@ -723,10 +805,23 @@ class CalculatorQa:
             self.device.key("=")
             time.sleep(0.3)
             first = self.device.display_texts()
+            if any(
+                self.device.normalize_expression(value)
+                == self.device.normalize_expression("1÷3")
+                for value in first
+            ):
+                raise QaError(f"First equals did not commit 1÷3; display={first!r}")
             self.device.press_sequence(["×", "3"])
+            if not self.device.expression_suffix_visible("×3"):
+                raise QaError(
+                    f"Continuation input ×3 was not visible; first result={first!r}; "
+                    f"display={self.device.display_texts()!r}"
+                )
             self.device.key("=")
             time.sleep(0.35)
             actual = self.device.display_texts()
+            if any(self.device.normalize_expression(value).endswith("×3") for value in actual):
+                raise QaError(f"Second equals did not commit the ×3 continuation; display={actual!r}")
             screenshot = self.device.screenshot("evidence/tc-calc-008-target.png")
             # The numerical contract is exact here: (1 / 3) * 3 equals 1.
             if self.device.result_visible("1"):
@@ -768,10 +863,23 @@ class CalculatorQa:
             self.device.key("=")
             time.sleep(0.25)
             first = self.device.display_texts()
+            if any(
+                self.device.normalize_expression(value)
+                == self.device.normalize_expression("10^15")
+                for value in first
+            ):
+                raise QaError(f"Equals did not commit 10^15; display={first!r}")
             self.device.press_sequence(["+", "1"])
+            if not self.device.expression_suffix_visible("+1"):
+                raise QaError(
+                    f"Continuation input +1 was not visible after 10^15; "
+                    f"first result={first!r}; display={self.device.display_texts()!r}"
+                )
             self.device.key("=")
             time.sleep(0.35)
             actual = self.device.display_texts()
+            if any(self.device.normalize_expression(value).endswith("+1") for value in actual):
+                raise QaError(f"Equals did not commit the +1 continuation; display={actual!r}")
             screenshot = self.device.screenshot("evidence/tc-calc-009-target.png")
             # If the exponent literal was accepted, the display should no longer be
             # exactly the preceding 1e+15 result; an error is also a failed chain.
@@ -809,6 +917,7 @@ class CalculatorQa:
         title = "History persists after activity restart and can restore an expression"
         try:
             self.device.close_history_if_open()
+            self.device.ensure_basic_panel()
             self.device.tap_label("AC")
             self.device.press_sequence(["1", "+", "1"])
             typed = self.device.display_texts()
@@ -830,14 +939,20 @@ class CalculatorQa:
             # time to finish that write before deliberately killing the process.
             time.sleep(1.5)
             before_restart = self.device.display_texts()
-            if not self.device.result_visible("2"):
+            input_expression = self.device.normalize_expression("1+1")
+            expression_still_visible = any(
+                self.device.normalize_expression(value) == input_expression
+                for value in before_restart
+            )
+            if not self.device.result_visible("2") or expression_still_visible:
                 screenshot = self.device.screenshot("evidence/tc-calc-007-before-restart.png")
                 self.add_result(
-                    test_id, title, "ERROR", "1+1 evaluates to 2 before process restart",
+                    test_id, title, "ERROR", "Committed 1+1 = 2 before process restart",
                     " | ".join(before_restart),
                     comment=(
-                        "The expression did not visibly produce 2 before force-stop; persistence "
-                        "was not evaluated. Check the expression/input path before diagnosing history."
+                        "Equals did not visibly commit the result: the input expression remained in "
+                        "the editor (the '= 2' line may only be a live preview). History persistence "
+                        "was not evaluated; check equals-key delivery before diagnosing history."
                     ),
                     evidence=screenshot,
                 )
@@ -902,8 +1017,40 @@ class CalculatorQa:
                 )
 
     def check_google_reference(self) -> None:
-        packages = self.device.adb("shell", "pm", "list", "packages", check=False)
+        try:
+            packages = self.device.adb(
+                "shell", "pm", "list", "packages", timeout=60, check=False
+            )
+        except Exception as exc:
+            self.reference.update({
+                "status": "PACKAGE_SCAN_ERROR",
+                "package": None,
+                "note": f"Could not inspect emulator packages: {type(exc).__name__}: {exc}",
+            })
+            self.add_result(
+                "TC-CALC-010", "Live comparison with official Google Calculator", "ERROR",
+                "Check for com.google.android.calculator and compare live results",
+                "Package scan raised an error",
+                comment=self.reference["note"],
+            )
+            return
+
         installed = set(re.findall(r"package:([^\s]+)", packages))
+        self.installed_packages = installed
+        if not installed:
+            self.reference.update({
+                "status": "PACKAGE_SCAN_ERROR",
+                "package": None,
+                "note": f"Package scan returned no package records: {clean(packages)[:500]!r}",
+            })
+            self.add_result(
+                "TC-CALC-010", "Live comparison with official Google Calculator", "ERROR",
+                "Check for com.google.android.calculator and compare live results",
+                clean(packages)[:500] or "No package records returned",
+                comment=self.reference["note"],
+            )
+            return
+
         if GOOGLE_CALCULATOR_PACKAGE not in installed:
             self.reference.update({
                 "status": "NOT_INSTALLED",
@@ -927,6 +1074,10 @@ class CalculatorQa:
             ref.launch(GOOGLE_CALCULATOR_PACKAGE)
             ref.tap_first(("AC", "C"))
             ref.press_sequence(["2", "+", "3", "×", "4"])
+            if not ref.expression_visible("2+3×4"):
+                raise QaError(
+                    f"Google reference input mismatch; display={ref.display_texts()!r}"
+                )
             ref.key("=")
             time.sleep(0.4)
             actual = ref.display_texts()
@@ -1061,8 +1212,7 @@ class CalculatorQa:
         self.run_exponent_chain()
         self.check_google_reference()
 
-        packages = self.device.adb("shell", "pm", "list", "packages", check=False)
-        aosp_present = "package:com.android.calculator2" in packages
+        aosp_present = "com.android.calculator2" in self.installed_packages
         if self.reference["status"] == "NOT_INSTALLED" and aosp_present:
             self.reference["note"] += (
                 " The emulator did include com.android.calculator2, but that is an AOSP/system "

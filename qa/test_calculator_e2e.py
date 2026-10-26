@@ -16,6 +16,8 @@ class AndroidUiHarnessTests(unittest.TestCase):
             '<hierarchy>'
             '<node text="0" bounds="[15,100][45,140]" clickable="true" '
             'visible-to-user="true" class="android.widget.EditText" />'
+            '<node text="0" bounds="[15,400][45,440]" clickable="true" '
+            'visible-to-user="true" class="android.widget.EditText" />'
             '<node text="0" bounds="[15,700][45,740]" clickable="true" '
             'visible-to-user="true" class="android.widget.TextView" />'
             '</hierarchy>'
@@ -34,6 +36,14 @@ class AndroidUiHarnessTests(unittest.TestCase):
 
         self.assertEqual(tapped, [("shell", "input", "tap", "30", "720")])
 
+    def test_zero_key_waits_for_the_typed_expression_to_change(self) -> None:
+        ui = object.__new__(AndroidUi)
+        ui.tap_label = lambda label, **kwargs: ["CALCULATOR", "sin(3)"]
+        ui.display_texts = lambda: ["CALCULATOR", "sin(30)"]
+
+        ui.key("0")
+        self.assertEqual(ui.display_texts()[-1], "sin(30)")
+
     def test_expression_matching_ignores_spacing_but_not_missing_digits(self) -> None:
         root = ET.fromstring(
             '<hierarchy><node text="0.1 + 0.2" bounds="[20,100][300,150]" '
@@ -50,9 +60,33 @@ class AndroidUiHarnessTests(unittest.TestCase):
         self.assertTrue(ui.expression_visible("0.1+0.2"))
         self.assertFalse(ui.expression_visible(".1+0.2"))
 
+    def test_google_package_scan_error_is_reported_without_aborting(self) -> None:
+        class BrokenAdb:
+            def adb(self, *args: str, **kwargs: object) -> str:
+                raise TimeoutError("package scan timeout")
+
+        qa = object.__new__(CalculatorQa)
+        qa.device = BrokenAdb()
+        qa.reference = {
+            "requested": "Google Calculator (com.google.android.calculator)",
+            "status": "NOT_CHECKED",
+            "package": None,
+            "note": "",
+        }
+        qa.installed_packages = set()
+        qa.results = []
+
+        with redirect_stdout(io.StringIO()):
+            qa.check_google_reference()
+
+        self.assertEqual(qa.reference["status"], "PACKAGE_SCAN_ERROR")
+        self.assertEqual(qa.results[0]["id"], "TC-CALC-010")
+        self.assertEqual(qa.results[0]["status"], "ERROR")
+
     def test_history_failure_closes_the_sheet_before_next_case(self) -> None:
         class FakeDevice:
             close_history_if_open = AndroidUi.close_history_if_open
+            normalize_expression = staticmethod(AndroidUi.normalize_expression)
 
             def __init__(self) -> None:
                 self.history_open = False
@@ -69,6 +103,9 @@ class AndroidUiHarnessTests(unittest.TestCase):
                     self.history_open = True
                 elif label == "Close history":
                     self.history_open = False
+
+            def ensure_basic_panel(self) -> None:
+                pass
 
             def press_sequence(self, keys: list[str]) -> None:
                 pass
