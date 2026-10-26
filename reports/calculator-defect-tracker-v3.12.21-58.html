@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>MySpace v3.12.21-58 — Test Guide QA report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #142333;
+      --muted: #526477;
+      --paper: #f3f6fa;
+      --card: #ffffff;
+      --line: #d8e1eb;
+      --navy: #10243b;
+      --blue: #1b5ca8;
+      --green: #11623d;
+      --green-bg: #e6f5ec;
+      --red: #9f2525;
+      --red-bg: #fff0ed;
+      --amber: #815a00;
+      --amber-bg: #fff5d9;
+      --gray: #4b5c6c;
+      --gray-bg: #edf1f5;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 16px/1.58 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    a { color: #1559a3; text-decoration-thickness: .08em; text-underline-offset: .16em; }
+    a:focus-visible, summary:focus-visible { outline: 3px solid #f0b323; outline-offset: 3px; border-radius: 4px; }
+    .page { max-width: 1080px; margin: 0 auto; padding: 20px; }
+    .hero {
+      color: #fff;
+      background: radial-gradient(ellipse at 100% 0%, #365981 0, transparent 42%), linear-gradient(135deg, #10243b, #183b5f);
+      border-radius: 22px;
+      padding: clamp(24px, 5vw, 52px);
+      box-shadow: 0 18px 50px rgba(18, 44, 72, .16);
+    }
+    .eyebrow { margin: 0 0 10px; color: #b8d9ff; font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 0; max-width: 800px; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.08; letter-spacing: -.035em; }
+    .hero p { max-width: 760px; margin: 18px 0 0; color: #e2edf8; }
+    .verdict {
+      display: inline-flex; align-items: center; gap: 9px; margin-top: 24px; padding: 10px 14px;
+      border: 1px solid rgba(255,255,255,.4); border-radius: 999px; background: rgba(255,255,255,.1);
+      color: #fff; font-weight: 800;
+    }
+    .verdict::before { content: "!"; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #ffcf66; color: #332200; }
+    .quick-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 2px 26px; }
+    .quick-nav a { padding: 7px 11px; border: 1px solid var(--line); border-radius: 999px; background: #fff; font-size: .9rem; text-decoration: none; }
+    section { margin: 24px 0; }
+    h2 { margin: 0 0 12px; font-size: clamp(1.4rem, 3vw, 1.9rem); line-height: 1.2; letter-spacing: -.02em; }
+    h3 { margin: 0 0 8px; font-size: 1.15rem; line-height: 1.3; }
+    .subtle { margin: 0 0 16px; color: var(--muted); }
+    .callout, .panel, .finding, .case-card, .stat, .run-card {
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+      box-shadow: 0 4px 16px rgba(24, 49, 76, .045);
+    }
+    .callout { padding: 17px 19px; border-left: 5px solid var(--amber); background: #fffaf0; }
+    .callout strong { color: #593f00; }
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 18px 0; }
+    .stat { padding: 16px; }
+    .stat b { display: block; font-size: 1.65rem; line-height: 1.1; }
+    .stat span { display: block; margin-top: 6px; color: var(--muted); font-size: .91rem; }
+    .identity-grid, .run-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .panel, .run-card { padding: 17px; }
+    .panel h3 { margin-bottom: 10px; }
+    .kv { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 7px 12px; margin: 0; font-size: .94rem; }
+    .kv dt { color: var(--muted); font-weight: 700; }
+    .kv dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+    code { padding: .08em .34em; border-radius: 5px; background: #edf2f7; font: .88em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow-wrap: anywhere; }
+    .run-card p { margin: 7px 0 0; color: var(--muted); }
+    .run-card strong { color: var(--ink); }
+    .section-label { display: inline-block; margin-bottom: 8px; color: var(--blue); font-size: .78rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .results-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .result-card { padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+    .result-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .result-id { font-weight: 800; }
+    .badge { display: inline-flex; align-items: center; white-space: nowrap; padding: 3px 9px; border-radius: 999px; font-size: .76rem; font-weight: 850; letter-spacing: .035em; }
+    .pass { color: var(--green); background: var(--green-bg); }
+    .fail { color: var(--red); background: var(--red-bg); }
+    .blocked { color: var(--amber); background: var(--amber-bg); }
+    .unconfirmed, .not-run { color: var(--gray); background: var(--gray-bg); }
+    .result-card p { margin: 10px 0 0; }
+    .result-card .actual { color: var(--muted); font-size: .93rem; }
+    .result-card .actual strong { color: var(--ink); }
+    .plan-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .case-card { padding: 14px 15px; }
+    .case-title { display: flex; align-items: flex-start; gap: 9px; }
+    .case-number { flex: 0 0 auto; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: #eaf1fa; color: #174b82; font-size: .83rem; font-weight: 900; }
+    .case-heading { flex: 1; min-width: 0; }
+    .case-heading strong { display: block; line-height: 1.3; }
+    .case-heading small { color: var(--muted); }
+    .case-card p { margin: 10px 0 0; color: var(--muted); font-size: .94rem; }
+    .case-card .case-status { margin-top: 10px; }
+    .finding { margin: 14px 0; padding: clamp(16px, 3vw, 24px); border-top: 5px solid var(--red); }
+    .finding h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
+    .finding dl { display: grid; grid-template-columns: 142px minmax(0, 1fr); gap: 8px 14px; margin: 14px 0 0; }
+    .finding dt { color: var(--muted); font-weight: 750; }
+    .finding dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+    .blind-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .blind-card { padding: 16px; border: 1px solid #e4c677; border-radius: 14px; background: #fffaf0; }
+    .blind-card h3 { color: #664a00; }
+    .blind-card p { margin: 8px 0 0; }
+    .footer { margin: 30px 0 10px; padding: 18px 2px 4px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+    .footer p { margin: 5px 0; }
+    @media (max-width: 760px) {
+      .page { padding: 12px; }
+      .hero { border-radius: 17px; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .identity-grid, .run-grid, .results-grid, .plan-grid, .blind-grid { grid-template-columns: 1fr; }
+      .kv, .finding dl { grid-template-columns: 1fr; gap: 2px; }
+      .kv dd, .finding dd { margin-bottom: 9px; }
+      .result-head { align-items: flex-start; }
+    }
+    @media (max-width: 380px) {
+      body { font-size: 15px; }
+      .stats { gap: 8px; }
+      .stat { padding: 12px; }
+      .stat b { font-size: 1.35rem; }
+      .verdict { align-items: flex-start; border-radius: 14px; }
+    }
+    @media print {
+      body { background: #fff; }
+      .page { max-width: none; padding: 0; }
+      .hero { color: #111; background: #fff; border: 1px solid #888; box-shadow: none; }
+      .hero p, .eyebrow { color: #333; }
+      .verdict { color: #111; border-color: #777; background: #fff; }
+      .panel, .run-card, .case-card, .stat, .finding, .result-card { box-shadow: none; break-inside: avoid; }
+      a { color: #111; }
+    }
+  </style>
+</head>
+<body>
+<main class="page">
+  <header class="hero">
+    <p class="eyebrow">Mobile QA report · 26 October 2026</p>
+    <h1>MySpace v3.12.21 (58)<br>Test Guide coverage</h1>
+    <p>Black-box verification of the pinned distribution APK, with a guide-wide A–G plan, normal and edge cases, blind probes, and a commented defect tracker.</p>
+    <div class="verdict">FAIL · 2 reproducible calculator defects · Google comparison blocked</div>
+  </header>
+
+  <nav class="quick-nav" aria-label="Report sections">
+    <a href="#summary">Summary</a><a href="#inputs">Pinned inputs</a><a href="#runtime">Runtime results</a>
+    <a href="#plan">30-case plan</a><a href="#blind">Blind probes</a><a href="#defects">Defects</a><a href="#limits">Limits</a>
+  </nav>
+
+  <section id="summary">
+    <h2>At a glance</h2>
+    <div class="stats" aria-label="Test summary">
+      <div class="stat"><b>7 / 10</b><span>MySpace unique calculator IDs passed</span></div>
+      <div class="stat"><b>2</b><span>Open, reproducible correctness defects</span></div>
+      <div class="stat"><b>3</b><span>Android 14 emulator shards; max parallel 3</span></div>
+      <div class="stat"><b>12 / 12</b><span>Local QA-harness unit tests passed</span></div>
+    </div>
+    <div class="callout">
+      <strong>Coverage boundary:</strong> The 30-case plan covers the guide’s A–G claims, but the supplied MySpace APK’s current black-box E2E harness exercises the calculator path only. Non-calculator and unautomated visual/gesture claims below are marked source-CI-only or not directly run—not reported as APK runtime passes.
+    </div>
+    <p class="subtle">The pinned source CI passed, but that source-built test evidence does not replace running every feature against the supplied distribution APK.</p>
+  </section>
+
+  <section id="inputs">
+    <h2>Pinned inputs</h2>
+    <div class="identity-grid">
+      <article class="panel">
+        <h3>MySpace distribution APK</h3>
+        <dl class="kv">
+          <dt>File</dt><dd><a href="https://github.com/tarungittarun/TicTic/raw/e0bc02e191e6f793a40f23d0a07705a75396468e/artifacts/MySpace-v3.12.21-58-lite-dist.apk"><code>MySpace-v3.12.21-58-lite-dist.apk</code></a></dd>
+          <dt>Package</dt><dd><code>app.space.one</code></dd>
+          <dt>Version</dt><dd>3.12.21 · code 58</dd>
+          <dt>SHA-256</dt><dd><code>629442fc1d54508690f8c75664ea8be7611fef14a74f4edcf6f2bd1cab40068d</code></dd>
+        </dl>
+      </article>
+      <article class="panel">
+        <h3>Standalone MyCalc distribution APK</h3>
+        <dl class="kv">
+          <dt>File</dt><dd><a href="https://github.com/tarungittarun/TicTic/raw/e0bc02e191e6f793a40f23d0a07705a75396468e/artifacts/MyCalc-v1.0.19-20.apk"><code>MyCalc-v1.0.19-20.apk</code></a></dd>
+          <dt>Package</dt><dd><code>app.space.calc</code></dd>
+          <dt>Version</dt><dd>1.0.19 · code 20</dd>
+          <dt>SHA-256</dt><dd><code>342f51bdbb12539f44971fc945d427714ac8cf74bf01a7fa8fccf02660e1f3fa</code></dd>
+        </dl>
+      </article>
+    </div>
+    <article class="panel" style="margin-top:12px">
+      <h3>Guide and source pin</h3>
+      <p><a href="https://github.com/tarungittarun/TicTic/blob/e0bc02e191e6f793a40f23d0a07705a75396468e/TEST-GUIDE.md">Open the pinned TEST-GUIDE.md</a> · source commit <code>e0bc02e191e6f793a40f23d0a07705a75396468e</code> · guide SHA-256 <code>8ea903e7bca901acfe5151c6b665b84f066be7a7e340684f5afff001429943f4</code>.</p>
+    </article>
+  </section>
+
+  <section id="runtime">
+    <h2>Runtime execution</h2>
+    <div class="run-grid">
+      <article class="run-card">
+        <span class="section-label">Canonical workflow</span>
+        <h3><a href="https://github.com/tarungittarun/AIA-/actions/runs/40299195327">Run 40299195327</a></h3>
+        <p>Three Android 14 shards, one emulator boot per shard, maximum three concurrent jobs. Shards 1–2 succeeded; shard 3 failed as expected on the two calculator defects. Screenshots, UI dumps, JSON, and Markdown are attached under the run’s Artifacts section.</p>
+      </article>
+      <article class="run-card">
+        <span class="section-label">Earlier direct evidence</span>
+        <h3><a href="https://github.com/tarungittarun/AIA-/actions/runs/40294118915">Run 40294118915</a></h3>
+        <p>Used to confirm standalone MyCalc TC-CALC-002 and TC-CALC-003. Later runs used the refined shard plan and fixed TC-CALC-009’s test classification.</p>
+      </article>
+      <article class="run-card">
+        <span class="section-label">Pinned-source CI</span>
+        <h3><a href="https://github.com/tarungittarun/TicTic/actions/runs/40292039978">Tests 40292039978</a> · <a href="https://github.com/tarungittarun/TicTic/actions/runs/40292039996">Android CI 40292039996</a></h3>
+        <p>Both reported success at the exact source commit. The guide states 386 Python contracts, 21 JVM suites, and 33 instrumented stories. These are source-level checks, not direct proof for each screen in the packaged APK.</p>
+      </article>
+      <article class="run-card">
+        <span class="section-label">Reference limitation</span>
+        <h3>Official Google Calculator unavailable</h3>
+        <p><code>com.google.android.calculator</code> was absent from the emulator image. TC-CALC-010 is BLOCKED. AOSP Calculator and third-party APK mirrors were not used.</p>
+      </article>
+    </div>
+    <p class="subtle" style="margin-top:12px">Transient Android system ANR dialogs required bounded Wait retries. Jobs recovered and produced results; this is recorded as an emulator stability warning, not a confirmed product defect.</p>
+  </section>
+
+  <section>
+    <h2>Exact MySpace APK calculator results</h2>
+    <p class="subtle">Unique IDs are counted once; TC-CALC-001 was also rerun as the TC-CALC-010 reference baseline.</p>
+    <div class="results-grid">
+      <article class="result-card"><div class="result-head"><span class="result-id">TC-CALC-001 · Operator precedence</span><span class="badge pass">PASS</span></div><p><code>2 + 3 × 4</code> → expected <code>14</code>, observed <code>14</code>.</p></article>
+      <article class="result-card"><div class="result-head"><span class="result-id">TC-CALC-002 · Parentheses</span><span class="badge pass">PASS</span></div><p><code>(2 + 3) × 4</code> → expected <code>20</code>, observed <code>20</code>.</p></article>
+      <article class="result-card"><div class="result-head"><span class="result-id">TC-CALC-003 · Decimal addition</span><span class="badge pass">PASS</span></div><p><code>0.1 + 0.2</code> → expected <code>0.3</code>, observed <code>0.3</code>.</p></article>
+      <article class="result-card"><div class="result-head"><span class="result-id">TC-CALC-004 · Percentage</span><span class="badge pass">PASS</span></div><p><code>200 + 10%</code> → expected <code>220</code>, observed <code>220</code>.</p></article>
+      <article class="result-card"><div class="result-head"><span class="result-id">TC-CALC-005 · Square root</span><span class="badge pass">PASS</span></div><p><code>√(9)</code> → expected <code>3</code>, observed <code>3</code>.</p></article>
+      <article class="result-card"><div class="result-head"><span class="result-id">TC-CALC-006 · Sine in degrees</span><span class="badge pass">PASS</span></div><p><code>sin(30)</code> → expected <code>0.5</code>, observed <code>0.5</code>.</p></article>
+      <article class="result-card"><div class="result-head"><span class="result-id">TC-CALC-007 · History persistence</span><span class="badge pass">PASS</span></div><p>After activity restart, history restored <code>1+1</code> and result <code>2</code>.</p></article>
+      <article class="result-card"><div class="result-head"><span class="result-id">TC-CALC-008 · Chained precision</span><span class="badge fail">FAIL · DEF-3219-01</span></div><p class="actual"><strong>Expected:</strong> <code>1</code> after <code>1 ÷ 3 = × 3 =</code>. <strong>Observed:</strong> <code>0.9999999999</code>.</p></article>
+      <article class="result-card"><div class="result-head"><span class="result-id">TC-CALC-009 · Exponent continuation</span><span class="badge fail">FAIL · DEF-3219-02</span></div><p class="actual"><strong>Expected:</strong> <code>1000000000000001</code>. <strong>Observed:</strong> <code>1e+15+1</code> followed by <code>Error</code>.</p></article>
+      <article class="result-card"><div class="result-head"><span class="result-id">TC-CALC-010 · Google parity</span><span class="badge blocked">BLOCKED</span></div><p>The official Google Calculator package was absent. No AOSP substitute was used.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Standalone MyCalc results</h2>
+    <div class="results-grid">
+      <article class="result-card"><div class="result-head"><span class="result-id">TC-CALC-001–005</span><span class="badge pass">PASS · CONFIRMED</span></div><p>Observed passes: TC001 <code>14</code>; TC002 <code>20</code> (run 40294118915); TC003 <code>0.3</code> (run 40294118915); TC004 <code>220</code>; TC005 <code>3</code>.</p></article>
+      <article class="result-card"><div class="result-head"><span class="result-id">TC-CALC-006–007</span><span class="badge unconfirmed">UNCONFIRMED</span></div><p>Selected in the standalone shard, but no standalone per-case outcome surfaced in the published check annotations. Not counted as passes.</p></article>
+      <article class="result-card"><div class="result-head"><span class="result-id">TC-CALC-008–009</span><span class="badge fail">FAIL</span></div><p>The same precision and exponent-continuation failures reproduced in the standalone APK.</p></article>
+    </div>
+    <p class="subtle" style="margin-top:12px">Section F is only partially verified: APK identity is pinned, but the standalone icon/zero-permission claims and cases 006–007 are not confirmed by this runtime run.</p>
+  </section>
+
+  <section id="plan">
+    <h2>30-case plan for guide sections A–G</h2>
+    <p class="subtle">N = normal · E = edge/negative/boundary. “Source CI green” means the pinned upstream workflow was green; it does not mean that case ran on the supplied distribution APK.</p>
+    <div class="plan-grid">
+      <article class="case-card"><div class="case-title"><span class="case-number">01</span><div class="case-heading"><strong>A1–A2 · Honeycomb icon and header route</strong><small>Normal</small></div></div><p>Check launcher/app-drawer icon; open MySpace; confirm header mark and home navigation.</p><div class="case-status"><span class="badge not-run">NOT DIRECTLY RUN</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">02</span><div class="case-heading"><strong>B1–B3 · Stock selection handles</strong><small>Edge</small></div></div><p>Long-press <code>123456</code>; inspect selection pill and drag both handles by character.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">03</span><div class="case-heading"><strong>B4 · Copy exact selected slice</strong><small>Edge</small></div></div><p>Copy a held substring and paste elsewhere; verify display grouping commas are not copied.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">04</span><div class="case-heading"><strong>B5 · Cut, then type into the gap</strong><small>Edge</small></div></div><p>Cut the selected portion and verify the next digit lands in the removed span.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">05</span><div class="case-heading"><strong>B6–B7 · Dismiss selection and clear with AC</strong><small>Edge</small></div></div><p>Tap outside with the menu open, then hold text and press AC; check menu and held text clear.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">06</span><div class="case-heading"><strong>B8 · Selection versus horizontal scroll</strong><small>Edge</small></div></div><p>With handles up, swipe horizontally; then repeat without a selection on a long expression.</p><div class="case-status"><span class="badge not-run">NOT DIRECTLY RUN</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">07</span><div class="case-heading"><strong>C1–C2 · Expression layout and color treatment</strong><small>Normal</small></div></div><p>Check long expression position, live-answer emphasis, expression gradient, and operator/equal key colors.</p><div class="case-status"><span class="badge not-run">VISUAL CHECK NOT RUN</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">08</span><div class="case-heading"><strong>C3, C8 · Mid-number caret and visibility</strong><small>Edge</small></div></div><p>Tap inside <code>12345</code>, insert a digit, and check a visible caret at the next input location.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">09</span><div class="case-heading"><strong>C4 · Minus under multiplication</strong><small>Edge</small></div></div><p>Type <code>10×</code>, insert <code>−</code> after the operator, and ensure <code>×</code> remains.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">10</span><div class="case-heading"><strong>C5 · Contextual percentage</strong><small>Normal</small></div></div><p><code>200 + 10% = 220</code>.</p><div class="case-status"><span class="badge pass">PASS · BOTH APKs</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">11</span><div class="case-heading"><strong>C6 · Precedence and bracket balancing</strong><small>Normal + edge</small></div></div><p>Check <code>5+3×2=11</code> and unclosed <code>(5+3=8</code>; direct run covered precedence and balanced parentheses only.</p><div class="case-status"><span class="badge blocked">PARTIAL · TC001/002 PASS</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">12</span><div class="case-heading"><strong>C7 · Adaptive bracket key at caret</strong><small>Edge</small></div></div><p>Press <code>( )</code> repeatedly at mid-expression and verify it offers the fitting bracket.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">13</span><div class="case-heading"><strong>C9 · No device keyboard</strong><small>Edge</small></div></div><p>Enter and edit expressions; verify no system keyboard appears at any point.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">14</span><div class="case-heading"><strong>D1 · Implicit multiplication</strong><small>Edge</small></div></div><p><code>2 ( ) 5 + 2 ( ) 2 = 28</code>.</p><div class="case-status"><span class="badge not-run">NOT DIRECTLY RUN</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">15</span><div class="case-heading"><strong>D2–D3 · Pending operator and repeated equals</strong><small>Edge</small></div></div><p>Replace <code>10+</code> with <code>10−</code>; check <code>5+=10</code>.</p><div class="case-status"><span class="badge not-run">NOT DIRECTLY RUN</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">16</span><div class="case-heading"><strong>D4 · Indian display grouping</strong><small>Normal</small></div></div><p><code>123456</code> displays <code>1,23,456</code> while the underlying copy remains ungrouped.</p><div class="case-status"><span class="badge not-run">NOT DIRECTLY RUN</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">17</span><div class="case-heading"><strong>D5 · Scientific panel and square root</strong><small>Normal</small></div></div><p>Expand/fold panel and verify keys; calculate <code>√9=3</code>.</p><div class="case-status"><span class="badge blocked">PARTIAL · SQRT PASS</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">18</span><div class="case-heading"><strong>D6 · Inverse trig and Deg/Rad</strong><small>Edge</small></div></div><p>Check <code>Inv</code> + <code>sin</code> and toggle Deg/Rad; direct run checked <code>sin(30)=0.5</code>.</p><div class="case-status"><span class="badge blocked">PARTIAL · SINE PASS</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">19</span><div class="case-heading"><strong>D7–D8 · AC and caret backspace</strong><small>Edge</small></div></div><p>Clear a held selection with AC; delete one character at the caret with backspace.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">20</span><div class="case-heading"><strong>E1–E2 · History persistence and access</strong><small>Normal + edge</small></div></div><p>Check ordered history and restore after restart; separately open it by swiping down.</p><div class="case-status"><span class="badge blocked">PARTIAL · HISTORY PASS</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">21</span><div class="case-heading"><strong>E3 · Menu and memory popup</strong><small>Edge</small></div></div><p>Verify five menu items plus Effects; reorder and recall a memory item.</p><div class="case-status"><span class="badge not-run">NOT DIRECTLY RUN</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">22</span><div class="case-heading"><strong>E4 · Keypress effects</strong><small>Normal + edge</small></div></div><p>Select an animation; verify four or more styles and persistence across keypresses.</p><div class="case-status"><span class="badge not-run">NOT DIRECTLY RUN</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">23</span><div class="case-heading"><strong>E5 · Screen and internal scrolling</strong><small>Edge</small></div></div><p>Check the page stays fixed while expression text and popup contents scroll internally.</p><div class="case-status"><span class="badge not-run">NOT DIRECTLY RUN</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">24</span><div class="case-heading"><strong>F · Standalone MyCalc</strong><small>Normal + edge</small></div></div><p>Verify package/build identity, icon, zero permissions, and B/C/D behavior.</p><div class="case-status"><span class="badge blocked">PARTIAL · SEE MyCalc RESULTS</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">25</span><div class="case-heading"><strong>G · Notes</strong><small>Normal + edge</small></div></div><p>Create a note; pin it, change color, and archive it.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">26</span><div class="case-heading"><strong>G · Calendar</strong><small>Normal + edge</small></div></div><p>Year picker; week/day views; save/trigger reminder and check a date boundary.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">27</span><div class="case-heading"><strong>G · Music</strong><small>Edge</small></div></div><p>Play from library; leave the screen; test notification transport controls.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">28</span><div class="case-heading"><strong>G · Recorder</strong><small>Edge</small></div></div><p>Save recording and self-test; check permission, cancel, and storage-error paths.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">29</span><div class="case-heading"><strong>G · Scanner/PDF</strong><small>Edge</small></div></div><p>Capture, move four crop handles, create a PDF, rotate, and cancel.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+      <article class="case-card"><div class="case-title"><span class="case-number">30</span><div class="case-heading"><strong>G · Files and Diagnostics</strong><small>Edge</small></div></div><p>Edit/save/reopen text; diagnostics local save/share/cancel and privacy check.</p><div class="case-status"><span class="badge not-run">SOURCE CI ONLY</span></div></article>
+    </div>
+  </section>
+
+  <section id="blind">
+    <h2>Blind black-box probes</h2>
+    <p class="subtle">These extra probes are outside the guide's explicit examples. Expected arithmetic behavior was set from the user-visible expression, without assuming an implementation.</p>
+    <div class="blind-grid">
+      <article class="blind-card"><h3>BND-01 · TC-CALC-008</h3><p><code>1 ÷ 3 = × 3 =</code> should return exactly <code>1</code>.</p><p><span class="badge fail">FAIL · MySpace and MyCalc</span></p><p>Both show <code>0.9999999999</code>.</p></article>
+      <article class="blind-card"><h3>BND-02 · TC-CALC-009</h3><p><code>10^15 = + 1 =</code> should evaluate to <code>1000000000000001</code>.</p><p><span class="badge fail">FAIL · MySpace and MyCalc</span></p><p>Both display <code>1e+15+1</code> followed by <code>Error</code>.</p></article>
+    </div>
+  </section>
+
+  <section id="defects">
+    <h2>Open defect tracker</h2>
+    <article class="finding">
+      <h3>DEF-3219-01 · Chained calculation loses precision <span class="badge fail">OPEN · P2 / MEDIUM</span></h3>
+      <dl>
+        <dt>Affected builds</dt><dd>MySpace 3.12.21 code 58; MyCalc 1.0.19 code 20</dd>
+        <dt>Reproduction</dt><dd>Enter <code>1 ÷ 3</code>, press equals, append <code>× 3</code>, press equals.</dd>
+        <dt>Expected / actual</dt><dd>Expected <code>1</code>; both APKs display <code>0.9999999999</code>.</dd>
+        <dt>Comment · 2026-10-26</dt><dd>Reproduced on the Android 14 emulator in both checksum-pinned APKs. The same result appeared in the earlier MySpace 3.12.19-56 QA run (40284113631). The first result shown was <code>0.3333333333</code>. Recurrent runtime defect; not an OCR mismatch.</dd>
+        <dt>Root-cause note</dt><dd>Reusing rounded display text is plausible but unconfirmed.</dd>
+        <dt>Suggested follow-up</dt><dd>Preserve unrounded numeric state across equals-then-operator input and add an exact-result regression.</dd>
+      </dl>
+    </article>
+    <article class="finding">
+      <h3>DEF-3219-02 · Scientific-notation result cannot be continued <span class="badge fail">OPEN · P2 / MEDIUM</span></h3>
+      <dl>
+        <dt>Affected builds</dt><dd>MySpace 3.12.21 code 58; MyCalc 1.0.19 code 20</dd>
+        <dt>Reproduction</dt><dd>Enter <code>10 ^ 15</code>, press equals, append <code>+ 1</code>, press equals.</dd>
+        <dt>Expected / actual</dt><dd>Expected <code>1000000000000001</code> or equivalent; both APKs show <code>1e+15+1</code> then <code>Error</code>.</dd>
+        <dt>Comment · 2026-10-26</dt><dd>Reproduced on both exact distribution APKs. This is an additional blind edge probe, not a failure of a guide example. The harness's initial “ERROR” classification was corrected to “FAIL” for this visible product error, then the three-shard plan was rerun.</dd>
+        <dt>Root-cause note</dt><dd>The parser/validator may reject exponent-formatted result text; this is a hypothesis, not a confirmed diagnosis.</dd>
+        <dt>Suggested follow-up</dt><dd>Separate internal numeric state from formatted display text and add an end-to-end continuation test.</dd>
+      </dl>
+    </article>
+  </section>
+
+  <section id="limits">
+    <h2>Limits and interpretation</h2>
+    <article class="panel">
+      <ol>
+        <li>The plan covers sections A–G, but exact-APK runtime automation currently covers the calculator only. Other MySpace screens and unautomated visual/gesture claims are not verified by this report.</li>
+        <li>Guide-reported automated coverage and exact-source CI are green; those are source-level checks and do not prove every supplied APK screen/gesture.</li>
+        <li>The official Google Calculator was absent. TC-CALC-010 remains blocked; no AOSP substitute or third-party mirror was used.</li>
+        <li>Standalone MyCalc TC-CALC-006 and TC-CALC-007 were selected but lack standalone per-case evidence in published check annotations; both remain unconfirmed.</li>
+        <li>No physical handset run, ad inventory audit, or non-calculator MySpace distribution-APK exploration was completed. This QA work changed no app or advertising code.</li>
+      </ol>
+    </article>
+  </section>
+
+  <section>
+    <h2>Recommended next steps</h2>
+    <article class="panel">
+      <ol>
+        <li>Fix and regress DEF-3219-01 and DEF-3219-02 in the calculator engine; retest both pinned APKs.</li>
+        <li>Add direct MySpace distribution coverage for B/C/E and each G feature; collect standalone MyCalc outcomes for cases 006–007.</li>
+        <li>If licensing and runner constraints permit, add the official Google Calculator to a Play-enabled reference environment and rerun TC-CALC-010. Do not substitute AOSP.</li>
+      </ol>
+    </article>
+  </section>
+
+  <footer class="footer">
+    <p><strong>Evidence:</strong> <a href="https://github.com/tarungittarun/AIA-/actions/runs/40299195327">Canonical GitHub Actions run and artifacts</a>.</p>
+    <p>Self-contained responsive HTML; no external fonts, scripts, images, or stylesheet dependencies.</p>
+  </footer>
+</main>
+</body>
+</html>
