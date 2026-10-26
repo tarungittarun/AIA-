@@ -448,15 +448,33 @@ class AndroidUi:
         )
         return has_ac and has_equals and has_operator
 
+    @staticmethod
+    def _is_anr_dialog(labels: Iterable[str]) -> bool:
+        text = " ".join(labels).casefold()
+        return "responding" in text and ("isn't" in text or "not responding" in text)
+
     def navigate_to_calculator(self, package: str) -> None:
         self.launch(package)
         # The suite host may start on its home screen. Open only its Calculator
         # tile/route; no other feature is used by this test.
         route_labels = ("Calculator", "Apps", "Menu", "Clock")
+        anr_waits = 0
         for _ in range(8):
             if self.is_calculator_screen():
                 return
             labels = self.labels()
+            if self._is_anr_dialog(labels):
+                if anr_waits >= 3 or not any(label.casefold() == "wait" for label in labels):
+                    break
+                self.tap_label("Wait", timeout=2.0)
+                anr_waits += 1
+                print(
+                    f"::warning title=Android system responsiveness::Detected an ANR dialog; "
+                    f"selected Wait ({anr_waits}/3).",
+                    flush=True,
+                )
+                time.sleep(8.0)
+                continue
             tapped = False
             for label in route_labels:
                 if label in labels:
@@ -907,6 +925,9 @@ class CalculatorQa:
             raise QaError(f"APK SHA-256 mismatch: expected {EXPECTED_APK_SHA256}, got {digest}")
 
         self._install_apk()
+        # Let Android finish post-install package bookkeeping before app launch; this
+        # software-emulator runner has surfaced a system ANR immediately after install.
+        time.sleep(15.0)
         self.device.adb("shell", "pm", "clear", self.package, timeout=30, check=False)
         self.device.navigate_to_calculator(self.package)
         self.device.screenshot("evidence/initial-calculator-screen.png")

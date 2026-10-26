@@ -92,8 +92,9 @@ printf 'no\n' | avdmanager create avd --force --name "$AVD_NAME" --package "$IMA
   2>&1 | tee "$REPORT_DIR/avdmanager.log"
 
 # API 34's first UI hierarchy request was killed with exit 137 on the default
-# Pixel 2 profile; memory pressure is only a hypothesis. Give Android more guest
-# RAM and reduce SwiftShader's display surface as a practical mitigation.
+# Pixel 2 profile; the last OCR fallback exposed a system-process ANR. Give the
+# software emulator more guest CPU, keep 3 GiB RAM, and shrink the SwiftShader
+# surface further as a practical performance mitigation (not a proven root cause).
 AVD_CONFIG="$ANDROID_AVD_HOME/$AVD_NAME.avd/config.ini"
 python3 - "$AVD_CONFIG" <<'PYTHON_AVD_CONFIG'
 from pathlib import Path
@@ -103,9 +104,10 @@ path = Path(sys.argv[1])
 settings = {
     "hw.ramSize": "3072",
     "vm.heapSize": "512",
-    "hw.lcd.width": "720",
-    "hw.lcd.height": "1280",
-    "hw.lcd.density": "320",
+    "hw.cpu.ncore": "4",
+    "hw.lcd.width": "480",
+    "hw.lcd.height": "854",
+    "hw.lcd.density": "240",
 }
 lines = [line for line in path.read_text(encoding="utf-8").splitlines()
          if line.split("=", 1)[0] not in settings]
