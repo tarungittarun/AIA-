@@ -62,10 +62,12 @@ SCREENSHOTS = [
     ("myspace", "tc-calc-007-history.png", "MySpace TC-CALC-007 — persisted history view"),
     ("myspace", "tc-calc-008-target.png", "MySpace TC-CALC-008 — chained repeating-decimal result"),
     ("mycalc", "tc-calc-005-target.png", "Standalone MyCalc TC-CALC-005 — square-root path pass"),
+    ("mycalc", "tc-calc-007-history.png", "Standalone MyCalc TC-CALC-007 — persisted history view"),
     ("mycalc", "tc-calc-008-target.png", "Standalone MyCalc TC-CALC-008 — chained repeating-decimal result"),
     ("myspace", "tc-calc-009-target.png", "MySpace TC-CALC-009 — large-number continuation"),
     ("mycalc", "tc-calc-009-target.png", "Standalone MyCalc TC-CALC-009 — large-number continuation"),
     ("myspace", "tc-calc-011-replay-result.png", "MySpace TC-CALC-011 — D9 history-card replay result"),
+    ("mycalc", "tc-calc-011-replay-result.png", "Standalone MyCalc TC-CALC-011 — D9 history-card replay result"),
 ]
 
 
@@ -386,7 +388,7 @@ def build(args: argparse.Namespace) -> None:
     story += [summary, Spacer(1, 4 * mm)]
     callout = Table([[p(
         "<b>Overall: mixed; the full A–H guide is not certified against the distributed APKs.</b><br/>"
-        "MySpace reproduced two calculator failures in blind precision/large-number probes. The matching standalone MyCalc APK showed the same two failures and PackageManager listed one requested permission despite the guide's literal zero-permissions claim. The official Google Calculator was absent; its comparison is blocked.",
+        "MySpace reproduced two calculator failures in blind precision/large-number probes. The matching standalone MyCalc APK showed the same two failures; PackageManager listed one custom signature-protected permission despite the guide's literal zero-permissions claim (the runtime-permissions section was empty). The official Google Calculator was absent; its comparison is blocked.",
         styles["callout"]) ]], colWidths=[171 * mm])
     callout.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, -1), AMBER_BG),
@@ -471,6 +473,8 @@ def build(args: argparse.Namespace) -> None:
         else:
             status = fallback_status
             observed = missing_note if status == "UNCONFIRMED" else fallback
+        if case == "TC-CALC-012":
+            observed = str(observed) + "; PackageManager dump: prot=signature, granted=true, runtime permissions section empty."
         rendered_mycalc_statuses.append(status)
         mycalc_data.append([
             p(f'<font name="{mono}">{case}</font>', styles["table"]),
@@ -527,7 +531,7 @@ def build(args: argparse.Namespace) -> None:
         ),
         (
             "DEF-324-03 — Standalone “zero permissions” claim conflicts with PackageManager [OPEN · P3]",
-            "The exact installed MyCalc APK's PackageManager requested-permissions section lists app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION; TC-CALC-012 failed against the guide's literal “zero permissions” claim. The audit did not determine protection level, dependency origin, or whether a runtime prompt appears. Recommended: inspect the merged release manifest; either remove the unnecessary request or document a precise, verified claim such as no dangerous/runtime permissions if that is what the manifest proves. Evidence: shard 1 artifact and TC-CALC-012 annotation.",
+            "The exact installed MyCalc APK's PackageManager dump lists app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION under both declared and requested permissions; TC-CALC-012 therefore fails against the guide's literal “zero permissions” claim. The same dump marks the custom permission prot=signature and granted=true, and shows an empty runtime permissions section. This supports a documentation/manifest-claim mismatch, not a finding that a dangerous runtime permission prompt appeared. The dependency origin was not traced. Recommended: inspect the merged release manifest; either remove the unneeded request or revise the guide to make a precise verified claim (for example, no runtime permissions, if that is the intended guarantee). Evidence: original PackageManager dump in the shard 1 artifact.",
         ),
         (
             "QA-GAP-324-01 — Full guide A–H not certified on distributed APKs [OPEN · COVERAGE GAP]",
@@ -561,10 +565,21 @@ def build(args: argparse.Namespace) -> None:
     story.append(p("Source: tc-calc-012-package-dump.txt produced by the runtime permission-audit case. The snippet below is extracted from the artifact; the full text dump is published beside this PDF.", styles["body"]))
     lines = dump_text.splitlines()
     relevant: list[str] = []
-    for i, line in enumerate(lines):
-        if line.strip().casefold() == "requested permissions:":
-            relevant.extend(lines[max(0, i - 2): min(len(lines), i + 8)])
-            break
+    for header in ("declared permissions:", "requested permissions:", "install permissions:", "runtime permissions:"):
+        index = next((i for i, line in enumerate(lines) if line.strip().casefold() == header), None)
+        if index is None:
+            continue
+        relevant.append(lines[index])
+        entries: list[str] = []
+        for entry in lines[index + 1:]:
+            if not entry.strip() or entry.strip().casefold() in {
+                "declared permissions:", "requested permissions:",
+                "install permissions:", "runtime permissions:", "queries:",
+            }:
+                break
+            entries.append(entry)
+        relevant.extend(entries or ["    (none listed)"])
+        relevant.append("")
     if not relevant:
         relevant = [line for line in lines if "DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" in line][:8]
     if not relevant:
