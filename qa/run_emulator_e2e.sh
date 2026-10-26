@@ -25,7 +25,9 @@ if [[ "$HOST_ARCH" == "arm64" || "$HOST_ARCH" == "aarch64" ]]; then
 else
   EMULATOR_ABI="x86_64"
 fi
-IMAGE="system-images;android-${ANDROID_API};google_apis;$EMULATOR_ABI"
+# The full Google APIs image surfaced a system-process ANR under software emulation.
+# ATD retains the APIs but removes non-test services/apps to reduce guest overhead.
+IMAGE="system-images;android-${ANDROID_API};google_atd;$EMULATOR_ABI"
 PLATFORM_PACKAGE="platforms;android-${ANDROID_API}"
 EMULATOR_LOG="$REPORT_DIR/emulator.log"
 BOOT_LOG="$REPORT_DIR/boot-status.log"

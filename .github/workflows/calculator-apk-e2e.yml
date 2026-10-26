@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   android-emulator-e2e:
-    name: MySpace Calculator on Android 14 emulator (Google APIs)
+    name: MySpace Calculator on Android 14 ATD emulator (Google APIs)
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
