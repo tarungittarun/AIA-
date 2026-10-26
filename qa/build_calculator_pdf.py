@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import html
 import json
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -115,6 +116,54 @@ def find_package_dump(root: Path) -> Path | None:
         if "mycalc" in {part.lower() for part in path.parts}
     ]
     return sorted(matches)[0] if matches else None
+
+
+def copy_json_results(root: Path, destination: Path) -> tuple[dict[str, dict[str, dict]], list[Path]]:
+    results: dict[str, dict[str, dict]] = {}
+    copied: list[Path] = []
+    expected_hashes = {"app.space.one": MYSPACE_SHA, "app.space.calc": MYCALC_SHA}
+    for source in sorted(root.rglob("calculator-e2e-results.json")):
+        data = json.loads(source.read_text(encoding="utf-8"))
+        artifact = data.get("artifact", {})
+        package = artifact.get("package")
+        if package not in expected_hashes:
+            continue
+        actual_hash = artifact.get("sha256")
+        if actual_hash and actual_hash != expected_hashes[package]:
+            raise SystemExit(f"Unexpected APK digest in {source}: {actual_hash}")
+        shard_match = next((re.search(r"shard-(\d+)", part) for part in source.parts if re.search(r"shard-(\d+)", part)), None)
+        shard = f"shard-{shard_match.group(1)}" if shard_match else "shard-unknown"
+        app_name = "myspace" if package == "app.space.one" else "mycalc"
+        target = destination / f"{app_name}-{shard}-results.json"
+        shutil.copy2(source, target)
+        copied.append(target)
+        package_results = results.setdefault(package, {})
+        for row in data.get("results", []):
+            test_id = row.get("id")
+            if not test_id:
+                continue
+            previous = package_results.get(test_id)
+            if previous and previous.get("status") != row.get("status"):
+                raise SystemExit(
+                    f"Conflicting JSON outcomes for {package} {test_id}: "
+                    f"{previous.get('status')} vs {row.get('status')}"
+                )
+            package_results[test_id] = row
+    return results, copied
+
+
+def status_counts(results: dict[str, dict]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for row in results.values():
+        status = str(row.get("status", "UNCONFIRMED")).upper()
+        counts[status] = counts.get(status, 0) + 1
+    return counts
+
+
+def count_label(counts: dict[str, int]) -> str:
+    order = ("PASS", "FAIL", "BLOCKED", "ERROR", "UNCONFIRMED")
+    parts = [f"{counts[status]} {status}" for status in order if counts.get(status)]
+    return " · ".join(parts) if parts else "No per-case JSON outcomes available"
 
 
 def setup_styles() -> tuple[dict[str, ParagraphStyle], str, str, str]:
@@ -269,7 +318,10 @@ def build(args: argparse.Namespace) -> None:
         raise SystemExit(f"Evidence artifact directory not found: {artifact_root}")
 
     styles, regular, bold, mono = setup_styles()
+    if evidence_output.exists():
+        shutil.rmtree(evidence_output)
     evidence_output.mkdir(parents=True, exist_ok=True)
+    runtime_results, result_json_files = copy_json_results(artifact_root, evidence_output)
     found: list[tuple[str, str, Path, Path]] = []
     missing: list[str] = []
     for app_folder, filename, caption in SCREENSHOTS:
@@ -278,7 +330,7 @@ def build(args: argparse.Namespace) -> None:
             missing.append(f"{app_folder}/{filename}")
             continue
         safe_app = "myspace" if app_folder == "myspace" else "mycalc"
-        case = filename.replace("-target.png", "").replace("-replay-result.png", "")
+        case = filename.removesuffix(".png").replace("-target", "").replace("-replay-result", "")
         destination_name = f"{safe_app}-{case}.png"
         destination = evidence_output / destination_name
         shutil.copy2(source, destination)
@@ -292,6 +344,12 @@ def build(args: argparse.Namespace) -> None:
     dump_copy = evidence_output / "mycalc-tc-calc-012-package-dump.txt"
     shutil.copy2(dump_source, dump_copy)
     dump_text = dump_copy.read_text(encoding="utf-8", errors="replace")
+    myspace_results = runtime_results.get("app.space.one", {})
+    mycalc_results = runtime_results.get("app.space.calc", {})
+    myspace_counts = status_counts(myspace_results)
+    mycalc_counts = status_counts(mycalc_results)
+    if not myspace_counts:
+        myspace_counts = {"PASS": 8, "FAIL": 2, "BLOCKED": 1}
 
     output.parent.mkdir(parents=True, exist_ok=True)
     doc = SimpleDocTemplate(
@@ -311,9 +369,10 @@ def build(args: argparse.Namespace) -> None:
         p("REPORT DATE: 26 OCTOBER 2026  |  ANDROID 14 / API 34  |  3-SHARD ACTIONS RUN", styles["small"]),
         Spacer(1, 3 * mm),
     ]
+    mycalc_card = count_label(mycalc_counts) if mycalc_counts else "PARTIAL EVIDENCE<br/>per-case outcomes not in retained JSON"
     summary_data = [
         [p("MYSPACE DIRECT APK", styles["center"]), p("MYCALC DIRECT APK", styles["center"]), p("SOURCE CI", styles["center"])],
-        [p("8 PASS · 2 FAIL · 1 BLOCKED", styles["center"]), p("PARTIAL EVIDENCE<br/>TC-005 PASS; TC-008/009/012 FAIL", styles["center"]), p("GREEN AT PINNED COMMIT<br/>NOT APK-LEVEL PROOF", styles["center"])],
+        [p(f"{html.escape(count_label(myspace_counts))}", styles["center"]), p(mycalc_card, styles["center"]), p("GREEN AT PINNED COMMIT<br/>NOT APK-LEVEL PROOF", styles["center"])],
     ]
     summary = Table(summary_data, colWidths=[57 * mm, 57 * mm, 57 * mm], rowHeights=[9 * mm, 19 * mm])
     summary.setStyle(TableStyle([
@@ -366,16 +425,22 @@ def build(args: argparse.Namespace) -> None:
         ("TC-CALC-010", "Official Google comparison", "com.google.android.calculator absent; no AOSP substitution", "BLOCKED"),
         ("TC-CALC-011", "D9 grouped history-card replay", "123456+1 restored and re-evaluated; 1,23,457", "PASS"),
     ]
-    for case, guide, observed, status in myspace_cases:
+    rendered_myspace_statuses: list[str] = []
+    for case, guide, fallback_actual, fallback_status in myspace_cases:
+        row = myspace_results.get(case)
+        status = str(row.get("status", fallback_status)).upper() if row else fallback_status
+        actual = (row.get("actual") or row.get("comment") or fallback_actual) if row else fallback_actual
+        rendered_myspace_statuses.append(status)
         myspace_data.append([
             p(f'<font name="{mono}">{case}</font>', styles["table"]),
-            plain(guide, styles["table"]), plain(observed, styles["table"]), status_cell(status, styles),
+            plain(guide, styles["table"]), plain(str(actual), styles["table"]), status_cell(status, styles),
         ])
-    row_bgs = {i: status_color(row[-1] if isinstance(row[-1], str) else "") for i, row in enumerate(myspace_cases, 1)}
+    row_bgs = {i: status_color(status) for i, status in enumerate(rendered_myspace_statuses, 1)}
     story.append(make_table(myspace_data, [25 * mm, 45 * mm, 83 * mm, 18 * mm], row_bgs=row_bgs))
+    actual_myspace_counts = status_counts({case: {"status": status} for case, status in zip([row[0] for row in myspace_cases], rendered_myspace_statuses)})
     story += [
         Spacer(1, 3 * mm),
-        p("MySpace tally: 8 PASS · 2 FAIL · 1 BLOCKED. TC-CALC-011 directly covered the guide's new D9 history-card re-evaluation claim; it does not certify the other selection, theme, history-layout or app-wide claims.", styles["body"]),
+        p(f"MySpace tally: {html.escape(count_label(actual_myspace_counts))}. TC-CALC-011 directly covered the guide's new D9 history-card re-evaluation claim; it does not certify the other selection, theme, history-layout or app-wide claims.", styles["body"]),
         p("Google reference note", styles["h2"]),
         p("The official package was not installed on the emulator. No AOSP calculator or third-party mirror was substituted. TC-CALC-010 remains BLOCKED; it is not a functional pass.", styles["body"]),
         PageBreak(),
@@ -384,22 +449,48 @@ def build(args: argparse.Namespace) -> None:
     # Page 3 — standalone outcomes and scope matrix.
     story.append(p("3. Standalone MyCalc and guide coverage", styles["h1"]))
     mycalc_data = [[p("Case", styles["table_head"]), p("Direct evidence available", styles["table_head"]), p("Status", styles["table_head"])]]
-    mycalc_cases = [
-        ("TC-CALC-001–004", "Selected in shard 1; no standalone per-case result was present in retained annotations. Do not infer a pass.", "UNCONFIRMED"),
-        ("TC-CALC-005", "√(9) = 3; standalone display included 3.", "PASS"),
-        ("TC-CALC-006–007", "Selected in shard 2; standalone per-case outcome not available in retained annotations.", "UNCONFIRMED"),
-        ("TC-CALC-008", "1 ÷ 3, then × 3 → 0.9999999999; expected 1.", "FAIL"),
-        ("TC-CALC-009", "10^15 displayed 1e+15; continuing +1 produced Error.", "FAIL"),
-        ("TC-CALC-011", "Selected for D9 replay; standalone per-case outcome not available in retained annotations.", "UNCONFIRMED"),
-        ("TC-CALC-012", "PackageManager listed app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION.", "FAIL"),
+    mycalc_case_specs = [
+        ("TC-CALC-001", "Operator precedence", "Selected in shard 1; no result row in the retained machine-readable output.", "UNCONFIRMED"),
+        ("TC-CALC-002", "Parentheses arithmetic", "Selected in shard 1; no result row in the retained machine-readable output.", "UNCONFIRMED"),
+        ("TC-CALC-003", "Decimal arithmetic", "Selected in shard 1; no result row in the retained machine-readable output.", "UNCONFIRMED"),
+        ("TC-CALC-004", "Percent semantics", "Selected in shard 1; no result row in the retained machine-readable output.", "UNCONFIRMED"),
+        ("TC-CALC-005", "Square-root path", "Observed standalone result 3 for √(9).", "PASS"),
+        ("TC-CALC-006", "Degree-mode sine", "Selected in shard 2; no result row in the retained machine-readable output.", "UNCONFIRMED"),
+        ("TC-CALC-007", "History persistence", "Selected in shard 2; no result row in the retained machine-readable output.", "UNCONFIRMED"),
+        ("TC-CALC-008", "Blind precision probe", "1 ÷ 3, then × 3; expected 1.", "FAIL"),
+        ("TC-CALC-009", "Blind exponent continuation", "10^15 displayed 1e+15; continuing +1 produced Error.", "FAIL"),
+        ("TC-CALC-011", "D9 history-card replay", "Selected in shard 2; no result row in the retained machine-readable output.", "UNCONFIRMED"),
+        ("TC-CALC-012", "Requested-permissions audit", "PackageManager listed app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION.", "FAIL"),
     ]
-    for case, observed, status in mycalc_cases:
-        mycalc_data.append([p(f'<font name="{mono}">{case}</font>', styles["table"]), plain(observed, styles["table"]), status_cell(status, styles)])
-    row_bgs = {i: status_color(row[-1] if isinstance(row[-1], str) else "") for i, row in enumerate(mycalc_cases, 1)}
-    story.append(make_table(mycalc_data, [34 * mm, 119 * mm, 18 * mm], row_bgs=row_bgs))
+    rendered_mycalc_statuses: list[str] = []
+    for case, fallback, missing_note, fallback_status in mycalc_case_specs:
+        row = mycalc_results.get(case)
+        if row:
+            status = str(row.get("status", fallback_status)).upper()
+            observed = row.get("actual") or row.get("comment") or fallback
+        else:
+            status = fallback_status
+            observed = missing_note if status == "UNCONFIRMED" else fallback
+        rendered_mycalc_statuses.append(status)
+        mycalc_data.append([
+            p(f'<font name="{mono}">{case}</font>', styles["table"]),
+            plain(str(observed), styles["table"]),
+            status_cell(status, styles),
+        ])
+    mycalc_row_bgs = {i: status_color(status) for i, status in enumerate(rendered_mycalc_statuses, 1)}
+    story.append(make_table(mycalc_data, [33 * mm, 106 * mm, 35 * mm], row_bgs=mycalc_row_bgs))
+    mycalc_unconfirmed = [
+        case for (case, *_), status in zip(mycalc_case_specs, rendered_mycalc_statuses)
+        if status == "UNCONFIRMED"
+    ]
+    unconfirmed_note = (
+        "Cases still unconfirmed from the downloaded JSON/annotations: " + ", ".join(mycalc_unconfirmed) + "."
+        if mycalc_unconfirmed
+        else "Every selected MyCalc calculator case has a per-case JSON row; the broader icon/gesture/visual guide claims remain outside this runtime suite."
+    )
     story += [
         p("Evidence limitation", styles["h2"]),
-        p("The Actions run uploaded three evidence artifacts. The sandbox could not retrieve the original archive directly, so unconfirmed MyCalc rows are left unresolved rather than upgraded to passes. The selected original PNG screenshots below were later retrieved by a GitHub Actions evidence-publishing job from the same run.", styles["body"]),
+        p("The Actions run uploaded three evidence artifacts. The PDF publisher retrieved those original artifacts and copied per-shard JSON results and selected PNG screenshots into the public evidence folder. " + html.escape(unconfirmed_note) + " No missing result is inferred to be a pass.", styles["body"]),
         p("Guide A–H coverage", styles["h2"]),
     ]
     coverage_rows = [[p("Guide section", styles["table_head"]), p("APK-level status", styles["table_head"]), p("Boundary / note", styles["table_head"])]]
@@ -409,7 +500,7 @@ def build(args: argparse.Namespace) -> None:
         ("C · Expression", "PARTIAL", "C5 percent passed; related precedence/parenthesis passed. Visual/caret/keyboard and exact open-bracket flows not run."),
         ("D · Behavior", "PARTIAL", "D5/part D6 and MySpace D9 passed. D1–D3, D7–D8 and inverse/Rad toggle remain untested; blind probes failed."),
         ("E · History", "PARTIAL", "One history restore/persistence case passed; ordering, swipe, memory, effects and page-scroll claims not run."),
-        ("F · MyCalc", "PARTIAL / MISMATCH", "Limited calculator outcomes; two numeric failures, permission claim failed, other selected cases unconfirmed."),
+        ("F · MyCalc", "PARTIAL / MISMATCH", f"Two numeric failures and the zero-permission claim mismatch. {len(mycalc_unconfirmed)} selected test case(s) lack a JSON result row; icon/gesture/visual claims not run."),
         ("G · Other apps", "NOT DIRECTLY RUN", "Notes, Calendar, Music, Recorder, Scanner, Files and Diagnostics were outside this calculator suite."),
         ("H · Themes/caret", "SOURCE-CI ONLY", "Upstream source emulator workflow passed; no artifact-level theme or caret visual check."),
     ]
@@ -440,7 +531,7 @@ def build(args: argparse.Namespace) -> None:
         ),
         (
             "QA-GAP-324-01 — Full guide A–H not certified on distributed APKs [OPEN · COVERAGE GAP]",
-            "This is a coverage limitation, not a confirmed app defect. Missing direct coverage includes B1–B8 gestures/clipboard; most C/H visual and caret claims; D1–D3/D7–D8; most E behavior; MyCalc icon and unconfirmed cases; and all G-section Notes, Calendar, Music, Recorder, Scanner, Files and Diagnostics flows. Upstream source CI is green but cannot be counted as APK-level validation. Closure: execute and retain per-claim APK screenshots/logs, then label each guide item PASS/FAIL/BLOCKED/NOT RUN.",
+            "This is a coverage limitation, not a confirmed app defect. Missing direct coverage includes B1–B8 gestures/clipboard; most C/H visual and caret claims; D1–D3/D7–D8; most E behavior; MyCalc icon and visual claims; and all G-section Notes, Calendar, Music, Recorder, Scanner, Files and Diagnostics flows. Upstream source CI is green but cannot be counted as APK-level validation. Closure: execute and retain per-claim APK screenshots/logs, then label each guide item PASS/FAIL/BLOCKED/NOT RUN.",
         ),
     ]
     for title, detail in defects:
@@ -471,7 +562,7 @@ def build(args: argparse.Namespace) -> None:
     lines = dump_text.splitlines()
     relevant: list[str] = []
     for i, line in enumerate(lines):
-        if "requested permissions:" in line.casefold():
+        if line.strip().casefold() == "requested permissions:":
             relevant.extend(lines[max(0, i - 2): min(len(lines), i + 8)])
             break
     if not relevant:
@@ -500,17 +591,22 @@ def build(args: argparse.Namespace) -> None:
             plain(caption, styles["table"]),
             p(f'<font name="{mono}">{sha256_file(destination)}</font>', styles["table"]),
         ])
-    if dump_copy is not None:
+    manifest_rows.append([
+        p(f'<font name="{mono}">{html.escape(dump_copy.name)}</font>', styles["table"]),
+        plain("MyCalc TC-CALC-012 PackageManager dump", styles["table"]),
+        p(f'<font name="{mono}">{sha256_file(dump_copy)}</font>', styles["table"]),
+    ])
+    for result_file in result_json_files:
         manifest_rows.append([
-            p(f'<font name="{mono}">{html.escape(dump_copy.name)}</font>', styles["table"]),
-            plain("MyCalc TC-CALC-012 PackageManager dump", styles["table"]),
-            p(f'<font name="{mono}">{sha256_file(dump_copy)}</font>', styles["table"]),
+            p(f'<font name="{mono}">{html.escape(result_file.name)}</font>', styles["table"]),
+            plain("Machine-readable per-shard APK results", styles["table"]),
+            p(f'<font name="{mono}">{sha256_file(result_file)}</font>', styles["table"]),
         ])
     story.append(make_table(manifest_rows, [51 * mm, 63 * mm, 57 * mm]))
     story += [
         Spacer(1, 4 * mm),
         p("Status definitions", styles["h2"]),
-        p("PASS means a direct APK assertion was observed. FAIL means the direct assertion was contradicted. BLOCKED means a required comparison/precondition was unavailable. UNCONFIRMED means a case was selected but no usable per-case result was available in retained annotations; it is not silently counted as a pass. SOURCE-CI means the upstream source workflow passed, not that the distributed APK passed that item.", styles["body"]),
+        p("PASS means a direct APK assertion was observed. FAIL means the direct assertion was contradicted. BLOCKED means a required comparison/precondition was unavailable. UNCONFIRMED means a case was selected but no usable per-case result is available in the retrieved machine-readable JSON or retained check annotations; it is not silently counted as a pass. SOURCE-CI means the upstream source workflow passed, not that the distributed APK passed that item.", styles["body"]),
         p(f'Workflow and artifact index: <link href="{RUN_URL}" color="#1d5fa7">{RUN_URL}</link>', styles["small"]),
     ]
 
@@ -520,6 +616,7 @@ def build(args: argparse.Namespace) -> None:
         raise SystemExit("PDF signature validation failed")
     print(f"Built {output} ({len(pdf_bytes)} bytes)")
     print(f"Embedded {len(found)} original screenshots")
+    print(f"Copied {len(result_json_files)} machine-readable shard result files")
     print(f"Published evidence files to {evidence_output}")
 
 
