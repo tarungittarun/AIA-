@@ -1,0 +1,69 @@
+{
+  "report_title": "MySpace Calculator APK E2E QA Run",
+  "created_utc": "2026-10-26T12:21:16+00:00",
+  "artifact": {
+    "file": "MySpace-v3.12.24-61-lite-dist.apk",
+    "package": "app.space.one",
+    "size_bytes": 2270160,
+    "sha256": "bd6f3850b659ee8c9c37c17055e9d688caa7ca5c298a28487c475ae0c948e986"
+  },
+  "device": {
+    "emulator_api": 34,
+    "screen": "320x640",
+    "ui_inspection_method": "uiautomator-compressed",
+    "scope": "Calculator feature only"
+  },
+  "google_reference": {
+    "requested": "Google Calculator (com.google.android.calculator)",
+    "status": "NOT_CHECKED",
+    "package": null,
+    "note": ""
+  },
+  "selected_test_ids": [
+    "TC-CALC-001",
+    "TC-CALC-002",
+    "TC-CALC-003",
+    "TC-CALC-004"
+  ],
+  "summary": {
+    "PASS": 4
+  },
+  "results": [
+    {
+      "id": "TC-CALC-001",
+      "title": "Operator precedence",
+      "status": "PASS",
+      "expected": "14",
+      "actual": "CALCULATOR | 14",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/guide-shard-1/myspace/evidence/tc-calc-001-target.png"
+    },
+    {
+      "id": "TC-CALC-002",
+      "title": "Parentheses override precedence",
+      "status": "PASS",
+      "expected": "20",
+      "actual": "CALCULATOR | 20",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/guide-shard-1/myspace/evidence/tc-calc-002-target.png"
+    },
+    {
+      "id": "TC-CALC-003",
+      "title": "Decimal addition",
+      "status": "PASS",
+      "expected": "0.3",
+      "actual": "CALCULATOR | 0.3",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/guide-shard-1/myspace/evidence/tc-calc-003-target.png"
+    },
+    {
+      "id": "TC-CALC-004",
+      "title": "Contextual percentage",
+      "status": "PASS",
+      "expected": "220",
+      "actual": "CALCULATOR | 220",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/guide-shard-1/myspace/evidence/tc-calc-004-target.png"
+    }
+  ]
+}

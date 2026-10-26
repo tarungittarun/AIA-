@@ -1,0 +1,80 @@
+{
+  "report_title": "Standalone MyCalc Calculator APK E2E QA Run",
+  "created_utc": "2026-10-26T12:22:59+00:00",
+  "artifact": {
+    "file": "MyCalc-v1.0.22-23.apk",
+    "package": "app.space.calc",
+    "size_bytes": 1307931,
+    "sha256": "4465b0f0d7ff4c3e4fbdb9a9a09db88b0e4fffcbb02ce4f3e27d73a0b12510fa"
+  },
+  "device": {
+    "emulator_api": 34,
+    "screen": "320x640",
+    "ui_inspection_method": "uiautomator-compressed",
+    "scope": "Calculator feature only"
+  },
+  "google_reference": {
+    "requested": "Google Calculator (com.google.android.calculator)",
+    "status": "NOT_CHECKED",
+    "package": null,
+    "note": ""
+  },
+  "selected_test_ids": [
+    "TC-CALC-001",
+    "TC-CALC-002",
+    "TC-CALC-003",
+    "TC-CALC-004",
+    "TC-CALC-012"
+  ],
+  "summary": {
+    "FAIL": 1,
+    "PASS": 4
+  },
+  "results": [
+    {
+      "id": "TC-CALC-012",
+      "title": "Standalone MyCalc requests no Android permissions",
+      "status": "FAIL",
+      "expected": "No requested Android permissions",
+      "actual": "Requested permissions: app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+      "comment": "The installed standalone package requests one or more Android permissions.",
+      "evidence": "reports/e2e/guide-shard-1/mycalc/evidence/tc-calc-012-package-dump.txt"
+    },
+    {
+      "id": "TC-CALC-001",
+      "title": "Operator precedence",
+      "status": "PASS",
+      "expected": "14",
+      "actual": "MyCalc | STANDALONE | 14",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/guide-shard-1/mycalc/evidence/tc-calc-001-target.png"
+    },
+    {
+      "id": "TC-CALC-002",
+      "title": "Parentheses override precedence",
+      "status": "PASS",
+      "expected": "20",
+      "actual": "MyCalc | STANDALONE | 20",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/guide-shard-1/mycalc/evidence/tc-calc-002-target.png"
+    },
+    {
+      "id": "TC-CALC-003",
+      "title": "Decimal addition",
+      "status": "PASS",
+      "expected": "0.3",
+      "actual": "MyCalc | STANDALONE | 0.3",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/guide-shard-1/mycalc/evidence/tc-calc-003-target.png"
+    },
+    {
+      "id": "TC-CALC-004",
+      "title": "Contextual percentage",
+      "status": "PASS",
+      "expected": "220",
+      "actual": "MyCalc | STANDALONE | 220",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/guide-shard-1/mycalc/evidence/tc-calc-004-target.png"
+    }
+  ]
+}
