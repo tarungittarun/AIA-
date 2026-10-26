@@ -139,6 +139,13 @@ class AndroidUiHarnessTests(unittest.TestCase):
         qa.case_ids = None
         self.assertEqual(qa.case_plan(), set(CALCULATOR_TEST_IDS))
 
+    def test_history_result_matcher_accepts_equals_prefix_and_zero_padding(self) -> None:
+        self.assertTrue(CalculatorQa._history_result_visible(["= 2"], "2"))
+        self.assertTrue(CalculatorQa._history_result_visible(["2"], "2"))
+        self.assertTrue(CalculatorQa._history_result_visible(["= 2.00"], "2"))
+        self.assertFalse(CalculatorQa._history_result_visible(["= 2.1"], "2"))
+        self.assertFalse(CalculatorQa._history_result_visible(["= 12"], "2"))
+
     def test_expression_matching_ignores_spacing_but_not_missing_digits(self) -> None:
         root = ET.fromstring(
             '<hierarchy><node text="0.1 + 0.2" bounds="[20,100][300,150]" '

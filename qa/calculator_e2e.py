@@ -22,7 +22,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any, Iterable
 
-EXPECTED_APK_SHA256 = "cd56a2b654dbe7d3a54c4dd291a06e2ec9d7150b6c399a89f93591b167d6e4e8"
+EXPECTED_APK_SHA256 = "bcdd1de4606348d1e318452002f9f9a4c28bc464af1fabeb9941ee22891da02a"
 DEFAULT_PACKAGE = "app.space.one"
 GOOGLE_CALCULATOR_PACKAGE = "com.google.android.calculator"
 CALCULATOR_TEST_IDS = tuple(f"TC-CALC-{number:03d}" for number in range(1, 11))
@@ -789,6 +789,20 @@ class CalculatorQa:
             selected.add("TC-CALC-001")
         return selected
 
+    @staticmethod
+    def _history_result_visible(labels: Iterable[str], expected: str) -> bool:
+        expected_text = clean(expected)
+        for label in labels:
+            result = clean(label)
+            if result.startswith("="):
+                result = result[1:].strip()
+            if result == expected_text:
+                return True
+            decimal_suffix = result.removeprefix(expected_text + ".")
+            if decimal_suffix and set(decimal_suffix) == {"0"}:
+                return True
+        return False
+
     def add_result(
         self,
         test_id: str,
@@ -1071,8 +1085,9 @@ class CalculatorQa:
             time.sleep(0.45)
             history_texts = self.device.labels()
             screenshot = self.device.screenshot("evidence/tc-calc-007-history.png")
-            found = any("1+1" in text.replace(" ", "") for text in history_texts) and any(
-                text.strip() == "2" for text in history_texts
+            found = (
+                any("1+1" in text.replace(" ", "") for text in history_texts)
+                and self._history_result_visible(history_texts, "2")
             )
             if found:
                 # Tap the stored expression to verify the history item restores a
