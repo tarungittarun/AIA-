@@ -211,7 +211,12 @@ adb -s "$SERIAL" shell settings put global transition_animation_scale 0 >> "$BOO
 adb -s "$SERIAL" shell settings put global animator_duration_scale 0 >> "$BOOT_LOG" 2>&1 || true
 printf '::notice title=Android emulator ready::API %s %s boot completed; running calculator-only UI tests.\n' "$ANDROID_API" "$EMULATOR_ABI"
 
+qa_args=()
+if [[ -n "${CALCULATOR_CASES:-}" ]]; then
+  qa_args+=(--cases "$CALCULATOR_CASES")
+fi
 python3 -u "$ROOT/qa/calculator_e2e.py" \
   --apk "$APK_PATH" \
   --package app.space.one \
-  --report-dir "$REPORT_DIR"
+  --report-dir "$REPORT_DIR" \
+  "${qa_args[@]}"

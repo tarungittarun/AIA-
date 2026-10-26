@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 from contextlib import redirect_stdout
 from unittest.mock import patch
 
-from calculator_e2e import AndroidUi, CalculatorQa, QaError
+from calculator_e2e import AndroidUi, CALCULATOR_TEST_IDS, CalculatorQa, QaError
 
 
 class AndroidUiHarnessTests(unittest.TestCase):
@@ -127,6 +127,17 @@ class AndroidUiHarnessTests(unittest.TestCase):
         self.assertTrue(device.rebooted)
         self.assertEqual(device.wait_taps, 3)
         self.assertEqual(device.launches, 2)
+
+    def test_case_plan_is_sharded_and_google_job_runs_target_baseline(self) -> None:
+        qa = object.__new__(CalculatorQa)
+        qa.case_ids = {"TC-CALC-010"}
+        self.assertEqual(qa.case_plan(), {"TC-CALC-001", "TC-CALC-010"})
+
+        qa.case_ids = {"TC-CALC-008"}
+        self.assertEqual(qa.case_plan(), {"TC-CALC-008"})
+
+        qa.case_ids = None
+        self.assertEqual(qa.case_plan(), set(CALCULATOR_TEST_IDS))
 
     def test_expression_matching_ignores_spacing_but_not_missing_digits(self) -> None:
         root = ET.fromstring(

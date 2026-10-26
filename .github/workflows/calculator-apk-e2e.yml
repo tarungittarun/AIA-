@@ -1,4 +1,4 @@
-name: Calculator APK E2E QA
+name: Calculator APK v3.12.18 (55) E2E QA
 
 on:
   push:
@@ -19,9 +19,24 @@ concurrency:
 
 jobs:
   android-emulator-e2e:
-    name: MySpace Calculator on Android 14 ATD emulator (Google APIs)
+    name: ${{ matrix.case }} on Android 14 ATD (Google APIs)
     runs-on: ubuntu-24.04
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        case:
+          - TC-CALC-001
+          - TC-CALC-002
+          - TC-CALC-003
+          - TC-CALC-004
+          - TC-CALC-005
+          - TC-CALC-006
+          - TC-CALC-007
+          - TC-CALC-008
+          - TC-CALC-009
+          - TC-CALC-010
     steps:
       - name: Check out the QA harness
         uses: actions/checkout@v4
@@ -48,25 +63,25 @@ jobs:
             echo "::warning::Screenshot OCR fallback unavailable because Tesseract is missing."
           fi
 
-      - name: Check out the exact source commit containing the supplied APK
+      - name: Check out exact source commit containing APK v3.12.18-55
         uses: actions/checkout@v4
         with:
           repository: tarungittarun/TicTic
-          ref: 76f03909ea8bd11c9c4fed83c8e3d7279e3fc9c9
+          ref: ca8ab165ef155a367b9959a3c9cd7f4be21f891a
           path: linked-source
-          sparse-checkout: artifacts/MySpace-v3.12.7-44-lite-dist.apk
+          sparse-checkout: artifacts/MySpace-v3.12.18-55-lite-dist.apk
           sparse-checkout-cone-mode: false
           persist-credentials: false
 
-      - name: Verify the exact supplied APK
+      - name: Verify exact supplied APK v3.12.18-55
         shell: bash
         run: |
           set -euo pipefail
-          apk="$GITHUB_WORKSPACE/linked-source/artifacts/MySpace-v3.12.7-44-lite-dist.apk"
+          apk="$GITHUB_WORKSPACE/linked-source/artifacts/MySpace-v3.12.18-55-lite-dist.apk"
           python3 - "$apk" <<'PY'
           import hashlib, sys, zipfile
           apk = sys.argv[1]
-          expected = 'ff52331518b71a153abf6ef76c964538044121230e1ae87d2855e535a94e0a23'
+          expected = 'cd56a2b654dbe7d3a54c4dd291a06e2ec9d7150b6c399a89f93591b167d6e4e8'
           with open(apk, 'rb') as stream:
               actual = hashlib.file_digest(stream, 'sha256').hexdigest()
           if actual != expected:
@@ -78,7 +93,7 @@ jobs:
           print(f'Verified APK SHA-256: {actual}')
           PY
           echo "APK_PATH=$apk" >> "$GITHUB_ENV"
-          echo "Verified APK SHA-256: ff52331518b71a153abf6ef76c964538044121230e1ae87d2855e535a94e0a23"
+          echo "Verified APK SHA-256: cd56a2b654dbe7d3a54c4dd291a06e2ec9d7150b6c399a89f93591b167d6e4e8"
 
       - name: Set up Android SDK tools
         uses: android-actions/setup-android@v3
@@ -87,15 +102,17 @@ jobs:
           accept-android-sdk-licenses: true
           log-accepted-android-sdk-licenses: false
 
-      - name: Boot Android 14 emulator and run calculator UI tests
+      - name: Boot Android 14 emulator and run ${{ matrix.case }}
         shell: bash
+        env:
+          CALCULATOR_CASES: ${{ matrix.case }}
         run: bash qa/run_emulator_e2e.sh
 
-      - name: Upload test report, screenshots, and UI dumps
+      - name: Upload ${{ matrix.case }} report, screenshots, and UI dumps
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: calculator-e2e-evidence-${{ github.run_number }}
+          name: calculator-e2e-v3.12.18-${{ matrix.case }}-${{ github.run_number }}
           path: reports/e2e/
           if-no-files-found: warn
           retention-days: 30

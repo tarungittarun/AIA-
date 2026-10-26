@@ -22,9 +22,10 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any, Iterable
 
-EXPECTED_APK_SHA256 = "ff52331518b71a153abf6ef76c964538044121230e1ae87d2855e535a94e0a23"
+EXPECTED_APK_SHA256 = "cd56a2b654dbe7d3a54c4dd291a06e2ec9d7150b6c399a89f93591b167d6e4e8"
 DEFAULT_PACKAGE = "app.space.one"
 GOOGLE_CALCULATOR_PACKAGE = "com.google.android.calculator"
+CALCULATOR_TEST_IDS = tuple(f"TC-CALC-{number:03d}" for number in range(1, 11))
 
 BASIC_GRID = {
     "AC": (0, 0), "( )": (0, 1), "%": (0, 2), "÷": (0, 3),
@@ -753,11 +754,24 @@ class AndroidUi:
 
 
 class CalculatorQa:
-    def __init__(self, apk: Path, package: str, report_dir: Path) -> None:
+    def __init__(
+        self,
+        apk: Path,
+        package: str,
+        report_dir: Path,
+        case_ids: set[str] | None = None,
+    ) -> None:
         self.apk = apk
         self.package = package
         self.report_dir = report_dir
         self.report_dir.mkdir(parents=True, exist_ok=True)
+        if case_ids is not None:
+            unknown = case_ids - set(CALCULATOR_TEST_IDS)
+            if unknown:
+                raise QaError(f"Unknown calculator test IDs: {sorted(unknown)}")
+            if not case_ids:
+                raise QaError("At least one calculator test ID must be selected")
+        self.case_ids = set(case_ids) if case_ids is not None else None
         self.device = AndroidUi(report_dir, "target")
         self.results: list[dict[str, Any]] = []
         self.reference: dict[str, Any] = {
@@ -767,6 +781,13 @@ class CalculatorQa:
             "note": "",
         }
         self.installed_packages: set[str] = set()
+
+    def case_plan(self) -> set[str]:
+        """Return this shard's IDs, adding TC-CALC-001 as the TC-010 comparator baseline."""
+        selected = set(CALCULATOR_TEST_IDS) if self.case_ids is None else set(self.case_ids)
+        if "TC-CALC-010" in selected:
+            selected.add("TC-CALC-001")
+        return selected
 
     def add_result(
         self,
@@ -1274,29 +1295,40 @@ class CalculatorQa:
         self.device.navigate_to_calculator(self.package)
         self.device.screenshot("evidence/initial-calculator-screen.png")
 
-        self.run_case(
-            "TC-CALC-001", "Operator precedence", ["2", "+", "3", "×", "4"], "14"
-        )
-        self.run_case(
-            "TC-CALC-002", "Parentheses override precedence",
-            ["(", "2", "+", "3", ")", "×", "4"], "20"
-        )
-        self.run_case(
-            "TC-CALC-003", "Decimal addition", ["0", ".", "1", "+", "0", ".", "2"], "0.3"
-        )
-        self.run_case(
-            "TC-CALC-004", "Contextual percentage", ["2", "0", "0", "+", "1", "0", "%"], "220"
-        )
-        self.run_case(
-            "TC-CALC-005", "Square root in scientific panel", ["√(", "9", ")"], "3", scientific=True
-        )
-        self.run_case(
-            "TC-CALC-006", "Sine in degree mode", ["sin(", "3", "0", ")"], "0.5", scientific=True
-        )
-        self.run_history()
-        self.run_chained_precision()
-        self.run_exponent_chain()
-        self.check_google_reference()
+        selected = self.case_plan()
+        if "TC-CALC-001" in selected:
+            self.run_case(
+                "TC-CALC-001", "Operator precedence", ["2", "+", "3", "×", "4"], "14"
+            )
+        if "TC-CALC-002" in selected:
+            self.run_case(
+                "TC-CALC-002", "Parentheses override precedence",
+                ["(", "2", "+", "3", ")", "×", "4"], "20"
+            )
+        if "TC-CALC-003" in selected:
+            self.run_case(
+                "TC-CALC-003", "Decimal addition", ["0", ".", "1", "+", "0", ".", "2"], "0.3"
+            )
+        if "TC-CALC-004" in selected:
+            self.run_case(
+                "TC-CALC-004", "Contextual percentage", ["2", "0", "0", "+", "1", "0", "%"], "220"
+            )
+        if "TC-CALC-005" in selected:
+            self.run_case(
+                "TC-CALC-005", "Square root in scientific panel", ["√(", "9", ")"], "3", scientific=True
+            )
+        if "TC-CALC-006" in selected:
+            self.run_case(
+                "TC-CALC-006", "Sine in degree mode", ["sin(", "3", "0", ")"], "0.5", scientific=True
+            )
+        if "TC-CALC-007" in selected:
+            self.run_history()
+        if "TC-CALC-008" in selected:
+            self.run_chained_precision()
+        if "TC-CALC-009" in selected:
+            self.run_exponent_chain()
+        if "TC-CALC-010" in selected:
+            self.check_google_reference()
 
         aosp_present = "com.android.calculator2" in self.installed_packages
         if self.reference["status"] == "NOT_INSTALLED" and aosp_present:
@@ -1325,6 +1357,7 @@ class CalculatorQa:
                 "scope": "Calculator feature only",
             },
             "google_reference": self.reference,
+            "selected_test_ids": sorted(self.case_plan()),
             "summary": status_counts,
             "results": self.results,
         }
@@ -1415,9 +1448,16 @@ def main() -> int:
     parser.add_argument("--apk", type=Path, required=True)
     parser.add_argument("--package", default=DEFAULT_PACKAGE)
     parser.add_argument("--report-dir", type=Path, default=Path("reports/e2e"))
+    parser.add_argument(
+        "--cases",
+        help="Comma-separated TC-CALC-001..010 IDs; omit to run the full calculator suite",
+    )
     args = parser.parse_args()
     try:
-        qa = CalculatorQa(args.apk, args.package, args.report_dir)
+        case_ids = None
+        if args.cases is not None:
+            case_ids = {item.strip().upper() for item in args.cases.split(",") if item.strip()}
+        qa = CalculatorQa(args.apk, args.package, args.report_dir, case_ids=case_ids)
         return qa.run()
     except Exception as exc:
         print(f"::error title=Calculator E2E setup::{type(exc).__name__}: {exc}", flush=True)
