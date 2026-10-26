@@ -113,6 +113,63 @@ class AndroidUi:
         self._last_tree = None
         self._scientific_open = False
 
+    def _reboot_after_system_anr(self, package: str) -> None:
+        """Perform one bounded emulator reboot if Android's system process stays ANR."""
+        print(
+            "::warning title=System ANR recovery::The system process stayed unresponsive after "
+            "three Wait retries; rebooting the test emulator once.",
+            flush=True,
+        )
+        try:
+            self.adb("reboot", timeout=20, check=False)
+        except subprocess.TimeoutExpired:
+            # `adb reboot` may drop the transport before its shell command exits.
+            pass
+        try:
+            self.adb("wait-for-device", timeout=180)
+        except Exception as error:
+            raise QaError(f"Emulator did not reconnect after ANR recovery reboot: {error}") from error
+
+        boot_deadline = time.monotonic() + 240
+        while time.monotonic() < boot_deadline:
+            try:
+                if self.adb(
+                    "shell", "getprop", "sys.boot_completed", timeout=15, check=False
+                ).strip() == "1":
+                    break
+            except Exception:
+                pass
+            time.sleep(3.0)
+        else:
+            raise QaError("Emulator did not finish rebooting within 240 seconds after system ANR")
+
+        package_deadline = time.monotonic() + 120
+        package_line = f"package:{package}"
+        while time.monotonic() < package_deadline:
+            try:
+                packages = self.adb(
+                    "shell", "cmd", "package", "list", "packages", timeout=20, check=False
+                )
+                if package_line in packages.splitlines():
+                    break
+            except Exception:
+                pass
+            time.sleep(3.0)
+        else:
+            raise QaError(f"PackageManager did not report installed target package {package!r} after reboot")
+
+        for setting in ("window_animation_scale", "transition_animation_scale", "animator_duration_scale"):
+            self.adb("shell", "settings", "put", "global", setting, "0", check=False)
+        self._last_tree = None
+        self._ocr_mode = False
+        self._scientific_open = False
+        self.ui_method = "uiautomator-compressed"
+        time.sleep(5.0)
+        print(
+            f"::notice title=System ANR recovery::Emulator rebooted; {package} remains installed.",
+            flush=True,
+        )
+
     def force_stop(self, package: str) -> None:
         self.adb("shell", "am", "force-stop", package, check=False)
         time.sleep(0.5)
@@ -494,12 +551,21 @@ class AndroidUi:
         # tile/route; no other feature is used by this test.
         route_labels = ("Calculator", "Apps", "Menu", "Clock")
         anr_waits = 0
+        rebooted_after_anr = False
         for _ in range(8):
             if self.is_calculator_screen():
                 return
             labels = self.labels()
             if self._is_anr_dialog(labels):
-                if anr_waits >= 3 or not any(label.casefold() == "wait" for label in labels):
+                if anr_waits >= 3:
+                    if rebooted_after_anr:
+                        break
+                    self._reboot_after_system_anr(package)
+                    rebooted_after_anr = True
+                    anr_waits = 0
+                    self.launch(package)
+                    continue
+                if not any(label.casefold() == "wait" for label in labels):
                     break
                 self.tap_label("Wait", timeout=2.0)
                 anr_waits += 1

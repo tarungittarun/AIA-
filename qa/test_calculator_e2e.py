@@ -68,6 +68,66 @@ class AndroidUiHarnessTests(unittest.TestCase):
         self.assertEqual(ui.ui_method, "uiautomator-standard")
         self.assertIn(("shell", "uiautomator", "dump", "/sdcard/window-standard.xml"), calls)
 
+    def test_system_anr_recovery_reboots_and_waits_for_installed_package(self) -> None:
+        ui = object.__new__(AndroidUi)
+        ui._last_tree = ET.Element("stale-hierarchy")
+        ui._ocr_mode = True
+        ui._scientific_open = True
+        ui.ui_method = "screenshot-ocr-fallback"
+        calls: list[tuple[str, ...]] = []
+
+        def adb(*args: str, **kwargs: object) -> str:
+            calls.append(args)
+            if args == ("shell", "getprop", "sys.boot_completed"):
+                return "1\n"
+            if args == ("shell", "cmd", "package", "list", "packages"):
+                return "package:app.space.one\n"
+            return ""
+
+        ui.adb = adb
+        with patch("calculator_e2e.time.sleep", return_value=None), redirect_stdout(io.StringIO()):
+            ui._reboot_after_system_anr("app.space.one")
+
+        self.assertIn(("reboot",), calls)
+        self.assertIn(("wait-for-device",), calls)
+        self.assertIsNone(ui._last_tree)
+        self.assertFalse(ui._ocr_mode)
+        self.assertFalse(ui._scientific_open)
+        self.assertIn(("shell", "cmd", "package", "list", "packages"), calls)
+
+    def test_navigation_reboots_once_after_three_unresolved_system_anr_waits(self) -> None:
+        class FakeDevice:
+            navigate_to_calculator = AndroidUi.navigate_to_calculator
+            _is_anr_dialog = staticmethod(AndroidUi._is_anr_dialog)
+
+            def __init__(self) -> None:
+                self.rebooted = False
+                self.launches = 0
+                self.wait_taps = 0
+
+            def launch(self, package: str) -> None:
+                self.launches += 1
+
+            def is_calculator_screen(self) -> bool:
+                return self.rebooted and self.launches == 2
+
+            def labels(self) -> list[str]:
+                return ["Process system isn't responding", "Wait", "Close app"]
+
+            def tap_label(self, label: str, **kwargs: object) -> None:
+                self.wait_taps += 1
+
+            def _reboot_after_system_anr(self, package: str) -> None:
+                self.rebooted = True
+
+        device = FakeDevice()
+        with patch("calculator_e2e.time.sleep", return_value=None):
+            device.navigate_to_calculator("app.space.one")
+
+        self.assertTrue(device.rebooted)
+        self.assertEqual(device.wait_taps, 3)
+        self.assertEqual(device.launches, 2)
+
     def test_expression_matching_ignores_spacing_but_not_missing_digits(self) -> None:
         root = ET.fromstring(
             '<hierarchy><node text="0.1 + 0.2" bounds="[20,100][300,150]" '
