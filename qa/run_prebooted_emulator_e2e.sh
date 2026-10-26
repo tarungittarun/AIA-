@@ -52,7 +52,7 @@ run_suite() {
 
 mkdir -p "$REPORT_ROOT"
 myspace_status=0
-if run_suite "MySpace v3.12.21-58" "$APK_PATH" "$TARGET_PACKAGE" \
+if run_suite "MySpace v3.12.24-61" "$APK_PATH" "$TARGET_PACKAGE" \
   "$CALCULATOR_CASES" "$REPORT_ROOT/myspace"; then
   myspace_status=0
 else

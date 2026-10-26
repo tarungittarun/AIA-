@@ -24,13 +24,13 @@ from typing import Any, Iterable
 
 DEFAULT_PACKAGE = "app.space.one"
 STANDALONE_PACKAGE = "app.space.calc"
-EXPECTED_APK_SHA256 = "629442fc1d54508690f8c75664ea8be7611fef14a74f4edcf6f2bd1cab40068d"
+EXPECTED_APK_SHA256 = "bd6f3850b659ee8c9c37c17055e9d688caa7ca5c298a28487c475ae0c948e986"
 EXPECTED_APK_SHA256_BY_PACKAGE = {
     DEFAULT_PACKAGE: EXPECTED_APK_SHA256,
-    STANDALONE_PACKAGE: "342f51bdbb12539f44971fc945d427714ac8cf74bf01a7fa8fccf02660e1f3fa",
+    STANDALONE_PACKAGE: "4465b0f0d7ff4c3e4fbdb9a9a09db88b0e4fffcbb02ce4f3e27d73a0b12510fa",
 }
 GOOGLE_CALCULATOR_PACKAGE = "com.google.android.calculator"
-CALCULATOR_TEST_IDS = tuple(f"TC-CALC-{number:03d}" for number in range(1, 11))
+CALCULATOR_TEST_IDS = tuple(f"TC-CALC-{number:03d}" for number in range(1, 13))
 
 BASIC_GRID = {
     "AC": (0, 0), "( )": (0, 1), "%": (0, 2), "÷": (0, 3),
@@ -776,6 +776,8 @@ class CalculatorQa:
                 raise QaError(f"Unknown calculator test IDs: {sorted(unknown)}")
             if not case_ids:
                 raise QaError("At least one calculator test ID must be selected")
+            if "TC-CALC-012" in case_ids and package != STANDALONE_PACKAGE:
+                raise QaError("TC-CALC-012 applies only to the standalone MyCalc package")
         self.case_ids = set(case_ids) if case_ids is not None else None
         self.device = AndroidUi(report_dir, "target")
         self.results: list[dict[str, Any]] = []
@@ -790,15 +792,17 @@ class CalculatorQa:
     def case_plan(self) -> set[str]:
         """Return this shard's IDs, adding TC-CALC-001 as the TC-010 comparator baseline."""
         selected = set(CALCULATOR_TEST_IDS) if self.case_ids is None else set(self.case_ids)
+        if getattr(self, "package", DEFAULT_PACKAGE) != STANDALONE_PACKAGE:
+            selected.discard("TC-CALC-012")
         if "TC-CALC-010" in selected:
             selected.add("TC-CALC-001")
         return selected
 
     @staticmethod
     def _history_result_visible(labels: Iterable[str], expected: str) -> bool:
-        expected_text = clean(expected)
+        expected_text = clean(expected).replace(",", "")
         for label in labels:
-            result = clean(label)
+            result = clean(label).replace(",", "")
             if result.startswith("="):
                 result = result[1:].strip()
             if result == expected_text:
@@ -807,6 +811,34 @@ class CalculatorQa:
             if decimal_suffix and set(decimal_suffix) == {"0"}:
                 return True
         return False
+
+    @staticmethod
+    def _history_expression_visible(labels: Iterable[str], expected: str) -> bool:
+        expected_text = re.sub(r"[\s,]+", "", clean(expected)).replace("−", "-")
+        return any(
+            re.sub(r"[\s,]+", "", clean(label)).replace("−", "-") == expected_text
+            for label in labels
+        )
+
+    @staticmethod
+    def _requested_permissions_from_package_dump(package_dump: str) -> list[str]:
+        lines = package_dump.splitlines()
+        for index, line in enumerate(lines):
+            if line.strip().casefold() != "requested permissions:":
+                continue
+            header_indent = len(line) - len(line.lstrip())
+            permissions: list[str] = []
+            for entry in lines[index + 1:]:
+                if not entry.strip():
+                    continue
+                indent = len(entry) - len(entry.lstrip())
+                if indent <= header_indent:
+                    break
+                value = entry.strip()
+                if value.casefold() not in {"none", "<none>"}:
+                    permissions.append(value)
+            return permissions
+        return []
 
     def add_result(
         self,
@@ -1147,6 +1179,163 @@ class CalculatorQa:
                     flush=True,
                 )
 
+    def run_history_card_replay(self) -> None:
+        test_id = "TC-CALC-011"
+        title = "Grouped history card restores and re-evaluates without Error"
+        screenshot = ""
+        expected_expression = "123456+1"
+        try:
+            self.device.close_history_if_open()
+            self.device.ensure_basic_panel()
+            self.device.tap_label("AC")
+            self.device.press_sequence(["1", "2", "3", "4", "5", "6", "+", "1"])
+            typed = self.device.display_texts()
+            if not self._history_expression_visible(typed, expected_expression):
+                screenshot = self.device.screenshot("evidence/tc-calc-011-input-mismatch.png")
+                self.add_result(
+                    test_id, title, "ERROR",
+                    "Enter 123456+1, evaluate it, then restore the history card and evaluate again",
+                    " | ".join(typed),
+                    comment=(
+                        "Input precondition failed: the expression was not visible after keypad entry, "
+                        "so the history-card replay was not evaluated."
+                    ),
+                    evidence=screenshot,
+                )
+                return
+
+            self.device.key("=")
+            time.sleep(0.35)
+            first_result = self.device.display_texts()
+            if not self._history_result_visible(first_result, "123457"):
+                screenshot = self.device.screenshot("evidence/tc-calc-011-first-result.png")
+                self.add_result(
+                    test_id, title, "FAIL", "First evaluation displays 123457",
+                    " | ".join(first_result),
+                    comment="The initial arithmetic result was not 123457; history replay was not evaluated.",
+                    evidence=screenshot,
+                )
+                return
+
+            self.device.tap_label("History")
+            time.sleep(0.4)
+            history_labels = self.device.labels()
+            normalized = lambda value: re.sub(r"[\s,]+", "", clean(value)).replace("−", "-")
+            history_entry = next(
+                (label for label in history_labels if expected_expression in normalized(label)),
+                None,
+            )
+            screenshot = self.device.screenshot("evidence/tc-calc-011-history-card.png")
+            if history_entry is None:
+                self.add_result(
+                    test_id, title, "FAIL", "History contains the 123456+1 calculation card",
+                    " | ".join(history_labels),
+                    comment="The calculation card was not found in the visible history labels.",
+                    evidence=screenshot,
+                )
+                return
+
+            self.device.tap_label(history_entry, partial=True)
+            time.sleep(0.35)
+            restored = self.device.display_texts()
+            if not self._history_expression_visible(restored, expected_expression):
+                self.add_result(
+                    test_id, title, "FAIL", "History card restores expression 123456+1",
+                    " | ".join(restored),
+                    comment="The card was visible, but tapping it did not restore the grouped expression.",
+                    evidence=screenshot,
+                )
+                return
+
+            self.device.key("=")
+            time.sleep(0.35)
+            replay_result = self.device.display_texts()
+            screenshot = self.device.screenshot("evidence/tc-calc-011-replay-result.png")
+            has_error = any("error" in value.casefold() for value in replay_result)
+            if not has_error and self._history_result_visible(replay_result, "123457"):
+                self.add_result(
+                    test_id, title, "PASS", "History card re-evaluates to 123457 without Error",
+                    " | ".join(replay_result),
+                    comment=(
+                        "The grouped expression was restored and evaluated successfully; display commas "
+                        "did not contaminate the calculation."
+                    ),
+                    evidence=screenshot,
+                )
+            else:
+                self.add_result(
+                    test_id, title, "FAIL", "History card re-evaluates to 123457 without Error",
+                    " | ".join(replay_result),
+                    comment=(
+                        "Re-evaluation after selecting the card returned an incorrect result or Error. "
+                        "Display grouping may have been reintroduced into the expression."
+                    ),
+                    evidence=screenshot,
+                )
+        except Exception as exc:
+            screenshot = screenshot or self.device.screenshot("evidence/tc-calc-011-error.png")
+            hierarchy = self.device.save_hierarchy("evidence/tc-calc-011-error.xml")
+            self.add_result(
+                test_id, title, "ERROR", "Restored 123456+1 re-evaluates to 123457", "",
+                comment=f"{type(exc).__name__}: {exc}; hierarchy={hierarchy}",
+                evidence=screenshot,
+            )
+        finally:
+            try:
+                self.device.close_history_if_open()
+            except Exception as close_error:
+                print(
+                    f"::warning title=History replay cleanup::Could not close History sheet: "
+                    f"{type(close_error).__name__}: {close_error}",
+                    flush=True,
+                )
+
+    def run_standalone_permission_audit(self) -> None:
+        test_id = "TC-CALC-012"
+        title = "Standalone MyCalc requests no Android permissions"
+        if self.package != STANDALONE_PACKAGE:
+            self.add_result(
+                test_id, title, "ERROR", "Package app.space.calc requests no permissions",
+                self.package,
+                comment="This guide-F check applies only to the standalone MyCalc package.",
+            )
+            return
+        try:
+            package_dump = self.device.adb(
+                "shell", "dumpsys", "package", self.package, timeout=60, check=False
+            )
+            if self.package not in package_dump:
+                raise QaError(
+                    f"PackageManager dump did not identify {self.package}: {clean(package_dump)[:500]}"
+                )
+            permissions = self._requested_permissions_from_package_dump(package_dump)
+            details = (
+                "No requested permissions were listed."
+                if not permissions
+                else "Requested permissions: " + ", ".join(permissions)
+            )
+            evidence_path = self.report_dir / "evidence/tc-calc-012-package-dump.txt"
+            evidence_path.parent.mkdir(parents=True, exist_ok=True)
+            evidence_path.write_text(
+                "Package: " + self.package + "\n" + details + "\n\n" + package_dump,
+                encoding="utf-8",
+            )
+            self.add_result(
+                test_id, title, "PASS" if not permissions else "FAIL",
+                "No requested Android permissions", details,
+                comment=(
+                    "PackageManager reported no requested permissions."
+                    if not permissions
+                    else "The installed standalone package requests one or more Android permissions."
+                ),
+                evidence=str(evidence_path),
+            )
+        except Exception as exc:
+            self.add_result(
+                test_id, title, "ERROR", "No requested Android permissions", "",
+                comment=f"{type(exc).__name__}: {exc}",
+            )
+
     def check_google_reference(self) -> None:
         try:
             packages = self.device.adb(
@@ -1323,6 +1512,8 @@ class CalculatorQa:
         self.device.screenshot("evidence/initial-calculator-screen.png")
 
         selected = self.case_plan()
+        if "TC-CALC-012" in selected:
+            self.run_standalone_permission_audit()
         if "TC-CALC-001" in selected:
             self.run_case(
                 "TC-CALC-001", "Operator precedence", ["2", "+", "3", "×", "4"], "14"
@@ -1350,6 +1541,8 @@ class CalculatorQa:
             )
         if "TC-CALC-007" in selected:
             self.run_history()
+        if "TC-CALC-011" in selected:
+            self.run_history_card_replay()
         if "TC-CALC-008" in selected:
             self.run_chained_precision()
         if "TC-CALC-009" in selected:
@@ -1485,7 +1678,7 @@ def main() -> int:
     parser.add_argument("--report-dir", type=Path, default=Path("reports/e2e"))
     parser.add_argument(
         "--cases",
-        help="Comma-separated TC-CALC-001..010 IDs; omit to run the full calculator suite",
+        help="Comma-separated TC-CALC-001..012 IDs; omit to run the full calculator suite",
     )
     args = parser.parse_args()
     try:

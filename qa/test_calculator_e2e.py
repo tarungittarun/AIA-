@@ -68,11 +68,11 @@ class AndroidUiHarnessTests(unittest.TestCase):
     def test_exact_myspace_and_standalone_apk_hashes_are_pinned(self) -> None:
         self.assertEqual(
             EXPECTED_APK_SHA256_BY_PACKAGE[DEFAULT_PACKAGE],
-            "629442fc1d54508690f8c75664ea8be7611fef14a74f4edcf6f2bd1cab40068d",
+            "bd6f3850b659ee8c9c37c17055e9d688caa7ca5c298a28487c475ae0c948e986",
         )
         self.assertEqual(
             EXPECTED_APK_SHA256_BY_PACKAGE[STANDALONE_PACKAGE],
-            "342f51bdbb12539f44971fc945d427714ac8cf74bf01a7fa8fccf02660e1f3fa",
+            "4465b0f0d7ff4c3e4fbdb9a9a09db88b0e4fffcbb02ce4f3e27d73a0b12510fa",
         )
 
     def test_zero_key_tap_ignores_the_editable_display_copy(self) -> None:
@@ -200,15 +200,51 @@ class AndroidUiHarnessTests(unittest.TestCase):
         qa.case_ids = {"TC-CALC-008"}
         self.assertEqual(qa.case_plan(), {"TC-CALC-008"})
 
+        qa.case_ids = {"TC-CALC-011"}
+        self.assertEqual(qa.case_plan(), {"TC-CALC-011"})
+
+        qa.package = DEFAULT_PACKAGE
         qa.case_ids = None
+        self.assertEqual(
+            qa.case_plan(), set(CALCULATOR_TEST_IDS) - {"TC-CALC-012"}
+        )
+        qa.package = STANDALONE_PACKAGE
         self.assertEqual(qa.case_plan(), set(CALCULATOR_TEST_IDS))
 
-    def test_history_result_matcher_accepts_equals_prefix_and_zero_padding(self) -> None:
+    def test_history_result_matcher_accepts_equals_prefix_zero_padding_and_grouping(self) -> None:
         self.assertTrue(CalculatorQa._history_result_visible(["= 2"], "2"))
         self.assertTrue(CalculatorQa._history_result_visible(["2"], "2"))
         self.assertTrue(CalculatorQa._history_result_visible(["= 2.00"], "2"))
+        self.assertTrue(CalculatorQa._history_result_visible(["1,23,457"], "123457"))
         self.assertFalse(CalculatorQa._history_result_visible(["= 2.1"], "2"))
         self.assertFalse(CalculatorQa._history_result_visible(["= 12"], "2"))
+
+    def test_history_expression_matcher_ignores_display_grouping(self) -> None:
+        self.assertTrue(
+            CalculatorQa._history_expression_visible(["1,23,456 + 1"], "123456+1")
+        )
+        self.assertFalse(
+            CalculatorQa._history_expression_visible(["1,23,45 + 1"], "123456+1")
+        )
+
+    def test_package_dump_permission_parser_reads_only_requested_permissions(self) -> None:
+        dump = """Package [app.space.calc]:
+  requested permissions:
+    android.permission.INTERNET
+  install permissions:
+    android.permission.INTERNET: granted=true
+  User 0:
+"""
+        self.assertEqual(
+            CalculatorQa._requested_permissions_from_package_dump(dump),
+            ["android.permission.INTERNET"],
+        )
+        self.assertEqual(
+            CalculatorQa._requested_permissions_from_package_dump(
+                "Package [app.space.calc]:\\n  User 0:\\n"
+            ),
+            [],
+        )
 
     def test_expression_matching_ignores_spacing_but_not_missing_digits(self) -> None:
         root = ET.fromstring(
