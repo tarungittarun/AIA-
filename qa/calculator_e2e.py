@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 """Black-box UI QA for the calculator in the supplied MySpace APK.
 
-The test runs only against the Calculator feature. It uses Android's built-in
-UIAutomator hierarchy dump and input commands so no third-party device service
-or app credentials are required. Results and screenshots are always written,
-even when a functional assertion fails.
+The test runs only against the Calculator feature. It prefers a compressed
+UIAutomator hierarchy and adb input; if Android kills UiAutomation, screenshots
+and Tesseract OCR provide a visual fallback. Results and evidence are saved.
 """
 from __future__ import annotations
 
 import argparse
+import csv
 import datetime as dt
 import hashlib
 import json
 import os
 import re
+import statistics
 import subprocess
 import sys
 import time
@@ -24,6 +25,19 @@ from typing import Any, Iterable
 EXPECTED_APK_SHA256 = "ff52331518b71a153abf6ef76c964538044121230e1ae87d2855e535a94e0a23"
 DEFAULT_PACKAGE = "app.space.one"
 GOOGLE_CALCULATOR_PACKAGE = "com.google.android.calculator"
+
+BASIC_GRID = {
+    "AC": (0, 0), "( )": (0, 1), "%": (0, 2), "÷": (0, 3),
+    "7": (1, 0), "8": (1, 1), "9": (1, 2), "×": (1, 3),
+    "4": (2, 0), "5": (2, 1), "6": (2, 2), "−": (2, 3),
+    "1": (3, 0), "2": (3, 1), "3": (3, 2), "+": (3, 3),
+    "0": (4, 0), ".": (4, 1), "⌫": (4, 2), "=": (4, 3),
+}
+SCIENTIFIC_GRID = {
+    "√(": (0, 0), "π": (0, 1), "^": (0, 2), "!": (0, 3),
+    "Deg": (1, 0), "sin(": (1, 1), "cos(": (1, 2), "tan(": (1, 3),
+    "Inv": (2, 0), "e": (2, 1), "ln(": (2, 2), "log(": (2, 3),
+}
 
 
 class QaError(RuntimeError):
@@ -57,6 +71,9 @@ class AndroidUi:
         self.label = label
         self.report_dir.mkdir(parents=True, exist_ok=True)
         self._last_tree: ET.Element | None = None
+        self._ocr_mode = False
+        self._scientific_open = False
+        self.ui_method = "uiautomator-compressed"
         self._width, self._height = self._screen_size()
 
     def adb(self, *args: str, timeout: int = 30, check: bool = True) -> str:
@@ -94,20 +111,234 @@ class AndroidUi:
             )
         time.sleep(2.0)
         self._last_tree = None
+        self._scientific_open = False
 
     def force_stop(self, package: str) -> None:
         self.adb("shell", "am", "force-stop", package, check=False)
         time.sleep(0.5)
         self._last_tree = None
+        self._scientific_open = False
+
+    def _capture_uiautomator_diagnostics(self, error: Exception) -> Path:
+        details = [f"UI hierarchy failure: {type(error).__name__}: {error}"]
+        probes = (
+            ("screen size", ("shell", "wm", "size"), 15),
+            ("activity state", ("shell", "dumpsys", "activity", "activities"), 45),
+            ("system_server memory", ("shell", "dumpsys", "meminfo", "system_server"), 45),
+            ("guest memory", ("shell", "cat", "/proc/meminfo"), 15),
+            ("recent logcat", ("logcat", "-d", "-t", "400"), 45),
+        )
+        for title, args, timeout in probes:
+            details.append(f"\n--- {title} ---")
+            try:
+                details.append(self.adb(*args, timeout=timeout, check=False))
+            except Exception as probe_error:
+                details.append(f"Diagnostic command failed: {type(probe_error).__name__}: {probe_error}")
+        try:
+            screenshot = self.screenshot(f"evidence/{self.label}-uiautomator-failure.png")
+            details.append(f"\nScreenshot: {screenshot or 'capture failed'}")
+        except Exception as screenshot_error:
+            details.append(f"\nScreenshot failed: {type(screenshot_error).__name__}: {screenshot_error}")
+        path = self.report_dir / f"{self.label}-uiautomator-diagnostics.txt"
+        path.write_text("\n".join(details), encoding="utf-8")
+        print(f"::notice title=UIAutomator diagnostics::Saved device state and logcat to {path}.", flush=True)
+        return path
+
+    def _ocr_tree(self) -> ET.Element:
+        image = self.screenshot(f"evidence/{self.label}-ocr-current.png")
+        if not image:
+            raise QaError("adb screencap did not return a screenshot for OCR fallback")
+        try:
+            proc = subprocess.run(
+                ["tesseract", image, "stdout", "--psm", "11", "tsv"],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                timeout=45,
+                check=False,
+            )
+        except FileNotFoundError as exc:
+            raise QaError("Tesseract is not installed; screenshot OCR fallback is unavailable") from exc
+        except subprocess.TimeoutExpired as exc:
+            raise QaError("Tesseract screenshot OCR exceeded 45 seconds") from exc
+        if proc.returncode != 0:
+            raise QaError(f"Tesseract OCR failed ({proc.returncode}): {clean(proc.stderr)}")
+
+        root = ET.Element("hierarchy", {"source": "screenshot-ocr"})
+        try:
+            rows = csv.DictReader(proc.stdout.splitlines(), delimiter="\t")
+            for row in rows:
+                if row.get("level") != "5":
+                    continue
+                text = clean(row.get("text", ""))
+                if not text:
+                    continue
+                left, top = int(row["left"]), int(row["top"])
+                width, height = int(row["width"]), int(row["height"])
+                node = ET.SubElement(root, "node")
+                node.attrib.update({
+                    "text": text,
+                    "bounds": f"[{left},{top}][{left + width},{top + height}]",
+                    "clickable": "true" if top >= int(self._height * 0.40) else "false",
+                    "visible-to-user": "true",
+                    "class": "screenshot-ocr",
+                })
+        except (KeyError, TypeError, ValueError) as exc:
+            raise QaError(f"Could not parse Tesseract TSV output: {clean(proc.stdout[:500])}") from exc
+        if not list(root):
+            raise QaError("Tesseract OCR returned no visible text")
+        return root
+
+    def _recover_hierarchy_with_ocr(self, error: Exception) -> ET.Element:
+        diagnostic = self._capture_uiautomator_diagnostics(error)
+        try:
+            tree = self._ocr_tree()
+        except Exception as ocr_error:
+            raise QaError(
+                f"UIAutomator failed ({error}); screenshot OCR also failed ({ocr_error}); "
+                f"diagnostics={diagnostic}"
+            ) from ocr_error
+        self._ocr_mode = True
+        self.ui_method = "screenshot-ocr-fallback"
+        print(
+            "::warning title=UI inspection fallback::UIAutomator failed; using screenshot OCR "
+            f"for labels and visual checks. Device diagnostics: {diagnostic}",
+            flush=True,
+        )
+        self._last_tree = tree
+        return tree
 
     def dump(self) -> ET.Element:
-        self.adb("shell", "uiautomator", "dump", "/sdcard/window.xml", timeout=45)
-        raw = self.adb("exec-out", "cat", "/sdcard/window.xml", timeout=20)
+        if self._last_tree is not None:
+            return self._last_tree
+        if self._ocr_mode:
+            self._last_tree = self._ocr_tree()
+            return self._last_tree
+
+        compressed_error: Exception | None = None
+        method = "uiautomator-compressed"
         try:
-            self._last_tree = ET.fromstring(raw)
-        except ET.ParseError as exc:
-            raise QaError(f"Could not parse UI hierarchy XML: {raw[:500]!r}") from exc
-        return self._last_tree
+            self.adb("shell", "uiautomator", "dump", "--compressed", "/sdcard/window.xml", timeout=90)
+        except Exception as error:
+            compressed_error = error
+            method = "uiautomator-standard"
+            try:
+                # Older Android images may not support --compressed; retry the
+                # standard hierarchy dump once before collecting diagnostics.
+                self.adb("shell", "uiautomator", "dump", "/sdcard/window.xml", timeout=90)
+                print("::warning title=UIAutomator::Compressed dump failed; standard dump succeeded.", flush=True)
+            except Exception as standard_error:
+                return self._recover_hierarchy_with_ocr(
+                    QaError(f"compressed dump: {compressed_error}; standard dump: {standard_error}")
+                )
+
+        try:
+            raw = self.adb("exec-out", "cat", "/sdcard/window.xml", timeout=30)
+            tree = ET.fromstring(raw)
+        except Exception as error:
+            return self._recover_hierarchy_with_ocr(error)
+        self.ui_method = method
+        self._last_tree = tree
+        return tree
+
+    @staticmethod
+    def _compact_label(value: str) -> str:
+        return (clean(value).casefold().replace(" ", "")
+                .replace("×", "x").replace("÷", "/")
+                .replace("−", "-").replace("–", "-"))
+
+    @classmethod
+    def _label_equivalent(cls, actual: str, expected: str) -> bool:
+        actual_value = cls._compact_label(actual)
+        expected_value = cls._compact_label(expected)
+        aliases = {
+            "×": {"x", "*"}, "÷": {"/"}, "−": {"-"},
+            "( )": {"()", "(", ")"}, "√(": {"√", "v("},
+            "sin(": {"sin"}, "cos(": {"cos"}, "tan(": {"tan"},
+            "ln(": {"ln"}, "log(": {"log"},
+        }
+        return actual_value == expected_value or actual_value in aliases.get(expected, set())
+
+    def _grid_identity(self, text: str) -> tuple[str, int, int] | None:
+        for label, (row, col) in BASIC_GRID.items():
+            if self._label_equivalent(text, label):
+                return "basic", row, col
+        for label, (row, col) in SCIENTIFIC_GRID.items():
+            if self._label_equivalent(text, label):
+                return "scientific", row, col
+        return None
+
+    def _ocr_grid_observations(self) -> list[tuple[int, int, float, float]]:
+        if not self._ocr_mode or self.label != "target" or self._last_tree is None:
+            return []
+        observations: list[tuple[int, int, float, float]] = []
+        for node in self._last_tree.iter("node"):
+            center = bounds_center(node.attrib.get("bounds", ""))
+            if center is None or center[1] < int(self._height * 0.40):
+                continue
+            identity = self._grid_identity(node.attrib.get("text", ""))
+            if identity is None:
+                continue
+            group, row, col = identity
+            if group == "scientific":
+                if not self._scientific_open:
+                    continue
+            elif self._scientific_open:
+                row += 3
+            observations.append((row, col, float(center[0]), float(center[1])))
+        return observations
+
+    @staticmethod
+    def _fit_coordinate(points: list[tuple[int, float]], index: int, fallback: float) -> float:
+        if not points:
+            return fallback
+        if len({key for key, _ in points}) < 2:
+            return statistics.median(value for _, value in points)
+        mean_x = statistics.mean(key for key, _ in points)
+        mean_y = statistics.mean(value for _, value in points)
+        denominator = sum((key - mean_x) ** 2 for key, _ in points)
+        if not denominator:
+            return fallback
+        slope = sum((key - mean_x) * (value - mean_y) for key, value in points) / denominator
+        return mean_y + slope * (index - mean_x)
+
+    def _ocr_grid_point(self, label: str) -> tuple[int, int] | None:
+        if not self._ocr_mode or self.label != "target":
+            return None
+        identity = self._grid_identity(label)
+        if identity is None:
+            return None
+        group, row, col = identity
+        if group == "scientific":
+            if not self._scientific_open:
+                return None
+        elif self._scientific_open:
+            row += 3
+        observations = self._ocr_grid_observations()
+        x_points = [(c, x) for _, c, x, _ in observations]
+        y_points = [(r, y) for r, _, _, y in observations]
+        x_fallback = self._width * (0.15 + col * 0.233)
+        y_fallback = self._height * (0.50 + row * (0.10 if not self._scientific_open else 0.0625))
+        x = self._fit_coordinate(x_points, col, x_fallback)
+        y = self._fit_coordinate(y_points, row, y_fallback)
+        return round(x), round(y)
+
+    def _toggle_chevron_with_ocr(self) -> None:
+        observations = self._ocr_grid_observations()
+        x_points = [(col, x) for _, col, x, _ in observations]
+        y_points = [(row, y) for row, _, _, y in observations]
+        col0 = self._fit_coordinate(x_points, 0, self._width * 0.15)
+        row0 = self._fit_coordinate(y_points, 0, self._height * 0.50)
+        row1 = self._fit_coordinate(y_points, 1, row0 + self._height * 0.10)
+        row_spacing = max(1.0, row1 - row0)
+        col1 = self._fit_coordinate(x_points, 1, col0 + self._width * 0.233)
+        col_spacing = max(1.0, col1 - col0)
+        x = round(col0 - col_spacing * 0.22)
+        y = round(row0 - row_spacing * 0.80)
+        self.adb("shell", "input", "tap", str(x), str(y))
+        self._scientific_open = True
+        self._last_tree = None
+        time.sleep(0.35)
 
     @staticmethod
     def _visible(node: ET.Element) -> bool:
@@ -127,12 +358,12 @@ class AndroidUi:
                     values.append(value)
         return values
 
-    @staticmethod
-    def _node_matches(node: ET.Element, label: str, partial: bool = False) -> bool:
+    @classmethod
+    def _node_matches(cls, node: ET.Element, label: str, partial: bool = False) -> bool:
         actuals = [clean(node.attrib.get("text", "")), clean(node.attrib.get("content-desc", ""))]
         if partial:
             return any(label.casefold() in actual.casefold() for actual in actuals if actual)
-        return label in actuals
+        return any(cls._label_equivalent(actual, label) for actual in actuals if actual)
 
     def _matching_nodes(self, label: str, partial: bool = False) -> list[ET.Element]:
         return [
@@ -145,6 +376,12 @@ class AndroidUi:
         last_labels: list[str] = []
         while time.monotonic() < deadline:
             candidates = self._matching_nodes(label, partial)
+            if self._ocr_mode and self._grid_identity(label):
+                candidates = [
+                    node for node in candidates
+                    if (point := bounds_center(node.attrib.get("bounds", "")))
+                    and point[1] >= int(self._height * 0.40)
+                ]
             last_labels = self.labels()
             if candidates:
                 # Prefer a directly clickable control; tapping a non-clickable label
@@ -157,6 +394,14 @@ class AndroidUi:
                         time.sleep(0.18)
                         self._last_tree = None
                         return
+            if self._ocr_mode:
+                point = self._ocr_grid_point(label)
+                if point:
+                    self.adb("shell", "input", "tap", str(point[0]), str(point[1]))
+                    time.sleep(0.18)
+                    self._last_tree = None
+                    return
+            self._last_tree = None
             time.sleep(0.15)
         raise QaError(f"Could not find tappable UI label {label!r}; visible labels: {last_labels}")
 
@@ -194,8 +439,14 @@ class AndroidUi:
             return ""
 
     def is_calculator_screen(self) -> bool:
-        labels = set(self.labels())
-        return "AC" in labels and "=" in labels and ("÷" in labels or "/" in labels)
+        labels = self.labels()
+        has_ac = any(self._label_equivalent(label, "AC") for label in labels)
+        has_equals = any(self._label_equivalent(label, "=") for label in labels)
+        has_operator = any(
+            self._label_equivalent(actual, operator)
+            for actual in labels for operator in ("÷", "×", "−", "+")
+        )
+        return has_ac and has_equals and has_operator
 
     def navigate_to_calculator(self, package: str) -> None:
         self.launch(package)
@@ -223,6 +474,7 @@ class AndroidUi:
                     str(self._width // 2), str(int(self._height * 0.78)),
                     str(self._width // 2), str(int(self._height * 0.32)), "350",
                 )
+                self._last_tree = None
                 time.sleep(0.4)
         screenshot = self.screenshot(f"{self.label}-navigation-failed.png")
         hierarchy = self.save_hierarchy(f"{self.label}-navigation-failed.xml")
@@ -232,12 +484,18 @@ class AndroidUi:
         )
 
     def ensure_scientific_panel(self) -> None:
+        if self._scientific_open:
+            return
         labels = self.labels()
-        if "sin(" in labels or "√(" in labels:
+        if any(self._label_equivalent(label, "sin(") for label in labels) or any(
+            self._label_equivalent(label, "√(") for label in labels
+        ):
+            self._scientific_open = True
             return
         for candidate in ("Open the extra keys", "Show scientific keys", "Scientific keys"):
             if candidate in labels:
                 self.tap_label(candidate)
+                self._scientific_open = True
                 time.sleep(0.25)
                 return
         # The chevron's visible icon text may be blank while its description varies
@@ -245,8 +503,12 @@ class AndroidUi:
         for label in labels:
             if "extra keys" in label.casefold() or "scientific" in label.casefold():
                 self.tap_label(label)
+                self._scientific_open = True
                 time.sleep(0.25)
                 return
+        if self._ocr_mode:
+            self._toggle_chevron_with_ocr()
+            return
         raise QaError(f"Scientific panel toggle not found; visible labels: {labels}")
 
     def key(self, key: str) -> None:
@@ -275,9 +537,12 @@ class AndroidUi:
             clickable = node.attrib.get("clickable", "false").lower() == "true"
             # Prefer the actual expression EditText and non-clickable text in the
             # display region. This excludes keypad digits from result assertions.
-            is_display = "edittext" in klass.casefold() or (
-                not clickable and top < int(self._height * 0.58)
-            )
+            if self._ocr_mode:
+                is_display = not clickable and top < int(self._height * 0.43)
+            else:
+                is_display = "edittext" in klass.casefold() or (
+                    not clickable and top < int(self._height * 0.58)
+                )
             if is_display:
                 values.append((top, text))
         ordered: list[str] = []
@@ -300,6 +565,7 @@ class AndroidUi:
             "display_text": self.display_texts(),
             "visible_labels": self.labels(),
             "screen": f"{self._width}x{self._height}",
+            "ui_inspection_method": self.ui_method,
         }
 
 
@@ -691,8 +957,9 @@ class CalculatorQa:
                 "sha256": digest,
             },
             "device": {
-                "emulator_api": 30,
+                "emulator_api": int(os.environ.get("ANDROID_API", "34")),
                 "screen": f"{self.device._width}x{self.device._height}",
+                "ui_inspection_method": self.device.ui_method,
                 "scope": "Calculator feature only",
             },
             "google_reference": self.reference,
@@ -723,6 +990,7 @@ class CalculatorQa:
             f"- **Package:** `{report['artifact']['package']}`",
             f"- **SHA-256:** `{report['artifact']['sha256']}`",
             f"- **Device:** Android API {report['device']['emulator_api']} emulator, {report['device']['screen']}",
+            f"- **UI inspection:** {report['device']['ui_inspection_method']}",
             "- **Scope:** Calculator feature only",
             f"- **Google reference:** {self.reference['status']} — {self.reference['note']}",
             "",
@@ -744,7 +1012,7 @@ class CalculatorQa:
             )
         lines.extend([
             "",
-            "Screenshots and UI hierarchy evidence are in the adjacent `evidence/` folder.",
+            "Screenshots and UI hierarchy or OCR evidence are in the adjacent `evidence/` folder.",
             "A BLOCKED Google comparison is not treated as a calculator functional pass.",
             "",
         ])

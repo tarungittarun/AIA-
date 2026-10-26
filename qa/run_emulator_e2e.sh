@@ -18,6 +18,7 @@ fi
 AVD_NAME="calculator-qa"
 SERIAL="emulator-5554"
 ANDROID_API="${ANDROID_API:-34}"
+export ANDROID_API
 HOST_ARCH="$(uname -m)"
 if [[ "$HOST_ARCH" == "arm64" || "$HOST_ARCH" == "aarch64" ]]; then
   EMULATOR_ABI="arm64-v8a"
@@ -89,6 +90,28 @@ export ANDROID_AVD_HOME="${ANDROID_AVD_HOME:-$HOME/.android/avd}"
 mkdir -p "$ANDROID_AVD_HOME"
 printf 'no\n' | avdmanager create avd --force --name "$AVD_NAME" --package "$IMAGE" --device pixel_2 \
   2>&1 | tee "$REPORT_DIR/avdmanager.log"
+
+# API 34's first UI hierarchy request was killed with exit 137 on the default
+# Pixel 2 profile; memory pressure is only a hypothesis. Give Android more guest
+# RAM and reduce SwiftShader's display surface as a practical mitigation.
+AVD_CONFIG="$ANDROID_AVD_HOME/$AVD_NAME.avd/config.ini"
+python3 - "$AVD_CONFIG" <<'PYTHON_AVD_CONFIG'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+settings = {
+    "hw.ramSize": "3072",
+    "vm.heapSize": "512",
+    "hw.lcd.width": "720",
+    "hw.lcd.height": "1280",
+    "hw.lcd.density": "320",
+}
+lines = [line for line in path.read_text(encoding="utf-8").splitlines()
+         if line.split("=", 1)[0] not in settings]
+lines.extend(f"{key}={value}" for key, value in settings.items())
+path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+PYTHON_AVD_CONFIG
 
 EMULATOR_BIN="$SDK_ROOT/emulator/emulator"
 if [[ ! -x "$EMULATOR_BIN" ]]; then
