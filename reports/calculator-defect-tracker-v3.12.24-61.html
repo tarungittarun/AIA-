@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>MySpace 3.12.24 / MyCalc 1.0.22 — APK QA report and defect tracker</title>
+<style>
+  :root {
+    --ink: #172b4d;
+    --muted: #52627a;
+    --line: #d9e1ec;
+    --paper: #ffffff;
+    --canvas: #f3f6fa;
+    --blue: #174ea6;
+    --blue-soft: #eaf1ff;
+    --green: #136c43;
+    --green-soft: #e7f6ee;
+    --red: #a42824;
+    --red-soft: #fff0ee;
+    --amber: #8b5600;
+    --amber-soft: #fff5dc;
+    --slate-soft: #edf1f5;
+    --shadow: 0 8px 28px rgba(23, 43, 77, .07);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--canvas);
+    color: var(--ink);
+    font: 16px/1.62 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  a { color: var(--blue); text-decoration-thickness: .08em; text-underline-offset: .16em; overflow-wrap: anywhere; }
+  a:hover { text-decoration-thickness: .15em; }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .93em; overflow-wrap: anywhere; }
+  .skip { position: absolute; left: -9999px; top: 0; z-index: 10; background: #fff; padding: .7rem 1rem; }
+  .skip:focus { left: .7rem; top: .7rem; }
+  .hero {
+    color: #fff;
+    background: linear-gradient(135deg, #142d56 0%, #1b4a83 58%, #267b81 100%);
+    padding: clamp(1.5rem, 5vw, 3.5rem) 1rem 2rem;
+  }
+  .hero-inner, main, footer { width: min(100% - 1.25rem, 1080px); margin-inline: auto; }
+  .eyebrow { margin: 0 0 .55rem; color: #d7e7ff; font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+  h1 { margin: 0; max-width: 900px; font-size: clamp(1.8rem, 5.4vw, 3.35rem); line-height: 1.1; letter-spacing: -.035em; }
+  .subtitle { max-width: 790px; color: #e5efff; font-size: clamp(1rem, 2vw, 1.18rem); margin: 1rem 0 1.3rem; }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .hero-tag { border: 1px solid rgba(255,255,255,.36); border-radius: 999px; padding: .35rem .68rem; color: #fff; font-size: .82rem; font-weight: 700; background: rgba(255,255,255,.09); }
+  nav {
+    position: sticky; top: 0; z-index: 5; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(12px); overflow-x: auto; white-space: nowrap;
+  }
+  nav ul { list-style: none; display: flex; gap: .3rem; width: min(100% - 1.25rem, 1080px); margin: 0 auto; padding: .65rem 0; }
+  nav a { display: inline-block; padding: .38rem .63rem; border-radius: 999px; font-size: .84rem; font-weight: 700; text-decoration: none; color: var(--ink); }
+  nav a:hover, nav a:focus { background: var(--blue-soft); }
+  main { padding: 1.2rem 0 3rem; }
+  section { scroll-margin-top: 5rem; margin: 1.15rem 0; }
+  .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 18px; padding: clamp(1rem, 3vw, 1.6rem); box-shadow: var(--shadow); }
+  h2 { font-size: clamp(1.35rem, 3vw, 1.8rem); line-height: 1.25; margin: 0 0 .8rem; letter-spacing: -.02em; }
+  h3 { font-size: 1.12rem; line-height: 1.35; margin: 0 0 .55rem; }
+  h4 { margin: .25rem 0; font-size: 1rem; }
+  p { margin: .55rem 0 .85rem; }
+  .lede { color: var(--muted); font-size: 1.02rem; max-width: 850px; }
+  .callout { border-left: 5px solid var(--amber); border-radius: 10px; padding: .85rem 1rem; background: var(--amber-soft); margin: 1rem 0; }
+  .callout.red { border-color: var(--red); background: var(--red-soft); }
+  .callout.green { border-color: var(--green); background: var(--green-soft); }
+  .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; margin: 1rem 0; }
+  .card { border: 1px solid var(--line); border-radius: 14px; padding: .95rem; background: #fff; min-width: 0; }
+  .card .label { color: var(--muted); font-size: .78rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .card .value { font-size: 1.25rem; font-weight: 850; line-height: 1.25; margin: .28rem 0; }
+  .card p { margin: .35rem 0 0; color: var(--muted); font-size: .9rem; }
+  .badge { display: inline-flex; align-items: center; gap: .25rem; border-radius: 999px; padding: .21rem .58rem; font-size: .76rem; font-weight: 850; letter-spacing: .025em; white-space: nowrap; }
+  .pass { color: var(--green); background: var(--green-soft); }
+  .fail { color: var(--red); background: var(--red-soft); }
+  .blocked, .partial { color: var(--amber); background: var(--amber-soft); }
+  .unconfirmed, .source, .notrun { color: #394b62; background: var(--slate-soft); }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; margin: .8rem 0 1rem; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; background: #fff; }
+  th, td { border-bottom: 1px solid var(--line); padding: .68rem .75rem; text-align: left; vertical-align: top; }
+  th { background: #f5f8fc; color: #33445d; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; }
+  td { font-size: .92rem; }
+  tr:last-child td { border-bottom: 0; }
+  .data-table { min-width: 690px; }
+  .small-table { min-width: 540px; }
+  .muted { color: var(--muted); }
+  .small { font-size: .88rem; }
+  .pill-list { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0; }
+  .pill { border: 1px solid var(--line); background: #f8fafc; border-radius: 999px; padding: .25rem .58rem; font-size: .82rem; }
+  .defect { border: 1px solid var(--line); border-radius: 15px; padding: 1.1rem; margin: .85rem 0; background: #fff; }
+  .defect-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
+  .defect-head h3 { flex: 1 1 320px; margin: 0; }
+  .comment { border-left: 4px solid var(--blue); background: #f4f8ff; padding: .65rem .8rem; border-radius: 0 9px 9px 0; }
+  .defect dl { display: grid; grid-template-columns: minmax(115px, 170px) minmax(0,1fr); gap: .35rem .8rem; margin: .8rem 0 0; }
+  .defect dt { color: var(--muted); font-size: .88rem; font-weight: 800; }
+  .defect dd { margin: 0; }
+  .coverage { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .75rem; }
+  .coverage-card { border: 1px solid var(--line); border-radius: 13px; padding: .9rem; background: #fff; }
+  .coverage-card h3 { display: flex; gap: .55rem; align-items: center; }
+  .coverage-card p:last-child { margin-bottom: 0; }
+  details { border: 1px solid var(--line); border-radius: 12px; padding: .72rem .9rem; margin: .65rem 0; background: #fff; }
+  summary { cursor: pointer; font-weight: 800; }
+  details[open] summary { margin-bottom: .5rem; }
+  .links { display: flex; flex-wrap: wrap; gap: .55rem; margin: .65rem 0; }
+  .button { display: inline-block; border-radius: 10px; background: var(--blue); color: #fff; padding: .55rem .78rem; font-weight: 800; font-size: .88rem; text-decoration: none; }
+  .button:hover { background: #123d80; }
+  .button.secondary { background: #eaf1ff; color: var(--blue); }
+  .check { padding-left: 1.25rem; }
+  .check li { padding: .18rem 0; }
+  .footnote { color: var(--muted); font-size: .86rem; }
+  footer { border-top: 1px solid var(--line); padding: 1.3rem 0 2rem; color: var(--muted); font-size: .88rem; }
+  @media (max-width: 760px) {
+    .cards { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .coverage { grid-template-columns: 1fr; }
+    .hero-inner, main, footer, nav ul { width: min(100% - 1rem, 1080px); }
+    .panel { border-radius: 14px; }
+  }
+  @media (max-width: 430px) {
+    body { font-size: 15px; }
+    .cards { gap: .55rem; }
+    .card { padding: .75rem; }
+    .card .value { font-size: 1.08rem; }
+    .defect dl { grid-template-columns: 1fr; gap: .05rem; }
+    .defect dd { margin-bottom: .45rem; }
+    nav a { padding: .35rem .52rem; font-size: .8rem; }
+  }
+  @media print {
+    body { background: #fff; color: #111; }
+    .hero { background: #fff; color: #111; padding: 1rem 0; }
+    .hero .subtitle, .eyebrow { color: #333; }
+    .hero-tag { color: #111; border-color: #777; }
+    nav, .links, .skip { display: none; }
+    .hero-inner, main, footer { width: 100%; }
+    .panel, .card, .defect { box-shadow: none; break-inside: avoid; }
+    section { break-inside: auto; }
+    a { color: #111; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to report</a>
+<header class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Android APK QA · direct artifact validation</p>
+    <h1>MySpace 3.12.24 (61)<br>MyCalc 1.0.22 (23)</h1>
+    <p class="subtitle">Guide A–H coverage, directly observed APK results, evidence boundaries, and a commented defect tracker.</p>
+    <div class="hero-tags" aria-label="Report status">
+      <span class="hero-tag">Report date: 26 October 2026</span>
+      <span class="hero-tag">Android 14 · API 34 emulator</span>
+      <span class="hero-tag">Overall: MIXED / NOT FULLY CERTIFIED</span>
+      <span class="hero-tag">MySpace direct suite: 8 pass · 2 fail · 1 blocked</span>
+    </div>
+  </div>
+</header>
+<nav aria-label="Report sections">
+  <ul>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#provenance">Builds &amp; evidence</a></li>
+    <li><a href="#results">Runtime results</a></li>
+    <li><a href="#coverage">A–H coverage</a></li>
+    <li><a href="#defects">Defect tracker</a></li>
+    <li><a href="#history">Regression history</a></li>
+  </ul>
+</nav>
+<main id="main">
+  <section id="summary" class="panel">
+    <h2>Executive summary</h2>
+    <p class="lede">The exact distributed APKs were hash-verified and exercised in a three-shard Android 14 GitHub Actions run. The calculator subset produced actionable findings, but this run does <strong>not</strong> establish that every claim in guide sections A–H works in the downloaded APKs.</p>
+    <div class="callout red"><strong>Release-facing result:</strong> MySpace has two reproducible calculator failures in the blind precision/large-number probes. The matching standalone MyCalc APK has the same two failures and PackageManager reports a requested package-scoped permission despite the guide's literal “zero permissions” claim. Official Google Calculator was absent, so the live comparison was blocked.</div>
+    <div class="cards">
+      <div class="card"><div class="label">MySpace · direct APK</div><div class="value">8 / 11 pass</div><p>2 fail · 1 blocked; TC-CALC-001–011.</p></div>
+      <div class="card"><div class="label">MyCalc · direct APK</div><div class="value">Partial evidence</div><p>TC-005 pass; TC-008/009/012 fail. Other selected results are unconfirmed from retained check output.</p></div>
+      <div class="card"><div class="label">APK E2E workflow</div><div class="value">1 / 3 shards green</div><p>Run 40321408355. Failures are assertion findings, not pinned-input or harness unit-test failures.</p></div>
+      <div class="card"><div class="label">Upstream source CI</div><div class="value">Both green</div><p>Same TicTic source commit; source-CI evidence only, not a substitute for APK runtime results.</p></div>
+    </div>
+    <p><strong>Scope note:</strong> this QA repository does not modify either app. The direct runtime suite is calculator-focused. It does not claim that Notes, Calendar, Music, Recorder, Scanner, Files, Diagnostics, theme visuals, selection gestures, icons, or Effects were manually/runtime-validated in these packaged APKs. No ads were added or integrated by this QA work; this report is not a full-app ad audit.</p>
+  </section>
+
+  <section id="provenance" class="panel">
+    <h2>Build identity and evidence provenance</h2>
+    <div class="table-wrap">
+      <table class="small-table">
+        <thead><tr><th>Artifact</th><th>Package / version</th><th>Size</th><th>SHA-256</th><th>Direct install</th></tr></thead>
+        <tbody>
+          <tr><td>MySpace v3.12.24-61 lite distribution</td><td><code>app.space.one</code><br>3.12.24 · code 61</td><td>2,270,160 bytes</td><td><code>bd6f3850b659ee8c9c37c17055e9d688caa7ca5c298a28487c475ae0c948e986</code></td><td>Installed successfully; exact digest verified in each shard.</td></tr>
+          <tr><td>Standalone MyCalc 1.0.22-23</td><td><code>app.space.calc</code><br>1.0.22 · code 23</td><td>1,307,931 bytes</td><td><code>4465b0f0d7ff4c3e4fbdb9a9a09db88b0e4fffcbb02ce4f3e27d73a0b12510fa</code></td><td>Installed successfully; exact digest verified in each shard.</td></tr>
+          <tr><td>TEST-GUIDE.md</td><td>TicTic source snapshot</td><td>—</td><td><code>92bc29905038b13468e52432b4531353cac368acc1f72e0ef8f3a8c5092bfe14</code></td><td>Pinned with the APKs.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Pinned upstream commit:</strong> <code>4f47a46d18a172b7ea44e8f180e5a6035a1cc54d</code> on <code>tarungittarun/TicTic</code>, branch <code>arena/3caca636-tictic</code>. Both APK ZIP integrity checks passed before CI.</p>
+    <h3>Direct APK runtime workflow</h3>
+    <p><a href="https://github.com/tarungittarun/AIA-/actions/runs/40321408355">Run 40321408355 — MySpace v3.12.24 / MyCalc 1.0.22 APK E2E QA</a>. Three Android 14 / API 34 shards ran concurrently. Pinned-input verification and the harness unit tests passed in all shards. Shard 2 passed; shard 1 failed on the standalone permission assertion; shard 3 failed on the chained-precision and exponent-entry assertions.</p>
+    <div class="links" aria-label="Runtime evidence artifacts">
+      <a class="button" href="https://github.com/tarungittarun/AIA-/actions/runs/40321408355/artifacts/12648873472">Shard 1 · core input &amp; permission evidence</a>
+      <a class="button" href="https://github.com/tarungittarun/AIA-/actions/runs/40321408355/artifacts/12648639365">Shard 2 · history &amp; replay evidence</a>
+      <a class="button" href="https://github.com/tarungittarun/AIA-/actions/runs/40321408355/artifacts/12650190219">Shard 3 · precision &amp; reference evidence</a>
+    </div>
+    <p class="footnote">The workflow uploaded all three artifacts (60-day retention). A sandbox attempt to download them returned an EOF from GitHub's artifact-storage host. The check-run annotations remain available and are the source for the per-case observations below. Do not treat cases marked “unconfirmed” as passes.</p>
+    <h3>Separate upstream source-CI evidence</h3>
+    <div class="table-wrap">
+      <table class="small-table">
+        <thead><tr><th>Workflow run</th><th>Successful jobs</th><th>Interpretation</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://github.com/tarungittarun/TicTic/actions/runs/40309812032">Tests · 40309812032</a></td><td>Source contracts (qa); JVM unit + end-to-end journeys; UI end-to-end on emulator</td><td>Green on the exact source commit. This tests source/CI builds and is not direct evidence for the downloaded distribution APKs.</td></tr>
+          <tr><td><a href="https://github.com/tarungittarun/TicTic/actions/runs/40309812145">Android CI · 40309812145</a></td><td>Python source contracts; assembleDebug</td><td>Build/source-CI pass only; it does not replace the APK E2E results above.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="footnote">The guide describes 387 Python contracts, 21 JVM suites, and 37 instrumented stories. The upstream workflows were green, but those source-CI counts are not counted here as APK-level passes.</p>
+    <p><strong>Harness update:</strong> A new direct history-card replay case (TC-CALC-011) and standalone PackageManager permission audit (TC-CALC-012) were added in QA commit <code>bd7e52b</code>. The historical v3.12.21 report was left untouched.</p>
+  </section>
+
+  <section id="results" class="panel">
+    <h2>Direct APK runtime results</h2>
+    <p class="muted">The table distinguishes actual per-case evidence from selection/coverage notes. Test IDs TC-CALC-008 and TC-CALC-009 are intentional blind boundary probes, not literal steps from the guide.</p>
+    <h3>MySpace 3.12.24 (61) · <code>app.space.one</code></h3>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Case</th><th>Guide link</th><th>Observed result</th><th>Outcome</th></tr></thead>
+        <tbody>
+          <tr><td><code>TC-CALC-001</code></td><td>C6 concept: precedence (adjacent expression)</td><td><code>2 + 3 × 4 = 14</code>; displayed 14.</td><td><span class="badge pass">PASS</span></td></tr>
+          <tr><td><code>TC-CALC-002</code></td><td>Core parentheses arithmetic</td><td><code>(2 + 3) × 4 = 20</code>; displayed 20.</td><td><span class="badge pass">PASS</span></td></tr>
+          <tr><td><code>TC-CALC-003</code></td><td>Core decimal arithmetic</td><td><code>0.1 + 0.2 = 0.3</code>; displayed 0.3.</td><td><span class="badge pass">PASS</span></td></tr>
+          <tr><td><code>TC-CALC-004</code></td><td>C5 percent semantics</td><td><code>200 + 10% = 220</code>; displayed 220.</td><td><span class="badge pass">PASS</span></td></tr>
+          <tr><td><code>TC-CALC-005</code></td><td>D5 scientific panel (partial)</td><td><code>√(9) = 3</code>; the square-root path returned 3. Full panel contents/fold behavior were not asserted.</td><td><span class="badge pass">PASS</span></td></tr>
+          <tr><td><code>TC-CALC-006</code></td><td>D6 degree-mode sine (partial)</td><td><code>sin(30) = 0.5</code>. Inverse trig and Deg/Rad switching were not asserted.</td><td><span class="badge pass">PASS</span></td></tr>
+          <tr><td><code>TC-CALC-007</code></td><td>E1 history (partial)</td><td>History entry survived the app process restart and restored <code>1+1</code>; displayed result 2. This does not verify all-history ordering/layout.</td><td><span class="badge pass">PASS</span></td></tr>
+          <tr><td><code>TC-CALC-008</code></td><td>Blind chained-precision probe</td><td><code>1 ÷ 3 =</code>, then <code>× 3 =</code> produced <strong>0.9999999999</strong>, not 1.</td><td><span class="badge fail">FAIL</span></td></tr>
+          <tr><td><code>TC-CALC-009</code></td><td>Blind large-number/exponent probe</td><td><code>10^15</code> displayed <code>1e+15</code>; continuing with <code>+1</code> produced <strong>Error</strong>.</td><td><span class="badge fail">FAIL</span></td></tr>
+          <tr><td><code>TC-CALC-010</code></td><td>Official Google Calculator comparison</td><td><code>com.google.android.calculator</code> was not installed on the emulator. No AOSP calculator or third-party APK was substituted.</td><td><span class="badge blocked">BLOCKED</span></td></tr>
+          <tr><td><code>TC-CALC-011</code></td><td>D9 grouped history-card replay</td><td>Entered <code>123456+1</code>, opened its history card, restored the expression and re-evaluated without Error; visible result was <code>1,23,457</code>.</td><td><span class="badge pass">PASS</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>MySpace tally:</strong> 8 PASS · 2 FAIL · 1 BLOCKED. The direct history-card replay passes; it is not evidence for the other history, selection, theme, or whole-app claims.</p>
+
+    <h3>Standalone MyCalc 1.0.22 (23) · <code>app.space.calc</code></h3>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Case</th><th>Selection / observation</th><th>Outcome</th></tr></thead>
+        <tbody>
+          <tr><td><code>TC-CALC-001–004</code></td><td>Selected in shard 1. No standalone per-case result was present in the retained check annotations accessible for this report; shard artifact could not be downloaded in the sandbox.</td><td><span class="badge unconfirmed">UNCONFIRMED</span></td></tr>
+          <tr><td><code>TC-CALC-005</code></td><td><code>√(9) = 3</code>; standalone display included 3.</td><td><span class="badge pass">PASS</span></td></tr>
+          <tr><td><code>TC-CALC-006–007</code></td><td>Selected in shard 2; no standalone per-case outcome was available in retained check annotations.</td><td><span class="badge unconfirmed">UNCONFIRMED</span></td></tr>
+          <tr><td><code>TC-CALC-008</code></td><td><code>1 ÷ 3 =</code>, then <code>× 3 =</code> produced <strong>0.9999999999</strong>, not 1.</td><td><span class="badge fail">FAIL</span></td></tr>
+          <tr><td><code>TC-CALC-009</code></td><td><code>10^15</code> displayed <code>1e+15</code>; continuing with <code>+1</code> produced <strong>Error</strong>.</td><td><span class="badge fail">FAIL</span></td></tr>
+          <tr><td><code>TC-CALC-011</code></td><td>Selected in shard 2 for D9 replay; standalone per-case outcome was not available in retained check annotations.</td><td><span class="badge unconfirmed">UNCONFIRMED</span></td></tr>
+          <tr><td><code>TC-CALC-012</code></td><td>PackageManager's requested-permissions section listed <code>app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION</code>.</td><td><span class="badge fail">FAIL</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><strong>Do not over-read the MyCalc table:</strong> selected cases with no retrievable per-case result are explicitly unconfirmed—not assumed passes or failures. The direct outcomes we can substantiate are TC-005, TC-008, TC-009, and TC-012. TC-010 was not selected for standalone MyCalc.</div>
+
+    <h3>Environment and comparison notes</h3>
+    <ul class="check">
+      <li>All three shards logged an Android system responsiveness/ANR dialog and selected <em>Wait</em>. The workflow recovered; without a target-app trace this is recorded as an environment warning, not attributed as a confirmed app defect.</li>
+      <li>The official Google Calculator package was absent. AOSP Calculator is not treated as equivalent. The requested live comparison therefore remains blocked.</li>
+      <li>APK hashes, package/version identity, ZIP integrity and installation were checked. These checks establish which binary was tested, not that every user-facing claim passed.</li>
+    </ul>
+  </section>
+
+  <section id="coverage" class="panel">
+    <h2>Guide A–H coverage boundary</h2>
+    <p class="lede">“Source-CI only” means the matching upstream source revision passed its own CI workflow; it does not mean the claim was exercised against the downloaded APK. “Partial” means a related subcase passed but the full guide claim did not.</p>
+    <div class="coverage">
+      <article class="coverage-card">
+        <h3><span>A · Logo</span><span class="badge source">SOURCE-CI / NOT APK-VERIFIED</span></h3>
+        <p>A1 has a guide-named icon contract in upstream CI; source-CI was green. Launcher icon pixels and A2 header/logo tap-to-home were not directly inspected in the distributed APK.</p>
+      </article>
+      <article class="coverage-card">
+        <h3><span>B · Selection / gestures</span><span class="badge notrun">NOT DIRECTLY RUN</span></h3>
+        <p>B1–B8 (hold-to-select, drag, boundaries, clipboard, cut, caret tap, AC clear, scroll arbitration) were not exercised in the APK E2E suite. Upstream UI emulator CI was green, but is source-build evidence only.</p>
+      </article>
+      <article class="coverage-card">
+        <h3><span>C · Expression box</span><span class="badge partial">PARTIAL</span></h3>
+        <p>C5 percent behavior passed (TC-004). Precedence/parenthesized arithmetic passed related cases (TC-001/002), but C6's exact/unclosed-bracket examples were not run. C1–C4, C7–C9 (layout, ink, caret insertion, unary minus, bracket fitting, caret geometry/autoscroll, no keyboard) were not directly validated.</p>
+      </article>
+      <article class="coverage-card">
+        <h3><span>D · Calculator behavior</span><span class="badge partial">PARTIAL</span></h3>
+        <p>D5 square root and part of D6 degree-mode sine passed; D9 history-card replay passed on MySpace. Grouped output was observed during D9, but exact D4 <code>123456 → 1,23,456</code> was not run. D1–D3, D6 inverse/Rad toggle, D7 selection-clear and D8 caret-backspace remain untested. Blind TC-008/009 failed on both APKs.</p>
+      </article>
+      <article class="coverage-card">
+        <h3><span>E · History, memory, effects</span><span class="badge partial">PARTIAL</span></h3>
+        <p>E1 has partial evidence: one calculation survived process restart and restored. History ordering/layout, E2 swipe-down, E3 menu and memory reorder, E4 effect styles, and E5 page-scroll behavior were not directly tested.</p>
+      </article>
+      <article class="coverage-card">
+        <h3><span>F · Standalone MyCalc</span><span class="badge fail">PARTIAL / CLAIM MISMATCH</span></h3>
+        <p>The APK installed and TC-005 passed, but precision/exponent probes failed and the zero-permission claim failed strict PackageManager requested-permission inspection. Other selected calculator outcomes are unconfirmed. Own-icon and B/C/D visual/gesture claims were not directly tested.</p>
+      </article>
+      <article class="coverage-card">
+        <h3><span>G · Rest of MySpace</span><span class="badge notrun">NOT DIRECTLY RUN</span></h3>
+        <p>Notes wall/pins/archive; Calendar year/week/day/reminders; Music library/notification transport; Recorder save self-test; Scanner capture/crop/PDF; Files editor; and Diagnostics local save/share were outside this calculator-only runtime suite. No G claim is certified by this report.</p>
+      </article>
+      <article class="coverage-card">
+        <h3><span>H · Themes and caret</span><span class="badge source">SOURCE-CI ONLY</span></h3>
+        <p>The guide names a bitmap-based caret/ink test, and upstream source emulator CI passed. H1–H4 were not visually exercised on the distributed APK, so light/dark colors, caret visibility, and live theme re-resolution remain unverified at artifact level.</p>
+      </article>
+    </div>
+    <details>
+      <summary>Recommended follow-up to close the guide coverage gaps</summary>
+      <ol>
+        <li>Retrieve and archive each shard artifact from the Actions run, then reconcile the missing standalone per-case outputs without changing unconfirmed cases to passes by inference.</li>
+        <li>Run the guide-named icon, selection/drag/clipboard, caret/theme, history/memory/effects and visual cases against the exact APKs (or add a clearly separate APK instrumentation test path).</li>
+        <li>Run a targeted MyCalc pass for the currently unconfirmed core/scientific/history/replay cases and retain machine-readable JSON plus screenshots/UI hierarchy evidence.</li>
+        <li>Exercise the G-section features on the exact MySpace APK; keep them explicitly outside the completed calculator run until that evidence exists.</li>
+        <li>Install the official Google Calculator on an authorized comparison image if feasible; rerun TC-010 without substituting AOSP.</li>
+      </ol>
+    </details>
+  </section>
+
+  <section id="defects" class="panel">
+    <h2>Detailed, commented defect tracker</h2>
+    <p class="muted">Root-cause language is intentionally qualified. The runtime tests identify observable failures; they do not prove the internal implementation path.</p>
+
+    <article class="defect">
+      <div class="defect-head"><h3>DEF-324-01 · Chained repeating-decimal calculation loses precision</h3><span class="badge fail">OPEN · P2</span></div>
+      <p class="comment"><strong>QA comment:</strong> This is a direct APK arithmetic mismatch on both distributed calculator packages. The UI shows a rounded quotient, and the next operation returns a value one unit in the tenth decimal place below the expected integer. The observed behavior is consistent with reusing rounded display text, but that is a hypothesis—not a source-level diagnosis.</p>
+      <dl>
+        <dt>Affected builds</dt><dd>MySpace 3.12.24 (61), <code>app.space.one</code>; MyCalc 1.0.22 (23), <code>app.space.calc</code>.</dd>
+        <dt>Reproduction</dt><dd>Enter <code>1 ÷ 3</code>, evaluate, then multiply the displayed result by <code>3</code> and evaluate again.</dd>
+        <dt>Expected</dt><dd><code>1</code>.</dd>
+        <dt>Observed</dt><dd>Both APKs displayed <code>0.3333333333</code> after the first step and <code>0.9999999999</code> after the second.</dd>
+        <dt>Evidence</dt><dd>TC-CALC-008, direct APK runtime, shard 3 of <a href="https://github.com/tarungittarun/AIA-/actions/runs/40321408355">run 40321408355</a>; both APKs have individual failure annotations.</dd>
+        <dt>Impact</dt><dd>Chained calculations involving repeating decimals can yield a visibly incorrect final answer; the same behavior occurred in both integrated and standalone calculator packages.</dd>
+        <dt>Suggested next step</dt><dd>Keep an unrounded numeric result/AST for subsequent operators and format only for display; add a regression test for the exact sequence on both APK variants. Confirm the implementation before assigning a root cause.</dd>
+        <dt>Regression note</dt><dd>The v3.12.21 report also recorded TC-008 failure for both APKs; the v3.12.24 direct run re-observed it.</dd>
+      </dl>
+    </article>
+
+    <article class="defect">
+      <div class="defect-head"><h3>DEF-324-02 · Exponent-formatted result cannot be continued with +1</h3><span class="badge fail">OPEN · P2</span></div>
+      <p class="comment"><strong>QA comment:</strong> The 10<sup>15</sup> result is shown in exponent notation; adding one to continue the calculation produces Error in both APKs. The probe is a blind large-number boundary check, not a literal guide step. It is consistent with the expression parser rejecting a display-formatted exponent, but the cause remains unconfirmed.</p>
+      <dl>
+        <dt>Affected builds</dt><dd>MySpace 3.12.24 (61) and standalone MyCalc 1.0.22 (23).</dd>
+        <dt>Reproduction</dt><dd>Evaluate <code>10^15</code>; then continue with <code>+1</code> and evaluate.</dd>
+        <dt>Expected</dt><dd>A valid numeric continuation (mathematically <code>1000000000000001</code> is representable in binary64); at minimum, no parser Error for the displayed finite value.</dd>
+        <dt>Observed</dt><dd>Initial display <code>1e+15</code>; continuation displayed <code>1e+15+1</code> and <code>Error</code>.</dd>
+        <dt>Evidence</dt><dd>TC-CALC-009, direct APK runtime, shard 3 of <a href="https://github.com/tarungittarun/AIA-/actions/runs/40321408355">run 40321408355</a>; failures were reported for both packages.</dd>
+        <dt>Impact</dt><dd>Users cannot continue a calculation from a large result displayed in scientific notation.</dd>
+        <dt>Suggested next step</dt><dd>Separate the internal value from its formatted string, support exponent-form input or retain the numeric result internally, and cover the continuation with a boundary regression test.</dd>
+        <dt>Regression note</dt><dd>The same TC-009 failure was recorded in the preserved v3.12.21 history report and reproduced again on v3.12.24 / 1.0.22.</dd>
+      </dl>
+    </article>
+
+    <article class="defect">
+      <div class="defect-head"><h3>DEF-324-03 · Standalone “zero permissions” claim conflicts with PackageManager</h3><span class="badge partial">OPEN · P3 · CLAIM / MANIFEST</span></div>
+      <p class="comment"><strong>QA comment:</strong> The guide says the standalone MyCalc app has “zero permissions.” The exact installed APK's PackageManager dump instead lists one requested permission: <code>app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION</code>. This makes the literal zero-requested-permissions claim inaccurate. The audit did not establish the permission's protection level, whether it is dependency-generated, or whether any runtime prompt is shown; do not infer those details from the name alone.</p>
+      <dl>
+        <dt>Affected build</dt><dd>Standalone MyCalc 1.0.22 (23), package <code>app.space.calc</code>.</dd>
+        <dt>Reproduction</dt><dd>Install the pinned APK on Android 14; inspect <code>dumpsys package app.space.calc</code> under “requested permissions”.</dd>
+        <dt>Expected</dt><dd>No requested permissions, as stated in guide section F.</dd>
+        <dt>Observed</dt><dd>One request: <code>app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION</code>; permission audit TC-CALC-012 failed.</dd>
+        <dt>Evidence</dt><dd>TC-CALC-012 annotation and package-dump evidence path in shard 1 artifact of <a href="https://github.com/tarungittarun/AIA-/actions/runs/40321408355">run 40321408355</a>.</dd>
+        <dt>Impact</dt><dd>Trust/documentation mismatch. The current evidence does not show a dangerous permission or a permission prompt, but it also does not prove either is absent.</dd>
+        <dt>Suggested next step</dt><dd>Inspect the merged release manifest and dependency origin. If the custom permission is required, revise the guide to make a precise claim (for example, no dangerous/runtime permissions only if verified); otherwise remove the unneeded request and retain a manifest regression check.</dd>
+      </dl>
+    </article>
+
+    <article class="defect">
+      <div class="defect-head"><h3>QA-GAP-324-01 · Full guide A–H not yet certified on the distributed APKs</h3><span class="badge unconfirmed">OPEN · COVERAGE GAP</span></div>
+      <p class="comment"><strong>QA comment:</strong> This is a test-coverage limitation, not a confirmed app defect. The run focused on calculator arithmetic, one history persistence path, D9 replay, the standalone permission claim, and two blind numeric probes. A green upstream source-CI run cannot be counted as direct validation of the binaries users install.</p>
+      <dl>
+        <dt>Uncovered areas</dt><dd>APK-level A2; B1–B8 gestures/clipboard; most visual/caret claims in C and H; D1–D3/D7–D8; most E behavior; MyCalc icon and remaining unconfirmed cases; all G-section Notes, Calendar, Music, Recorder, Scanner, Files and Diagnostics flows.</dd>
+        <dt>Evidence boundary</dt><dd>Source CI passed at the pinned source commit. Direct distribution APK evidence is limited to the case tables above.</dd>
+        <dt>Closure criteria</dt><dd>Run and retain per-claim APK results with screenshots or hierarchy/log evidence; mark each guide code PASS/FAIL/BLOCKED/NOT RUN; do not upgrade source-only evidence to artifact-level status.</dd>
+      </dl>
+    </article>
+  </section>
+
+  <section id="history" class="panel">
+    <h2>Regression history and preservation</h2>
+    <p>The previous <strong>MySpace v3.12.21 (58)</strong> QA report remains unchanged and is preserved as historical regression evidence:</p>
+    <div class="links"><a class="button secondary" href="https://raw.githubusercontent.com/tarungittarun/AIA-/arena/e4dfeee3-aia/reports/calculator-defect-tracker-v3.12.21-58.html">Open/download the v3.12.21 HTML report</a></div>
+    <p>In that version, the chained repeating-decimal probe (TC-008) and exponent-continuation probe (TC-009) also failed on the calculator APKs; the official Google comparison was blocked. The v3.12.24 report records fresh observations only where the new workflow produced direct evidence and does not carry forward old pass/fail statuses to other cases.</p>
+    <p><strong>Source and guide links:</strong> <a href="https://github.com/tarungittarun/TicTic/raw/arena/3caca636-tictic/TEST-GUIDE.md">Pinned v3.12.24 test guide</a> · <a href="https://github.com/tarungittarun/TicTic/raw/arena/3caca636-tictic/artifacts/MySpace-v3.12.24-61-lite-dist.apk">MySpace APK</a> · <a href="https://github.com/tarungittarun/TicTic/raw/arena/3caca636-tictic/artifacts/MyCalc-v1.0.22-23.apk">MyCalc APK</a>.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="legend-title">
+    <h2 id="legend-title">How to read this report</h2>
+    <div class="pill-list">
+      <span class="pill"><strong>PASS</strong> — direct APK assertion observed</span>
+      <span class="pill"><strong>FAIL</strong> — direct APK assertion contradicted</span>
+      <span class="pill"><strong>BLOCKED</strong> — comparison/precondition unavailable</span>
+      <span class="pill"><strong>UNCONFIRMED</strong> — selected but no usable per-case result surfaced</span>
+      <span class="pill"><strong>SOURCE-CI</strong> — source workflow green, not APK-level proof</span>
+      <span class="pill"><strong>NOT RUN</strong> — no direct test evidence in this run</span>
+    </div>
+    <p class="footnote">Report generated from workflow run 40321408355 and its check-run annotations on 26 October 2026. Public report file is self-contained HTML with responsive styling, no external assets, and print styles.</p>
+  </section>
+</main>
+<footer>
+  <p><strong>MySpace / MyCalc APK QA report · v3.12.24 (61) / v1.0.22 (23)</strong><br>Historical v3.12.21 evidence remains separate. No claim is promoted from source-CI to direct APK runtime without artifact-level evidence.</p>
+  <p><a href="https://github.com/tarungittarun/AIA-/actions/runs/40321408355">Open the complete Android APK E2E run on GitHub Actions</a></p>
+</footer>
+</body>
+</html>
