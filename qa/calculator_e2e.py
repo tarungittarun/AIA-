@@ -1406,7 +1406,10 @@ class CalculatorQa:
             f"{summary_notice}; Google reference={self.reference['status']}; "
             f"cases: {case_summary}"
         ).replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
-        print(f"::notice title=Calculator QA summary::{summary_notice}", flush=True)
+        print(
+            f"::notice title={self.package} calculator QA summary::{summary_notice}",
+            flush=True,
+        )
         for result in failures:
             message = clean(result["comment"]).replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
             print(f"::error title={result['id']}::{message}", flush=True)
