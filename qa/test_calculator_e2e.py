@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 from contextlib import redirect_stdout
 from unittest.mock import patch
 
-from calculator_e2e import AndroidUi, CalculatorQa
+from calculator_e2e import AndroidUi, CalculatorQa, QaError
 
 
 class AndroidUiHarnessTests(unittest.TestCase):
@@ -43,6 +43,30 @@ class AndroidUiHarnessTests(unittest.TestCase):
 
         ui.key("0")
         self.assertEqual(ui.display_texts()[-1], "sin(30)")
+
+    def test_dump_retries_standard_hierarchy_when_compressed_file_is_empty(self) -> None:
+        ui = object.__new__(AndroidUi)
+        ui._last_tree = None
+        ui._ocr_mode = False
+        ui.ui_method = "uiautomator-compressed"
+        calls: list[tuple[str, ...]] = []
+        valid_xml = '<hierarchy><node text="Calculator" bounds="[0,0][200,80]" /></hierarchy>'
+
+        def adb(*args: str, **kwargs: object) -> str:
+            calls.append(args)
+            if args[:3] == ("exec-out", "cat", "/sdcard/window-compressed.xml"):
+                return ""
+            if args[:3] == ("exec-out", "cat", "/sdcard/window-standard.xml"):
+                return valid_xml
+            return "UI hierarchy dumped"
+
+        ui.adb = adb
+        with patch("calculator_e2e.time.sleep", return_value=None), redirect_stdout(io.StringIO()):
+            tree = ui.dump()
+
+        self.assertEqual(tree.tag, "hierarchy")
+        self.assertEqual(ui.ui_method, "uiautomator-standard")
+        self.assertIn(("shell", "uiautomator", "dump", "/sdcard/window-standard.xml"), calls)
 
     def test_expression_matching_ignores_spacing_but_not_missing_digits(self) -> None:
         root = ET.fromstring(

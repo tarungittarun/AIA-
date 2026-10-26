@@ -208,6 +208,18 @@ class AndroidUi:
         self._last_tree = tree
         return tree
 
+    @staticmethod
+    def _parse_hierarchy(raw: str, method: str) -> ET.Element:
+        if not raw or not raw.strip():
+            raise QaError(f"{method} returned an empty hierarchy file")
+        try:
+            tree = ET.fromstring(raw)
+        except ET.ParseError as exc:
+            raise QaError(f"{method} returned malformed hierarchy XML: {exc}") from exc
+        if not any(node.tag == "node" for node in tree.iter()):
+            raise QaError(f"{method} returned hierarchy XML without any UI nodes")
+        return tree
+
     def dump(self) -> ET.Element:
         if self._last_tree is not None:
             return self._last_tree
@@ -215,31 +227,39 @@ class AndroidUi:
             self._last_tree = self._ocr_tree()
             return self._last_tree
 
-        compressed_error: Exception | None = None
-        method = "uiautomator-compressed"
-        try:
-            self.adb("shell", "uiautomator", "dump", "--compressed", "/sdcard/window.xml", timeout=90)
-        except Exception as error:
-            compressed_error = error
-            method = "uiautomator-standard"
+        attempts = (
+            ("uiautomator-compressed", True, "/sdcard/window-compressed.xml"),
+            ("uiautomator-standard", False, "/sdcard/window-standard.xml"),
+            ("uiautomator-standard", False, "/sdcard/window-standard-retry.xml"),
+        )
+        errors: list[str] = []
+        for index, (method, compressed, path) in enumerate(attempts):
             try:
-                # Older Android images may not support --compressed; retry the
-                # standard hierarchy dump once before collecting diagnostics.
-                self.adb("shell", "uiautomator", "dump", "/sdcard/window.xml", timeout=90)
-                print("::warning title=UIAutomator::Compressed dump failed; standard dump succeeded.", flush=True)
-            except Exception as standard_error:
-                return self._recover_hierarchy_with_ocr(
-                    QaError(f"compressed dump: {compressed_error}; standard dump: {standard_error}")
-                )
+                command = ["shell", "uiautomator", "dump"]
+                if compressed:
+                    command.append("--compressed")
+                command.append(path)
+                self.adb(*command, timeout=90)
+                raw = self.adb("exec-out", "cat", path, timeout=30)
+                tree = self._parse_hierarchy(raw, method)
+                if index:
+                    print(
+                        "::warning title=UIAutomator::Compressed/previous hierarchy dump was "
+                        "empty or malformed; a standard retry succeeded.",
+                        flush=True,
+                    )
+                self.ui_method = method
+                self._last_tree = tree
+                return tree
+            except Exception as error:
+                errors.append(f"{method} attempt {index + 1}: {type(error).__name__}: {error}")
+                self._last_tree = None
+                if index < len(attempts) - 1:
+                    # Allow UiAutomation/system UI to recover instead of
+                    # hammering the service with immediate repeated dumps.
+                    time.sleep(1.0 + index)
 
-        try:
-            raw = self.adb("exec-out", "cat", "/sdcard/window.xml", timeout=30)
-            tree = ET.fromstring(raw)
-        except Exception as error:
-            return self._recover_hierarchy_with_ocr(error)
-        self.ui_method = method
-        self._last_tree = tree
-        return tree
+        return self._recover_hierarchy_with_ocr(QaError("; ".join(errors)))
 
     @staticmethod
     def _compact_label(value: str) -> str:
