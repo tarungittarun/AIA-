@@ -1,0 +1,84 @@
+name: Publish v3.12.24 APK QA PDF with screenshots
+
+on:
+  push:
+    branches: [arena/e4dfeee3-aia]
+    paths:
+      - .github/workflows/publish-calculator-pdf.yml
+      - qa/build_calculator_pdf.py
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: GitHub Actions run that produced the Android screenshot evidence
+        required: true
+        default: '40321408355'
+        type: string
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  build-and-publish-pdf:
+    name: Retrieve screenshots and publish PDF
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out the session branch
+        uses: actions/checkout@v4
+
+      - name: Confirm publication stays on the session branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_REF_NAME" != "arena/e4dfeee3-aia" ]]; then
+            echo "Refusing to publish evidence from unexpected branch: $GITHUB_REF_NAME" >&2
+            exit 2
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PDF generator
+        run: python -m pip install --disable-pip-version-check 'reportlab>=4,<5'
+
+      - name: Download original Android E2E evidence artifacts
+        uses: actions/download-artifact@v4
+        with:
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.source_run_id || '40321408355' }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: myspace-guide-v3.12.24-shard-*
+          merge-multiple: false
+          path: reports/evidence/incoming
+
+      - name: Build PDF and extract original screenshots
+        run: |
+          python qa/build_calculator_pdf.py \
+            --artifact-root reports/evidence/incoming \
+            --output reports/calculator-defect-tracker-v3.12.24-61.pdf \
+            --evidence-output reports/evidence/v3.12.24-61
+          python - <<'PY'
+          from pathlib import Path
+          pdf = Path('reports/calculator-defect-tracker-v3.12.24-61.pdf').read_bytes()
+          assert pdf.startswith(b'%PDF-'), 'missing PDF signature'
+          print(f'PDF ready: {len(pdf):,} bytes')
+          for path in sorted(Path('reports/evidence/v3.12.24-61').glob('*')):
+              print(f'Evidence: {path} ({path.stat().st_size:,} bytes)')
+          PY
+
+      - name: Publish PDF and original screenshots on the session branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/calculator-defect-tracker-v3.12.24-61.pdf reports/evidence/v3.12.24-61/
+          if git diff --cached --quiet; then
+            echo "No PDF or evidence changes to publish."
+          else
+            git commit -m "Publish APK QA PDF with runtime screenshots"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
