@@ -3,12 +3,12 @@
   "engine": "tesseract TSV",
   "words": [
     {
-      "text": "852",
+      "text": "9:08",
       "left": 9,
-      "top": 6,
-      "width": 48,
-      "height": 12,
-      "conf": 92.158798,
+      "top": 7,
+      "width": 25,
+      "height": 10,
+      "conf": 69.461197,
       "line": [
         "1",
         "1",
@@ -17,11 +17,11 @@
     },
     {
       "text": "\u00a9",
-      "left": 50,
-      "top": 0,
+      "left": 45,
+      "top": 6,
       "width": 12,
-      "height": 27,
-      "conf": 75.664558,
+      "height": 12,
+      "conf": 94.894135,
       "line": [
         "1",
         "1",
