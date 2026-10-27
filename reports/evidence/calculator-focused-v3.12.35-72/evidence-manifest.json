@@ -1,0 +1,1245 @@
+{
+  "source_commit": "0727a2e3b9974d6df70153d76dc8e629e0a0b839",
+  "files": [
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/calculator-e2e-results.json",
+      "published_path": "raw/1-myspace-core/calculator-calculator-e2e-results.json",
+      "bytes": 6009,
+      "sha256": "4ca5a3520bc1eaf77bc4b0c2b577b0d94386215fc85c1f95ba777b919e963a8b"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/calculator-e2e-results.md",
+      "published_path": "raw/1-myspace-core/calculator-calculator-e2e-results.md",
+      "bytes": 3227,
+      "sha256": "01e4949cab235f50b15dea2d7df85222063f361ffd05011382ebb7f085d58cb2"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/initial-calculator-screen.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-initial-calculator-screen.png",
+      "bytes": 34593,
+      "sha256": "bef89ecc4d35baf9a9832193bc2ed22646ca9bbe7bf74b6b3327308baa6104b9"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/tc-calc-001-target.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-tc-calc-001-target.png",
+      "bytes": 34775,
+      "sha256": "094da48b41ebad78a50ffc31267f22d1a2d13b5722f4ea7af06afe9c29ffd93a"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/tc-calc-002-target.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-tc-calc-002-target.png",
+      "bytes": 36293,
+      "sha256": "d1d8bc0365f62249f83388234e3f730e339e210f9a947d67c19f90a30cb46f4f"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/tc-calc-003-target.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-tc-calc-003-target.png",
+      "bytes": 36702,
+      "sha256": "8f495b3cdd0ee690795d267f3b65e0dba367872d4e82a8b79bee5874b02776a7"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/tc-calc-004-target.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-tc-calc-004-target.png",
+      "bytes": 36425,
+      "sha256": "1c3c7c342bb498ccd3fa753c1b38308372a8161bd1dff97e3d0c8edb2eef6f5a"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/tc-calc-005-target.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-tc-calc-005-target.png",
+      "bytes": 35677,
+      "sha256": "d9766f1efe56f0ae2eb139c0d2ce86b2c17892cad85377b8430d0ec1f47f12cc"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/tc-calc-006-target.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-tc-calc-006-target.png",
+      "bytes": 36992,
+      "sha256": "261c2b93e2df934a2443e38e96fa3a37c7687cc91db80a54e82b0211402aecf2"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/tc-calc-007-history.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-tc-calc-007-history.png",
+      "bytes": 36371,
+      "sha256": "5cd4637caa33f052f005cf60a60481df54e873352ee218fd79b6f2dc511e810f"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/tc-calc-008-target.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-tc-calc-008-target.png",
+      "bytes": 36336,
+      "sha256": "673870f78509913c8c1d788e86dd970bbbc0ba31944dca1b743e3365550f3a74"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/tc-calc-009-target.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-tc-calc-009-target.png",
+      "bytes": 36313,
+      "sha256": "901b139a4c109280d4e694baae996fec24c5cc61f926955f57eb315595318849"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/tc-calc-011-history-card.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-tc-calc-011-history-card.png",
+      "bytes": 37140,
+      "sha256": "3836aae580aca9cfe045666bb47a26d3abc9b86d8f36756b50f4531c941d5be7"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/tc-calc-011-replay-result.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-tc-calc-011-replay-result.png",
+      "bytes": 39894,
+      "sha256": "5211b8df6d412d170d4e86f9d16e0b87e2c519b2465e1a6f0d6cbe14e3255d19"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-ads-calc.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-ads-calc.png",
+      "bytes": 41552,
+      "sha256": "8bde02ef03688269f2e2feae0be06ccd3529fe7066620f8f76211ae94aebb86c"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-ads-calc.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-ads-calc.xml",
+      "bytes": 2356,
+      "sha256": "69b621cbb3ff8eb382b861d9e0c9f69c50d3116e74de54325ed4462bd12dc56e"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b1-toolbar-ocr.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b1-toolbar-ocr.png",
+      "bytes": 44277,
+      "sha256": "d869796425628f3167be524f582bf389b935e51a608b226c27c69bc4685af4ee"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b1.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b1.png",
+      "bytes": 44277,
+      "sha256": "d869796425628f3167be524f582bf389b935e51a608b226c27c69bc4685af4ee"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b1.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b1.xml",
+      "bytes": 13113,
+      "sha256": "420413080b2e69637d016367f8daf6c8a9a4e7415fb6e7beae0d28d2f3326a26"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b11-caret-menu-ocr.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b11-caret-menu-ocr.png",
+      "bytes": 37751,
+      "sha256": "41b6368717f1dc2b9c2bcfebec6ecfbe7806363d98c3f32a796b5efdd396b9f0"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b11.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b11.png",
+      "bytes": 37751,
+      "sha256": "41b6368717f1dc2b9c2bcfebec6ecfbe7806363d98c3f32a796b5efdd396b9f0"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b11.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b11.xml",
+      "bytes": 13097,
+      "sha256": "dd596e475b1a0d5f377bf2e55fbba4509ddccc3036fd67a514302920feb0729d"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b2-toolbar-ocr.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b2-toolbar-ocr.png",
+      "bytes": 40959,
+      "sha256": "57b62643c356496730b2e9e7e27073b7c6284fddaffb4bf2faed65d35a7a22df"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b2.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b2.png",
+      "bytes": 40959,
+      "sha256": "57b62643c356496730b2e9e7e27073b7c6284fddaffb4bf2faed65d35a7a22df"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b2.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b2.xml",
+      "bytes": 13113,
+      "sha256": "420413080b2e69637d016367f8daf6c8a9a4e7415fb6e7beae0d28d2f3326a26"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b4-caret-menu-ocr.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b4-caret-menu-ocr.png",
+      "bytes": 37863,
+      "sha256": "5b3e2f9887b004444ba1d4279e283d1c27077d9215051e156780b75fecf2ebb4"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b4-toolbar-ocr.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b4-toolbar-ocr.png",
+      "bytes": 44432,
+      "sha256": "b700d77963f7dd1c629920a4867d412a41efb21ad39cfba38b48345c301b2977"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b4.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b4.png",
+      "bytes": 41073,
+      "sha256": "1c3131efbb4231235293bb298f5c44b7959bfef72d1b8b1299866804a5a887a1"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b4.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b4.xml",
+      "bytes": 13113,
+      "sha256": "420413080b2e69637d016367f8daf6c8a9a4e7415fb6e7beae0d28d2f3326a26"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b5-toolbar-ocr.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b5-toolbar-ocr.png",
+      "bytes": 44432,
+      "sha256": "b700d77963f7dd1c629920a4867d412a41efb21ad39cfba38b48345c301b2977"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b5.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b5.png",
+      "bytes": 34698,
+      "sha256": "6f2f1bda5b8f297c8b4abfe198af71541a0049a0685d0f6b35639e0fab683e45"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b5.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b5.xml",
+      "bytes": 13099,
+      "sha256": "a31f6083bc2a16980e1e0fbe09401471a703082ed833a03bddf436009d495830"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b7-after-ac-ocr.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b7-after-ac-ocr.png",
+      "bytes": 34507,
+      "sha256": "7627da0b01f1993c252fbb099cdcf5435b9e0c90994444ef68bb8bc81fe8ed5c"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b7-toolbar-ocr.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b7-toolbar-ocr.png",
+      "bytes": 44267,
+      "sha256": "ccba0c75aa45891f98c055524517b39f4b471c69cf1d1fb75a5018845c03dc5b"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b7.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b7.png",
+      "bytes": 34507,
+      "sha256": "7627da0b01f1993c252fbb099cdcf5435b9e0c90994444ef68bb8bc81fe8ed5c"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b7.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b7.xml",
+      "bytes": 13097,
+      "sha256": "dd596e475b1a0d5f377bf2e55fbba4509ddccc3036fd67a514302920feb0729d"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b9-before-edit.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b9-before-edit.png",
+      "bytes": 40899,
+      "sha256": "db5e539fdce2e03d0a419b17a4691230b3314764978509390a84e4b011cc283f"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b9.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b9.png",
+      "bytes": 42564,
+      "sha256": "26b93fcb614c01b4abefaab349fdc434283e614b4d04e499d801c9a51d406a33"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b9.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-b9.xml",
+      "bytes": 13115,
+      "sha256": "7ca9269817e1ba55054c60ef4e422ac7218facb12b5e5357a002c4f7a15b9b4e"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-c10-key-shape-picker.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-c10-key-shape-picker.png",
+      "bytes": 41139,
+      "sha256": "c04300792533c771d95789f47b5f494756bad9875140c74ec15e8697d2af3260"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-c10.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-c10.png",
+      "bytes": 41604,
+      "sha256": "7147cf19dc1f2e33ed98c758b1c4b2498ede93d100e6b1c275ee0d7a6cb0db66"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-c10.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-c10.xml",
+      "bytes": 2356,
+      "sha256": "69b621cbb3ff8eb382b861d9e0c9f69c50d3116e74de54325ed4462bd12dc56e"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-c9.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-c9.png",
+      "bytes": 34672,
+      "sha256": "805174c58a64816fa6b007c4341ed1b1404424628f922f59e883c17850ea565b"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-c9.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-c9.xml",
+      "bytes": 13097,
+      "sha256": "dd596e475b1a0d5f377bf2e55fbba4509ddccc3036fd67a514302920feb0729d"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-d1.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-d1.png",
+      "bytes": 36737,
+      "sha256": "311bd847e65655fe76c8cf255cc486be36032a7a3d53ed96ca27948459574cef"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-d1.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-d1.xml",
+      "bytes": 13099,
+      "sha256": "35b7322a9f5274b42ebcdc01f290244e43f3d12587f822a723ba93c9d8887f0e"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-d2.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-d2.png",
+      "bytes": 35709,
+      "sha256": "6231ae34b2cd8be13f8961faa6c669a775e2b65d2fa390bd0bb5b613a308d4cc"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-d2.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-d2.xml",
+      "bytes": 13104,
+      "sha256": "4580f844fcffc289141fdd7d3852ee48231f447e00224f7de2d4f68f7eed8860"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-d3.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-d3.png",
+      "bytes": 34995,
+      "sha256": "fef7aee2867584d5124735429af0c17f45d4eef04478d22b4ed222d44b43e494"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-d3.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-d3.xml",
+      "bytes": 13097,
+      "sha256": "71aeaf77e8314f5cba88b4b5f42b8872bfed10f8a963ba5762bcfedd895b7711"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-d4.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-d4.png",
+      "bytes": 41076,
+      "sha256": "3b255038a2100a0049a8d811781963f98c04bfa2bf3f1ab8d3df6204c0b1ed7c"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-d4.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-d4.xml",
+      "bytes": 13113,
+      "sha256": "420413080b2e69637d016367f8daf6c8a9a4e7415fb6e7beae0d28d2f3326a26"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-d6.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-d6.png",
+      "bytes": 36849,
+      "sha256": "f681b33cab718247d474baae2b93348bc89a73be76fb72974074a04452755c1b"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-d6.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-d6.xml",
+      "bytes": 16974,
+      "sha256": "1c0329a3183d8c2a2eb3065bce9974f30677eae77130db8abfdde0cdde20abc3"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-d8.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-d8.png",
+      "bytes": 35322,
+      "sha256": "e7cdf304652bfe8a6c7a3f6178cde80244e3a2c6adfbbe72a30234bbb18ea41e"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-d8.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-d8.xml",
+      "bytes": 13101,
+      "sha256": "0091dfd8b44edf7f5fe3b6d1af549e3911035f04f9002a0555649bc57cd79c83"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-e3-overflow-menu.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-e3-overflow-menu.png",
+      "bytes": 41604,
+      "sha256": "7147cf19dc1f2e33ed98c758b1c4b2498ede93d100e6b1c275ee0d7a6cb0db66"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-e3.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-e3.png",
+      "bytes": 41604,
+      "sha256": "7147cf19dc1f2e33ed98c758b1c4b2498ede93d100e6b1c275ee0d7a6cb0db66"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-e3.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-e3.xml",
+      "bytes": 2356,
+      "sha256": "69b621cbb3ff8eb382b861d9e0c9f69c50d3116e74de54325ed4462bd12dc56e"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-h1-h2.png",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-h1-h2.png",
+      "bytes": 41552,
+      "sha256": "8bde02ef03688269f2e2feae0be06ccd3529fe7066620f8f76211ae94aebb86c"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-h1-h2.xml",
+      "published_path": "raw/1-myspace-core/calculator-evidence-user-h1-h2.xml",
+      "bytes": 2356,
+      "sha256": "69b621cbb3ff8eb382b861d9e0c9f69c50d3116e74de54325ed4462bd12dc56e"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "diagnostics/target-crash-scan.txt",
+      "published_path": "raw/1-myspace-core/diagnostics-target-crash-scan.txt",
+      "bytes": 41055,
+      "sha256": "50a7a133ac09df1e8ffdc0e4ec146f5918905462f0ce6b3d3457f270fb4e9988"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "user-journey-results.json",
+      "published_path": "raw/1-myspace-core/user-journey-results.json",
+      "bytes": 15766,
+      "sha256": "e3c8d18235e7064940ce0d3a808fa7d221f287b097de1a33560d78f102dbf769"
+    },
+    {
+      "suite": "myspace-core",
+      "app": "myspace",
+      "source_relative_path": "user-journey-results.md",
+      "published_path": "raw/1-myspace-core/user-journey-results.md",
+      "bytes": 5168,
+      "sha256": "1f83b8d2e1ee4a91047f6c3569f7920d7c24ee53d91dc0d0eda12fb443a57997"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/calculator-e2e-results.json",
+      "published_path": "raw/2-myspace-features/calculator-calculator-e2e-results.json",
+      "bytes": 1073,
+      "sha256": "736b9c792c385a3e3302a8c5abf271ce656b976d7e97d144ffcece2bd515ef68"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/calculator-e2e-results.md",
+      "published_path": "raw/2-myspace-features/calculator-calculator-e2e-results.md",
+      "bytes": 901,
+      "sha256": "1510baed026b8cadaee6d3a5869db507228aa21a5e5c72bbb34a3141f099274f"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/initial-calculator-screen.png",
+      "published_path": "raw/2-myspace-features/calculator-evidence-initial-calculator-screen.png",
+      "bytes": 34593,
+      "sha256": "bef89ecc4d35baf9a9832193bc2ed22646ca9bbe7bf74b6b3327308baa6104b9"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/tc-calc-001-target.png",
+      "published_path": "raw/2-myspace-features/calculator-evidence-tc-calc-001-target.png",
+      "bytes": 34829,
+      "sha256": "9c70298520e621b3d3f651566425bcdf11da381a302778f26e2f9d13d545b78e"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b12-madd-toolbar.png",
+      "published_path": "raw/2-myspace-features/calculator-evidence-user-b12-madd-toolbar.png",
+      "bytes": 44466,
+      "sha256": "9ca24dea37a1e68ae07b40de91b21e74044924dbbb4726e5d8f32860801c9d95"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b12-muse-toolbar.png",
+      "published_path": "raw/2-myspace-features/calculator-evidence-user-b12-muse-toolbar.png",
+      "bytes": 39305,
+      "sha256": "54c381a0eeefbd0cf06c33fcf5dd53cf11ab1d441d2dc082ebca6edeeeed8a4a"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b12.png",
+      "published_path": "raw/2-myspace-features/calculator-evidence-user-b12.png",
+      "bytes": 40802,
+      "sha256": "b7bce1b32bce360997385820fa7550a8814d45a30b03d3533b93160ae02c6e9f"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-b12.xml",
+      "published_path": "raw/2-myspace-features/calculator-evidence-user-b12.xml",
+      "bytes": 13117,
+      "sha256": "ec536efe71143b6a150eb3ee6383baaa4c1d2e97f8eead2a938ebf6b557aadb6"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-e3-memory-list.png",
+      "published_path": "raw/2-myspace-features/calculator-evidence-user-e3-memory-list.png",
+      "bytes": 34653,
+      "sha256": "f8b69b81523f826c7d49d5ef4d11778b187813410373d69bb54faaf9b5a2eb62"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-e3-memory.png",
+      "published_path": "raw/2-myspace-features/calculator-evidence-user-e3-memory.png",
+      "bytes": 40811,
+      "sha256": "94f07a27a39d37905870619449090723100fb04916491b6f48b3fbcd4e7babb1"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-e3-memory.xml",
+      "published_path": "raw/2-myspace-features/calculator-evidence-user-e3-memory.xml",
+      "bytes": 13117,
+      "sha256": "ec536efe71143b6a150eb3ee6383baaa4c1d2e97f8eead2a938ebf6b557aadb6"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-e4-effects-picker.png",
+      "published_path": "raw/2-myspace-features/calculator-evidence-user-e4-effects-picker.png",
+      "bytes": 45198,
+      "sha256": "435cebab9e4b664aee76956a0aa9aff9370158fb86d5076344e632818a3d58b3"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-e4.png",
+      "published_path": "raw/2-myspace-features/calculator-evidence-user-e4.png",
+      "bytes": 43010,
+      "sha256": "a99e24656ba6ee429b2f31eca25801d798537ccf0047d8e464e31abb53a41530"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "calculator/evidence/user-e4.xml",
+      "published_path": "raw/2-myspace-features/calculator-evidence-user-e4.xml",
+      "bytes": 2356,
+      "sha256": "69b621cbb3ff8eb382b861d9e0c9f69c50d3116e74de54325ed4462bd12dc56e"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "diagnostics/target-crash-scan.txt",
+      "published_path": "raw/2-myspace-features/diagnostics-target-crash-scan.txt",
+      "bytes": 27674,
+      "sha256": "a432ed4d52c962cd515e3f2592e95709a732f9daa48c077ec7436f196ac00f15"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "user-journey-results.json",
+      "published_path": "raw/2-myspace-features/user-journey-results.json",
+      "bytes": 3556,
+      "sha256": "c5e157b6fc5a59e4b9ef96dcc6449093c48d8141249b4f76cbc49a3af1164305"
+    },
+    {
+      "suite": "myspace-features",
+      "app": "myspace",
+      "source_relative_path": "user-journey-results.md",
+      "published_path": "raw/2-myspace-features/user-journey-results.md",
+      "bytes": 1572,
+      "sha256": "535d0325e2cb651cab8022d6e2f5167b23dce0011bb112deab5498a3c2dd3e3f"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/calculator-e2e-results.json",
+      "published_path": "raw/3-mycalc/calculator-calculator-e2e-results.json",
+      "bytes": 5800,
+      "sha256": "5061f0b366262852ba0eb7552125f3f04f3697f8144c70b2375a1bdc5fc47265"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/calculator-e2e-results.md",
+      "published_path": "raw/3-mycalc/calculator-calculator-e2e-results.md",
+      "bytes": 2816,
+      "sha256": "1b31425f2baad426e3d46ccf4b18778a559d94e90a1be5b5c345e549ac3d1a4f"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/initial-calculator-screen.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-initial-calculator-screen.png",
+      "bytes": 29566,
+      "sha256": "71fac3bcdd07bac5949a4604fc484812f2c1276bbb9238bd9bb32efcb71925d6"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/tc-calc-001-target.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-tc-calc-001-target.png",
+      "bytes": 29714,
+      "sha256": "5a266262b4fe57168e1232176b3daf624a1328d660c2fcbfcadb8789b33681e0"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/tc-calc-002-target.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-tc-calc-002-target.png",
+      "bytes": 31209,
+      "sha256": "0f6644af9289fc08b7d1ddb8c578eb8a537979a85c8a8c5355555bbee6b3666d"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/tc-calc-003-target.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-tc-calc-003-target.png",
+      "bytes": 31646,
+      "sha256": "74bf7949f827ca15fec541bb9818e8d29d65907a038f3e4b5a574f69a1b262b1"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/tc-calc-004-target.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-tc-calc-004-target.png",
+      "bytes": 31356,
+      "sha256": "ae41a6c2b0758d878c526de0bba942f7b062cf8e3db97136f66904eeadc6b61e"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/tc-calc-005-target.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-tc-calc-005-target.png",
+      "bytes": 33176,
+      "sha256": "a4678f0525bef03672258c4c7e1f50fc3344aed34c310406a20aa7b15a8adeac"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/tc-calc-006-target.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-tc-calc-006-target.png",
+      "bytes": 34382,
+      "sha256": "4dabf35b7c620e06133b47715197aa82a30215969a845f676436ebd0d48a8c91"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/tc-calc-007-history.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-tc-calc-007-history.png",
+      "bytes": 32782,
+      "sha256": "f2ba7f2b0e6fdafd8d42c3479e97caeff685bb76fccb1fb2b139c51fa8464267"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/tc-calc-008-target.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-tc-calc-008-target.png",
+      "bytes": 31263,
+      "sha256": "499e3d952d619d9cf9f96e9223d5a7422debc2e9e4a88deba32f04601bf75a73"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/tc-calc-009-target.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-tc-calc-009-target.png",
+      "bytes": 33997,
+      "sha256": "7b70784f7889a0dc5e0907a2f9332aaeadbde21e39934b4f0c47d5b70485fef3"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/tc-calc-011-history-card.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-tc-calc-011-history-card.png",
+      "bytes": 33516,
+      "sha256": "28be941612cfe8c259cd71553f7d5b6e9eb42323d8caf83a4115da8297082f44"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/tc-calc-011-replay-result.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-tc-calc-011-replay-result.png",
+      "bytes": 34749,
+      "sha256": "b0318087aa31a3e1bf97a39f6e783f1a6bdd9eafb4bc4804dd7484cfa52ea4af"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/tc-calc-012-package-dump.txt",
+      "published_path": "raw/3-mycalc/calculator-evidence-tc-calc-012-package-dump.txt",
+      "bytes": 4768,
+      "sha256": "99b35b618f63f84017e56b64881ec94db556bc6a8345eaf06763015abe6a4abd"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-ads-calc.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-ads-calc.png",
+      "bytes": 36979,
+      "sha256": "f1eac9e6afac33cc5d73497223fca6976644ab9ed9c0933b9834736628ada9f4"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-ads-calc.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-ads-calc.xml",
+      "bytes": 2363,
+      "sha256": "20aa36f92a46ce670fb93ffca02c8d9dbd28790580ae0bb9ddff42c340b23afa"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b1-toolbar-ocr.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b1-toolbar-ocr.png",
+      "bytes": 39089,
+      "sha256": "3b94a3feabe75c568936deed18a414e3af8f14d714d40f64d86b2b7e4719b485"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b1.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b1.png",
+      "bytes": 39089,
+      "sha256": "3b94a3feabe75c568936deed18a414e3af8f14d714d40f64d86b2b7e4719b485"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b1.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b1.xml",
+      "bytes": 10885,
+      "sha256": "0c21c79eddaa110a3e4f15ebed1049009492ca48abcf28dec943024f09d34d97"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b11-caret-menu-ocr.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b11-caret-menu-ocr.png",
+      "bytes": 32787,
+      "sha256": "9a831059600c1266ba615823f71822f8f14e8fac98e570c177deebcaa73353c2"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b11.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b11.png",
+      "bytes": 32787,
+      "sha256": "9a831059600c1266ba615823f71822f8f14e8fac98e570c177deebcaa73353c2"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b11.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b11.xml",
+      "bytes": 10869,
+      "sha256": "efd4d1530af415b35f9ff0f968a80b551f63672da6f270988ef72b1c2ea328ba"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b12.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b12.png",
+      "bytes": 36929,
+      "sha256": "9512129d85ca4d941ec97a645689de87af047be2678867121ea9dc0db468e830"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b12.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b12.xml",
+      "bytes": 2363,
+      "sha256": "20aa36f92a46ce670fb93ffca02c8d9dbd28790580ae0bb9ddff42c340b23afa"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b2-toolbar-ocr.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b2-toolbar-ocr.png",
+      "bytes": 35976,
+      "sha256": "0a49010b410e7a1b0413232a82d4f83c913f6a7a23862624b3cbfe8f2703b487"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b2.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b2.png",
+      "bytes": 35976,
+      "sha256": "0a49010b410e7a1b0413232a82d4f83c913f6a7a23862624b3cbfe8f2703b487"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b2.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b2.xml",
+      "bytes": 10885,
+      "sha256": "0c21c79eddaa110a3e4f15ebed1049009492ca48abcf28dec943024f09d34d97"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b4-caret-menu-ocr.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b4-caret-menu-ocr.png",
+      "bytes": 32749,
+      "sha256": "c205a4fe6598daae879010f1e978422158fd5f2a571d9667e0c7c670a2074f9b"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b4-toolbar-ocr.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b4-toolbar-ocr.png",
+      "bytes": 39230,
+      "sha256": "5f6385847c0b6064e2349af98b378164cf73e48e663ba7e83ffdfe3449574f0a"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b4.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b4.png",
+      "bytes": 35923,
+      "sha256": "ec3c3c25b4497884ccae2dc5d9c62a56e6842c81b1610d02edaa75bbe1014660"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b4.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b4.xml",
+      "bytes": 10885,
+      "sha256": "0c21c79eddaa110a3e4f15ebed1049009492ca48abcf28dec943024f09d34d97"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b5-toolbar-ocr.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b5-toolbar-ocr.png",
+      "bytes": 39052,
+      "sha256": "2f37e637528585c5e9507b575cf8a0fe1d60cc88bb4602185de1a79ba183fc09"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b5.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b5.png",
+      "bytes": 29481,
+      "sha256": "44f00b26218a8fb33997be131204ea9d9ebf92bdd8e468755f4d1099d136c989"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b5.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b5.xml",
+      "bytes": 10871,
+      "sha256": "50f29cff0cbce5a72df81a6cecc08ddd5075f1a19b4ccb46875c44cde1f6242a"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b7-after-ac-ocr.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b7-after-ac-ocr.png",
+      "bytes": 29454,
+      "sha256": "773f33000973e4d339b592239272725e8ffd935bc9a289e145bc396c597d4520"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b7-toolbar-ocr.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b7-toolbar-ocr.png",
+      "bytes": 39052,
+      "sha256": "2f37e637528585c5e9507b575cf8a0fe1d60cc88bb4602185de1a79ba183fc09"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b7.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b7.png",
+      "bytes": 29454,
+      "sha256": "773f33000973e4d339b592239272725e8ffd935bc9a289e145bc396c597d4520"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b7.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b7.xml",
+      "bytes": 10869,
+      "sha256": "efd4d1530af415b35f9ff0f968a80b551f63672da6f270988ef72b1c2ea328ba"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b9-before-edit.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b9-before-edit.png",
+      "bytes": 35765,
+      "sha256": "6d1ebee934f67af5f309b4b8f2f7fba736ea6cdf1b1e0615c5adfe47fef6864c"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b9.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b9.png",
+      "bytes": 37459,
+      "sha256": "b351045687a51ec6e3a7d01a679d4ba2e96dbf5ae6e439fba3d004b3b1418016"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-b9.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-b9.xml",
+      "bytes": 10887,
+      "sha256": "1a8b7b3e991252543ec5db2c65817f54de22ef041a56b43aaac9a9f71ee6683d"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-c10-key-shape-picker.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-c10-key-shape-picker.png",
+      "bytes": 36597,
+      "sha256": "d666b1f66ea3c9fe7e36e992fde4d3954a87c5eccba65cc9991ddc67a1c3d7b3"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-c10.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-c10.png",
+      "bytes": 36979,
+      "sha256": "f1eac9e6afac33cc5d73497223fca6976644ab9ed9c0933b9834736628ada9f4"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-c10.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-c10.xml",
+      "bytes": 2363,
+      "sha256": "20aa36f92a46ce670fb93ffca02c8d9dbd28790580ae0bb9ddff42c340b23afa"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-c9.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-c9.png",
+      "bytes": 29653,
+      "sha256": "197009b0dd57a9514f698f55b3ea6623fed09e3b3f6aa7a1f452b95d30aef4aa"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-c9.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-c9.xml",
+      "bytes": 10869,
+      "sha256": "efd4d1530af415b35f9ff0f968a80b551f63672da6f270988ef72b1c2ea328ba"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-d1.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-d1.png",
+      "bytes": 31631,
+      "sha256": "fa53093f017b6b174e967e9538aea9cc1440b32ed0530aaa36b8f73b8c3d0d62"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-d1.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-d1.xml",
+      "bytes": 10871,
+      "sha256": "1a74de9b6d3129a845e2d264745d73f9a7518647d3d048a5124e96eccf9017e9"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-d2.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-d2.png",
+      "bytes": 30652,
+      "sha256": "60745dabc3025e01dd4d3e6107f5d4fa7d0ed8dae08f993051ee3d3c84cf8d77"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-d2.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-d2.xml",
+      "bytes": 10876,
+      "sha256": "b7f18799fc0989356c54bb0f2f8a2ba2d842cd25b34f25f2322efefdf4824516"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-d3.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-d3.png",
+      "bytes": 29992,
+      "sha256": "8503269143360e81d76deffdcea7cf5e7c28d266845bfefed52d20e131a5f940"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-d3.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-d3.xml",
+      "bytes": 10869,
+      "sha256": "872c3e448866c953cf9906cf5072e25f92f9b017aac9ae8a95891017b55c2075"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-d4.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-d4.png",
+      "bytes": 35930,
+      "sha256": "91fbb225a1c3beb97ce574dd1836b92bdb26a755f3af27a482d1dcd264bfa5d1"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-d4.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-d4.xml",
+      "bytes": 10885,
+      "sha256": "0c21c79eddaa110a3e4f15ebed1049009492ca48abcf28dec943024f09d34d97"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-d6.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-d6.png",
+      "bytes": 33888,
+      "sha256": "eae85391e88ee9eb65869c515bec36044d4532a3b51211570c740e1ce3890921"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-d6.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-d6.xml",
+      "bytes": 14758,
+      "sha256": "140e11361e0e10e1024c44e2a7246f1b10fe43ce13756387755adde60604155e"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-d8.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-d8.png",
+      "bytes": 30274,
+      "sha256": "e6b46cea9010def9c6ed605f4a2cde9c15862c4965b36194bb025f87f6014baa"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-d8.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-d8.xml",
+      "bytes": 10873,
+      "sha256": "ca71185d4002d8ae103ce867dacc11fdfe5a45880ea80db43ab0ec621de26e91"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-e3-memory.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-e3-memory.png",
+      "bytes": 29600,
+      "sha256": "3a53d1529ffd6bb6c4579e430d947538a2e3344794a153760a74c74afd128641"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-e3-memory.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-e3-memory.xml",
+      "bytes": 10869,
+      "sha256": "efd4d1530af415b35f9ff0f968a80b551f63672da6f270988ef72b1c2ea328ba"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-e3-overflow-menu.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-e3-overflow-menu.png",
+      "bytes": 36979,
+      "sha256": "f1eac9e6afac33cc5d73497223fca6976644ab9ed9c0933b9834736628ada9f4"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-e3.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-e3.png",
+      "bytes": 36979,
+      "sha256": "f1eac9e6afac33cc5d73497223fca6976644ab9ed9c0933b9834736628ada9f4"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-e3.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-e3.xml",
+      "bytes": 2363,
+      "sha256": "20aa36f92a46ce670fb93ffca02c8d9dbd28790580ae0bb9ddff42c340b23afa"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-e4-effects-picker.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-e4-effects-picker.png",
+      "bytes": 41360,
+      "sha256": "f95a8961c0ed45bc80af7cb96870f5dfd0b2ffd64a94bc755f7d4f1381ee4de7"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-e4.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-e4.png",
+      "bytes": 36959,
+      "sha256": "48d15e1c059cc472400a2f90b598bb36a6fc5c9c88e31692a39fe61a33a14e0e"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-e4.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-e4.xml",
+      "bytes": 2363,
+      "sha256": "20aa36f92a46ce670fb93ffca02c8d9dbd28790580ae0bb9ddff42c340b23afa"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-f-header.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-f-header.png",
+      "bytes": 33997,
+      "sha256": "7b70784f7889a0dc5e0907a2f9332aaeadbde21e39934b4f0c47d5b70485fef3"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-f-header.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-f-header.xml",
+      "bytes": 14755,
+      "sha256": "8dea98c0e84b187df9674c8853d78ee4faaf9bb64afd43d12482ef4c65b99ecb"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-h1-h2.png",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-h1-h2.png",
+      "bytes": 36979,
+      "sha256": "f1eac9e6afac33cc5d73497223fca6976644ab9ed9c0933b9834736628ada9f4"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "calculator/evidence/user-h1-h2.xml",
+      "published_path": "raw/3-mycalc/calculator-evidence-user-h1-h2.xml",
+      "bytes": 2363,
+      "sha256": "20aa36f92a46ce670fb93ffca02c8d9dbd28790580ae0bb9ddff42c340b23afa"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "diagnostics/target-crash-scan.txt",
+      "published_path": "raw/3-mycalc/diagnostics-target-crash-scan.txt",
+      "bytes": 44513,
+      "sha256": "34a856282fc6571cdc5c7391add5e7f591eff0b50f45556e2b819f0be0bb35d8"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "user-journey-results.json",
+      "published_path": "raw/3-mycalc/user-journey-results.json",
+      "bytes": 18476,
+      "sha256": "3d8a2110c70046111ee1c413889a9840431603d259c83a3881e0d017e5603d5a"
+    },
+    {
+      "suite": "mycalc",
+      "app": "mycalc",
+      "source_relative_path": "user-journey-results.md",
+      "published_path": "raw/3-mycalc/user-journey-results.md",
+      "bytes": 6658,
+      "sha256": "be1a2871678e996dcbc6f095bdea39ee1d5f24197d8a6a6ccfd51158bcafbd05"
+    }
+  ]
+}

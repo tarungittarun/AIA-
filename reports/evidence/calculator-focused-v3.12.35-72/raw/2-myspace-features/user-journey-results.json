@@ -1,0 +1,87 @@
+{
+  "report_title": "MySpace calculator-only APK QA",
+  "created_utc": "2026-10-27T08:26:08+00:00",
+  "suite": "myspace-features",
+  "artifact": {
+    "file": "MySpace-v3.12.35-72-lite-dist.apk",
+    "package": "app.space.one",
+    "size_bytes": 2274980,
+    "sha256": "f3257177dc098cf62f54a6f77df526195323d36b23ed5a69f9ff07ddf96b45fb",
+    "version_name": "3.12.35",
+    "version_code": 72
+  },
+  "device": {
+    "emulator_api": 34,
+    "screen": "320x640",
+    "ui_inspection_method": "uiautomator-compressed"
+  },
+  "source": {
+    "commit": "0727a2e3b9974d6df70153d76dc8e629e0a0b839",
+    "guide_sha256": "d494cf934f12f0c5b1e77da2254d026438d1c10d233c9b53e4620beb7014db92",
+    "direct_apk_evidence": true
+  },
+  "calculator_summary": {
+    "PASS": 1
+  },
+  "calculator_results": [
+    {
+      "id": "TC-CALC-001",
+      "title": "Operator precedence",
+      "status": "PASS",
+      "expected": "14",
+      "actual": "CALCULATOR | 14",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/user-v3.12.35-shard-2/calculator/evidence/tc-calc-001-target.png"
+    }
+  ],
+  "runtime_diagnostics": {
+    "package_pid_at_end": "4792",
+    "matching_log_lines": 220,
+    "path": "diagnostics/target-crash-scan.txt"
+  },
+  "user_summary": {
+    "FAIL": 1,
+    "PASS": 2
+  },
+  "user_results": [
+    {
+      "id": "B12",
+      "guide_section": "B12",
+      "title": "Store a number with MAdd and use it in an expression",
+      "status": "FAIL",
+      "expected": "MUse replaces the selected 4 in 3+4 with 123456; result 123459",
+      "actual": "after MUse=CALCULATOR | 3+41,23,456 | = 41,23,459",
+      "comment": "MUse did not replace only the held 4 with the previously stored 123456.",
+      "evidence": "calculator/evidence/user-b12.png",
+      "hierarchy": "calculator/evidence/user-b12.xml"
+    },
+    {
+      "id": "E3-MEMORY",
+      "guide_section": "E3",
+      "title": "Open the calculator memory list",
+      "status": "PASS",
+      "expected": "Saved value 123456 is visible in View memory",
+      "actual": "Memory | Close memory | 1,23,456 | Move up from place 1 | Move down from place 1 | 825 | © | v.46 | a | MySpace | catcutaTor | Memory | R | 1,23,456 | 59 | 45 | e | a0 | a | 80 | Calculator | Apps | Clock",
+      "comment": "The calculator's memory list displayed the value saved through MAdd.",
+      "evidence": "calculator/evidence/user-e3-memory.png",
+      "hierarchy": "calculator/evidence/user-e3-memory.xml"
+    },
+    {
+      "id": "E4",
+      "guide_section": "E4",
+      "title": "Choose a calculator keypress effect",
+      "status": "PASS",
+      "expected": "Effects picker opens and accepts an animation choice",
+      "actual": "choices=✓ Spring · bounce back with overshoot; Pulse · quick fade pulse; bounce; Pulse; fade; pulse; selected one option",
+      "comment": "The Effects picker exposed user-selectable calculator animation options. This smoke test confirms access and selection, not frame-by-frame animation timing.",
+      "evidence": "calculator/evidence/user-e4.png",
+      "hierarchy": "calculator/evidence/user-e4.xml"
+    }
+  ],
+  "limits": [
+    "Direct APK evidence comes from Android 14/API 34 emulator UI actions, screenshots and hierarchy dumps.",
+    "Only calculator screens and calculator-specific settings are exercised; other MySpace apps are out of scope.",
+    "The calculator ad check scans sampled visible text; it is not a network or third-party SDK audit.",
+    "Source-CI runs are reported separately from direct APK results."
+  ]
+}
