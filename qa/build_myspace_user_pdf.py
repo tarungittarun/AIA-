@@ -553,6 +553,7 @@ def build(args: argparse.Namespace) -> None:
         ("myspace-core", "user-c10.png", "C10 · key-shape picker"),
         ("myspace-features", "user-b12.png", "B12 · MAdd then selected-operand MUse result"),
         ("myspace-features", "user-b12-caret.png", "B12 · empty-caret MUse insertion result"),
+        ("myspace-features", "user-b12-caret-parked.png", "B12 · caret placed between operator and operand"),
         ("myspace-features", "user-b12-caret-menu.png", "B12 · caret menu exposes MUse and Paste"),
         ("myspace-features", "user-c11-key-theme-rose.png", "C11 · calculator after selecting the Rose key theme"),
         ("myspace-features", "user-e3-memory.png", "E3 · calculator memory list"),

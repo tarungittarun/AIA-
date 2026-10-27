@@ -837,15 +837,17 @@ class UserQa:
                 raise NotAvailable("OCR could not locate 3+4 for the caret-placement attempt.")
             left, top, right, bottom = bounds
             # Place the caret in the gap after '+' and before the final operand.
-            x = left + round((right - left) * 0.66)
+            x = left + round((right - left) * 0.56)
             y = (top + bottom) // 2
             self.d.adb("shell", "input", "tap", str(x), str(y))
             self._invalidate()
-            self._hold(x, y)
+            self._ocr_screen("evidence/user-b12-caret-parked.png")
+            self._hold(x, y, duration_ms=400)
             _, caret_menu = self._ocr_screen("evidence/user-b12-caret-menu.png")
             if not self._ocr_has(caret_menu, "MUse") or not self._ocr_has(caret_menu, "Paste"):
                 raise NotAvailable("The caret menu did not expose both MUse and Paste at the tapped expression position.")
             if self._ocr_has(caret_menu, "Copy") or self._ocr_has(caret_menu, "Cut"):
+                self.d.tap_label("AC")
                 raise NotAvailable("The hold produced a text-selection toolbar, so MUse insertion at an empty caret was not proven.")
             if not self._tap_ocr(caret_menu, "MUse"):
                 raise NotAvailable("MUse was visible in the caret menu but could not be tapped.")
@@ -861,7 +863,10 @@ class UserQa:
         self._case("B12-CARET", "B12", "Insert a stored value at a mid-expression caret", "MUse inserts 123456 between '+' and 4 in 3+4", b12_caret_insert)
 
         def memory_list() -> tuple[str, str, str]:
-
+            self._ensure_calculator_screen()
+            self.d.close_history_if_open()
+            self.d.ensure_basic_panel()
+            self.d.tap_label("AC")
             if self._try_tap(["More options", "More", "Menu"]) is None:
                 self.d.adb("shell", "input", "tap", str(self.d._width - 24), str(round(self.d._height * 0.17)))
                 self._invalidate()
@@ -882,6 +887,10 @@ class UserQa:
         self._case("E3-MEMORY", "E3", "Open the calculator memory list", "Saved value 123456 is visible in View memory", memory_list)
 
         def effects_picker() -> tuple[str, str, str]:
+            self._ensure_calculator_screen()
+            self.d.close_history_if_open()
+            self.d.ensure_basic_panel()
+            self.d.tap_label("AC")
             if self._try_tap(["More options", "More", "Menu"]) is None:
                 self.d.adb("shell", "input", "tap", str(self.d._width - 24), str(round(self.d._height * 0.17)))
                 self._invalidate()
@@ -916,6 +925,7 @@ class UserQa:
 
         def c11_key_theme() -> tuple[str, str, str]:
             self._ensure_calculator_screen()
+            self.d.close_history_if_open()
             self.d.ensure_basic_panel()
             self.d.tap_label("AC")
             before = self.d.screenshot("evidence/user-c11-key-theme-before.png")
@@ -925,7 +935,7 @@ class UserQa:
             theme_names = ("MySpace settings", "Graphite", "Ocean", "Sunset", "Mint", "Rose", "Lemon", "Iris")
 
             def dismiss_to_calculator() -> None:
-                popup_items = theme_names + ("Key theme", "Key shape", "Effects", "Memory", "History")
+                popup_items = theme_names + ("Key theme", "Key shape", "Effects", "Memory")
                 for _ in range(3):
                     labels_now = self.d.labels()
                     popup_open = any(case_insensitive_match(labels_now, [item]) for item in popup_items)
