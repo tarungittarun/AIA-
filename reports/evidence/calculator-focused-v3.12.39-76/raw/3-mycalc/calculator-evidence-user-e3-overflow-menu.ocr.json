@@ -1,0 +1,214 @@
+{
+  "screenshot": "calculator/evidence/user-e3-overflow-menu.png",
+  "engine": "tesseract TSV",
+  "words": [
+    {
+      "text": "123",
+      "left": 9,
+      "top": 6,
+      "width": 48,
+      "height": 12,
+      "conf": 91.580521,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u00a9",
+      "left": 47,
+      "top": 0,
+      "width": 15,
+      "height": 27,
+      "conf": 91.580521,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "eat",
+      "left": 248,
+      "top": 5,
+      "width": 42,
+      "height": 13,
+      "conf": 56.888508,
+      "line": [
+        "2",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u2018STANDALONE,",
+      "left": 228,
+      "top": 48,
+      "width": 74,
+      "height": 7,
+      "conf": 48.380013,
+      "line": [
+        "3",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MyCalc",
+      "left": 61,
+      "top": 44,
+      "width": 66,
+      "height": 19,
+      "conf": 62.844231,
+      "line": [
+        "4",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Haptics:",
+      "left": 109,
+      "top": 141,
+      "width": 47,
+      "height": 13,
+      "conf": 86.938797,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "On",
+      "left": 163,
+      "top": 141,
+      "width": 16,
+      "height": 10,
+      "conf": 93.843445,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Memory",
+      "left": 109,
+      "top": 182,
+      "width": 49,
+      "height": 13,
+      "conf": 96.451355,
+      "line": [
+        "6",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Show",
+      "left": 109,
+      "top": 222,
+      "width": 33,
+      "height": 11,
+      "conf": 96.318916,
+      "line": [
+        "7",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "as",
+      "left": 147,
+      "top": 214,
+      "width": 10,
+      "height": 28,
+      "conf": 96.846382,
+      "line": [
+        "7",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "fraction",
+      "left": 155,
+      "top": 222,
+      "width": 57,
+      "height": 11,
+      "conf": 95.96627,
+      "line": [
+        "7",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Key",
+      "left": 109,
+      "top": 254,
+      "width": 19,
+      "height": 30,
+      "conf": 95.958244,
+      "line": [
+        "8",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "theme",
+      "left": 135,
+      "top": 263,
+      "width": 38,
+      "height": 11,
+      "conf": 95.958244,
+      "line": [
+        "8",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Key",
+      "left": 109,
+      "top": 305,
+      "width": 21,
+      "height": 13,
+      "conf": 88.459862,
+      "line": [
+        "9",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "shape",
+      "left": 135,
+      "top": 304,
+      "width": 37,
+      "height": 14,
+      "conf": 88.459862,
+      "line": [
+        "9",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Effects",
+      "left": 109,
+      "top": 345,
+      "width": 43,
+      "height": 11,
+      "conf": 81.070663,
+      "line": [
+        "10",
+        "1",
+        "1"
+      ]
+    }
+  ]
+}

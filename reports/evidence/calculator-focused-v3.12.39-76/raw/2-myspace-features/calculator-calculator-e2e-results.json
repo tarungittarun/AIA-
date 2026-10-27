@@ -1,0 +1,39 @@
+{
+  "report_title": "MySpace Calculator APK E2E QA Run",
+  "created_utc": "2026-10-27T13:14:00+00:00",
+  "artifact": {
+    "file": "MySpace-v3.12.39-76-lite-dist.apk",
+    "package": "app.space.one",
+    "size_bytes": 2281228,
+    "sha256": "7ae98fd05c25554c3b90c32fbc2aeda789c25d0551fab81d071e804106a2a2ad"
+  },
+  "device": {
+    "emulator_api": 34,
+    "screen": "320x640",
+    "ui_inspection_method": "uiautomator-compressed",
+    "scope": "Calculator feature only"
+  },
+  "google_reference": {
+    "requested": "Google Calculator (com.google.android.calculator)",
+    "status": "NOT_CHECKED",
+    "package": null,
+    "note": ""
+  },
+  "selected_test_ids": [
+    "TC-CALC-001"
+  ],
+  "summary": {
+    "PASS": 1
+  },
+  "results": [
+    {
+      "id": "TC-CALC-001",
+      "title": "Operator precedence",
+      "status": "PASS",
+      "expected": "14",
+      "actual": "CALCULATOR | 14",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/user-v3.12.39-shard-2/calculator/evidence/tc-calc-001-target.png"
+    }
+  ]
+}

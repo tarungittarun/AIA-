@@ -1,0 +1,240 @@
+{
+  "screenshot": "calculator/evidence/user-b4-toolbar-ocr.png",
+  "engine": "tesseract TSV",
+  "words": [
+    {
+      "text": "218",
+      "left": 20,
+      "top": 6,
+      "width": 37,
+      "height": 11,
+      "conf": 25.011353,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "v.46",
+      "left": 248,
+      "top": 4,
+      "width": 44,
+      "height": 14,
+      "conf": 29.276672,
+      "line": [
+        "2",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "o",
+      "left": 10,
+      "top": 7,
+      "width": 50,
+      "height": 68,
+      "conf": 54.345608,
+      "line": [
+        "3",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MySpace",
+      "left": 72,
+      "top": 47,
+      "width": 93,
+      "height": 22,
+      "conf": 95.794647,
+      "line": [
+        "3",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "CALCULATOR",
+      "left": 229,
+      "top": 52,
+      "width": 73,
+      "height": 7,
+      "conf": 96.219383,
+      "line": [
+        "4",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Cut",
+      "left": 36,
+      "top": 98,
+      "width": 20,
+      "height": 10,
+      "conf": 70.588791,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Copy",
+      "left": 81,
+      "top": 98,
+      "width": 30,
+      "height": 13,
+      "conf": 65.946297,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MAdd",
+      "left": 135,
+      "top": 98,
+      "width": 35,
+      "height": 10,
+      "conf": 62.611359,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MU:",
+      "left": 195,
+      "top": 98,
+      "width": 19,
+      "height": 10,
+      "conf": 33.802658,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Pasti",
+      "left": 252,
+      "top": 98,
+      "width": 27,
+      "height": 10,
+      "conf": 86.88311,
+      "line": [
+        "6",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "1,23,456",
+      "left": 64,
+      "top": 154,
+      "width": 202,
+      "height": 42,
+      "conf": 91.076767,
+      "line": [
+        "7",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "=",
+      "left": 219,
+      "top": 267,
+      "width": 9,
+      "height": 2,
+      "conf": 87.574806,
+      "line": [
+        "8",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "1,23,456",
+      "left": 236,
+      "top": 259,
+      "width": 71,
+      "height": 14,
+      "conf": 87.555435,
+      "line": [
+        "8",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "v",
+      "left": 151,
+      "top": 291,
+      "width": 17,
+      "height": 16,
+      "conf": 61.320465,
+      "line": [
+        "9",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "AC",
+      "left": 36,
+      "top": 336,
+      "width": 27,
+      "height": 16,
+      "conf": 96.053223,
+      "line": [
+        "10",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "QO",
+      "left": 114,
+      "top": 334,
+      "width": 18,
+      "height": 23,
+      "conf": 56.837196,
+      "line": [
+        "11",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "%",
+      "left": 189,
+      "top": 334,
+      "width": 17,
+      "height": 19,
+      "conf": 92.373474,
+      "line": [
+        "12",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Calculati",
+      "left": 253,
+      "top": 602,
+      "width": 46,
+      "height": 10,
+      "conf": 0.0,
+      "line": [
+        "13",
+        "1",
+        "1"
+      ]
+    }
+  ]
+}

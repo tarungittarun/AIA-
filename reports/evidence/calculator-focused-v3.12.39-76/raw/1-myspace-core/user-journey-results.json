@@ -1,0 +1,356 @@
+{
+  "report_title": "MySpace calculator-only APK QA",
+  "created_utc": "2026-10-27T13:25:31+00:00",
+  "suite": "myspace-core",
+  "artifact": {
+    "file": "MySpace-v3.12.39-76-lite-dist.apk",
+    "package": "app.space.one",
+    "size_bytes": 2281228,
+    "sha256": "7ae98fd05c25554c3b90c32fbc2aeda789c25d0551fab81d071e804106a2a2ad",
+    "version_name": "3.12.39",
+    "version_code": 76
+  },
+  "device": {
+    "emulator_api": 34,
+    "screen": "320x640",
+    "ui_inspection_method": "uiautomator-compressed"
+  },
+  "source": {
+    "commit": "a09e52f2c3f141bfc2d3a95f667a38fcac08b54a",
+    "guide_sha256": "a3d0b131c7beb99f8bc12712eebf8c01e5a8873de7996a23f943905768578fc4",
+    "direct_apk_evidence": true
+  },
+  "calculator_summary": {
+    "PASS": 6,
+    "FAIL": 4,
+    "BLOCKED": 1
+  },
+  "calculator_results": [
+    {
+      "id": "TC-CALC-001",
+      "title": "Operator precedence",
+      "status": "PASS",
+      "expected": "14",
+      "actual": "CALCULATOR | 14",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/user-v3.12.39-shard-1/calculator/evidence/tc-calc-001-target.png"
+    },
+    {
+      "id": "TC-CALC-002",
+      "title": "Parentheses override precedence",
+      "status": "PASS",
+      "expected": "20",
+      "actual": "CALCULATOR | 20",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/user-v3.12.39-shard-1/calculator/evidence/tc-calc-002-target.png"
+    },
+    {
+      "id": "TC-CALC-003",
+      "title": "Decimal addition",
+      "status": "PASS",
+      "expected": "0.3",
+      "actual": "CALCULATOR | 0.3",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/user-v3.12.39-shard-1/calculator/evidence/tc-calc-003-target.png"
+    },
+    {
+      "id": "TC-CALC-004",
+      "title": "Contextual percentage",
+      "status": "PASS",
+      "expected": "220",
+      "actual": "CALCULATOR | 220",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/user-v3.12.39-shard-1/calculator/evidence/tc-calc-004-target.png"
+    },
+    {
+      "id": "TC-CALC-005",
+      "title": "Square root in scientific panel",
+      "status": "PASS",
+      "expected": "3",
+      "actual": "CALCULATOR | 3",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/user-v3.12.39-shard-1/calculator/evidence/tc-calc-005-target.png"
+    },
+    {
+      "id": "TC-CALC-006",
+      "title": "Sine in degree mode",
+      "status": "PASS",
+      "expected": "0.5",
+      "actual": "CALCULATOR | 0.5",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/user-v3.12.39-shard-1/calculator/evidence/tc-calc-006-target.png"
+    },
+    {
+      "id": "TC-CALC-007",
+      "title": "History persists after activity restart and can restore an expression",
+      "status": "FAIL",
+      "expected": "History shows 1+1 = 2 after restart",
+      "actual": "History · 7 | Clear | Close history | = 3 | 200+10% | 27th Oct, 13:15 | = 220 | 0.1+0.2 | 27th Oct, 13:14 | = 0.3 | (2+3)×4 | = 20 | 2+3×4 | = 14",
+      "comment": "The expected entry was not found after restart. Before restart the display was ['CALCULATOR', '2']; visible history labels were ['History · 7', 'Clear', 'Close history', '= 3', '200+10%', '27th Oct, 13:15', '= 220', '0.1+0.2', '27th Oct, 13:14', '= 0.3', '(2+3)×4', '= 20', '2+3×4', '= 14'].",
+      "evidence": "reports/e2e/user-v3.12.39-shard-1/calculator/evidence/tc-calc-007-history.png"
+    },
+    {
+      "id": "TC-CALC-011",
+      "title": "Grouped history card restores and re-evaluates without Error",
+      "status": "FAIL",
+      "expected": "History contains the 123456+1 calculation card",
+      "actual": "History · 8 | Clear | Close history | = 3 | 200+10% | 27th Oct, 13:15 | = 220 | 0.1+0.2 | 27th Oct, 13:14 | = 0.3 | (2+3)×4 | = 20 | 2+3×4 | = 14",
+      "comment": "The calculation card was not found in the visible history labels.",
+      "evidence": "reports/e2e/user-v3.12.39-shard-1/calculator/evidence/tc-calc-011-history-card.png"
+    },
+    {
+      "id": "TC-CALC-008",
+      "title": "Chained calculations retain unrounded precision",
+      "status": "FAIL",
+      "expected": "1",
+      "actual": "CALCULATOR | 0.9999999999",
+      "comment": "After 1 ÷ 3 =, the UI result was ['CALCULATOR', '0.3333333333']; multiplying by 3 did not return 1. This is consistent with the screen feeding its rounded display string back into the next expression.",
+      "evidence": "reports/e2e/user-v3.12.39-shard-1/calculator/evidence/tc-calc-008-target.png"
+    },
+    {
+      "id": "TC-CALC-009",
+      "title": "Scientific-notation result can be used in the next expression",
+      "status": "FAIL",
+      "expected": "Continue from 1e+15 without Error",
+      "actual": "CALCULATOR | 1e+15+1 | Error",
+      "comment": "Initial 10^15 display was ['CALCULATOR', '1e+15']; adding +1 left an unchanged exponent result or produced Error. This is consistent with exponent-formatted display text not being accepted as a numeric literal by the expression validator/parser.",
+      "evidence": "reports/e2e/user-v3.12.39-shard-1/calculator/evidence/tc-calc-009-target.png"
+    },
+    {
+      "id": "TC-CALC-010",
+      "title": "Live comparison with official Google Calculator",
+      "status": "BLOCKED",
+      "expected": "Same expressions run in com.google.android.calculator",
+      "actual": "Official package not installed",
+      "comment": "The official Google Calculator package was not present in the emulator image. No third-party APK mirror was used. Functional assertions therefore use the documented arithmetic expectations; this is not a live side-by-side Google comparison.",
+      "evidence": ""
+    }
+  ],
+  "runtime_diagnostics": {
+    "package_pid_at_end": "7654",
+    "matching_log_lines": 306,
+    "path": "diagnostics/target-crash-scan.txt"
+  },
+  "user_summary": {
+    "PASS": 17,
+    "FAIL": 1,
+    "BLOCKED": 1
+  },
+  "user_results": [
+    {
+      "id": "D1",
+      "guide_section": "D1",
+      "title": "Evaluate implicit multiplication",
+      "status": "PASS",
+      "expected": "2(5+2)2 = 28",
+      "actual": "input=CALCULATOR | 2(5+2)2 | = 28; result=CALCULATOR | 28",
+      "comment": "The user-entered 2(5+2)2 expression evaluated as implicit multiplication to 28.",
+      "evidence": "calculator/evidence/user-d1.png",
+      "hierarchy": "calculator/evidence/user-d1.xml"
+    },
+    {
+      "id": "D2",
+      "guide_section": "D2",
+      "title": "Replace a pending operator",
+      "status": "PASS",
+      "expected": "10+ then minus shows 10−",
+      "actual": "CALCULATOR | 10− | = 10",
+      "comment": "The trailing plus was replaced by minus; no evaluation was required.",
+      "evidence": "calculator/evidence/user-d2.png",
+      "hierarchy": "calculator/evidence/user-d2.xml"
+    },
+    {
+      "id": "D3",
+      "guide_section": "D3",
+      "title": "Evaluate with a trailing plus",
+      "status": "FAIL",
+      "expected": "5+ then equals shows 10",
+      "actual": "CALCULATOR | 5",
+      "comment": "Pressing equals after 5+ did not produce 10.",
+      "evidence": "calculator/evidence/user-d3.png",
+      "hierarchy": "calculator/evidence/user-d3.xml"
+    },
+    {
+      "id": "D4",
+      "guide_section": "D4",
+      "title": "Check Indian digit grouping",
+      "status": "PASS",
+      "expected": "123456 displays as 1,23,456",
+      "actual": "CALCULATOR | 1,23,456 | = 1,23,456",
+      "comment": "Indian digit grouping was visible while typing the six-digit number.",
+      "evidence": "calculator/evidence/user-d4.png",
+      "hierarchy": "calculator/evidence/user-d4.xml"
+    },
+    {
+      "id": "D6",
+      "guide_section": "D6",
+      "title": "Evaluate inverse sine in degree mode",
+      "status": "PASS",
+      "expected": "Inv then sin(0.5) = 30",
+      "actual": "inverse key=sin⁻¹; display=CALCULATOR | 30",
+      "comment": "Inverse sine of 0.5 in degree mode returned 30.",
+      "evidence": "calculator/evidence/user-d6.png",
+      "hierarchy": "calculator/evidence/user-d6.xml"
+    },
+    {
+      "id": "D8",
+      "guide_section": "D8",
+      "title": "Delete one character at the caret",
+      "status": "PASS",
+      "expected": "123 then Backspace leaves 12",
+      "actual": "CALCULATOR | 12 | = 12",
+      "comment": "The caret was placed at the end and one Backspace removed exactly one character.",
+      "evidence": "calculator/evidence/user-d8.png",
+      "hierarchy": "calculator/evidence/user-d8.xml"
+    },
+    {
+      "id": "B1",
+      "guide_section": "B1",
+      "title": "Hold number to select and show actions",
+      "status": "PASS",
+      "expected": "Visible selection and Cut/Copy/MAdd/MUse actions",
+      "actual": "OCR toolbar=Copy; Cut; MAdd; MUse; Paste; hierarchy=MySpace home | MySpace | CALCULATOR | History | World time | More options | 1,23,456 | = 1,23,456 | Toggle the scientific keys | Open the extra keys | AC | ( ) | % | ÷ | 7 | 8 | 9 | × | 4 | 5 | 6 | − | 1 | 2 | 3 | + | 0 | . | ⌫ | = | Apps | Clock | Calculator",
+      "comment": "The screenshot visibly exposed the floating selection toolbar; OCR is used because Android omits this popup from UiAutomator.",
+      "evidence": "calculator/evidence/user-b1.png",
+      "hierarchy": "calculator/evidence/user-b1.xml"
+    },
+    {
+      "id": "B2",
+      "guide_section": "B2",
+      "title": "Drag while holding to change the selected portion",
+      "status": "BLOCKED",
+      "expected": "Selection changes during an uninterrupted hold-and-drag",
+      "actual": "The emulator input API could not reproduce the app-specific stationary hold-then-drag gesture; no product failure is inferred from this attempt.",
+      "comment": "The user-facing control was not available to this emulator run.",
+      "evidence": "calculator/evidence/user-b2.png",
+      "hierarchy": "calculator/evidence/user-b2.xml"
+    },
+    {
+      "id": "B4",
+      "guide_section": "B4",
+      "title": "Copy then paste within the calculator",
+      "status": "PASS",
+      "expected": "Clipboard restores exactly 123456",
+      "actual": "CALCULATOR | 1,23,456 | = 1,23,456",
+      "comment": "Copy then Paste restored the digits within the calculator app; external app handoff was intentionally not tested.",
+      "evidence": "calculator/evidence/user-b4.png",
+      "hierarchy": "calculator/evidence/user-b4.xml"
+    },
+    {
+      "id": "B5",
+      "guide_section": "B5",
+      "title": "Cut a held number and type into the gap",
+      "status": "PASS",
+      "expected": "Selection is removed; next digit is 7",
+      "actual": "CALCULATOR | 7 | = 7",
+      "comment": "Cut removed the held number and the next keypad digit became the expression.",
+      "evidence": "calculator/evidence/user-b5.png",
+      "hierarchy": "calculator/evidence/user-b5.xml"
+    },
+    {
+      "id": "B6",
+      "guide_section": "B6",
+      "title": "Tap the held expression to release selection and place the caret",
+      "status": "PASS",
+      "expected": "Selection clears; next key inserts at the tapped interior point",
+      "actual": "after tapping selected text and typing 9: CALCULATOR | 12,39,456 | = 12,39,456",
+      "comment": "The held selection released on an in-selection tap, and the next digit was inserted at an interior caret position.",
+      "evidence": "calculator/evidence/user-b6.png",
+      "hierarchy": "calculator/evidence/user-b6.xml"
+    },
+    {
+      "id": "B7",
+      "guide_section": "B7",
+      "title": "Clear a held selection with AC",
+      "status": "PASS",
+      "expected": "Held text and selection toolbar both clear",
+      "actual": "display=CALCULATOR | 0; OCR after AC=1:23 © w40 ~ MySpace eatcutaror p v AC % QO 80 a0 Calculator",
+      "comment": "AC removed the held text and dismissed the floating selection toolbar.",
+      "evidence": "calculator/evidence/user-b7.png",
+      "hierarchy": "calculator/evidence/user-b7.xml"
+    },
+    {
+      "id": "B9",
+      "guide_section": "B9",
+      "title": "Tap inside a number and insert a digit",
+      "status": "PASS",
+      "expected": "9 is inserted at the caret, not appended",
+      "actual": "CALCULATOR | 12,39,456 | = 12,39,456",
+      "comment": "OCR located the expression and a tap 58% across its visible glyph bounds inserted 9 between existing digits.",
+      "evidence": "calculator/evidence/user-b9.png",
+      "hierarchy": "calculator/evidence/user-b9.xml"
+    },
+    {
+      "id": "B11",
+      "guide_section": "B11",
+      "title": "Hold empty expression-box space for caret menu",
+      "status": "PASS",
+      "expected": "MUse/Paste/Select all caret actions",
+      "actual": "OCR caret menu=MUse; Paste",
+      "comment": "The screenshot shows the empty-box caret menu; OCR is used because the Android floating menu is omitted from UiAutomator.",
+      "evidence": "calculator/evidence/user-b11.png",
+      "hierarchy": "calculator/evidence/user-b11.xml"
+    },
+    {
+      "id": "C9",
+      "guide_section": "C9",
+      "title": "Verify tapping the expression does not open a device keyboard",
+      "status": "PASS",
+      "expected": "No Android soft keyboard shown",
+      "actual": "input_method not shown",
+      "comment": "Android's input-method diagnostics did not report a visible software keyboard after tapping the expression.",
+      "evidence": "calculator/evidence/user-c9.png",
+      "hierarchy": "calculator/evidence/user-c9.xml"
+    },
+    {
+      "id": "E3",
+      "guide_section": "E3",
+      "title": "Open the three-dot menu",
+      "status": "PASS",
+      "expected": "Overflow exposes Effects and the calculator actions",
+      "actual": "Haptics: On | Memory | Show as fraction | Key theme | Key shape | Effects | 123 | © | v.46 | CALCULATOR | B | MySpace | Haptics: | On | Memory | Show | as | fraction | Key | theme | Key | shape | AC | Effects | fo) | 5) | 2 | e | a0 | a | 80 | ® | © | g | Calculator | Clock | Apps",
+      "comment": "The overflow menu exposed Effects plus calculator menu actions. This smoke check does not verify the exact item count or reorder behavior.",
+      "evidence": "calculator/evidence/user-e3.png",
+      "hierarchy": "calculator/evidence/user-e3.xml"
+    },
+    {
+      "id": "C10",
+      "guide_section": "C10",
+      "title": "Open key-shape picker and select Circle",
+      "status": "PASS",
+      "expected": "Picker presents Circle/Squircle/Pill/Rounded square/No shape",
+      "actual": "picker=Circle; Squircle; Pill; Rounded square; No shape; selected=Circle",
+      "comment": "The picker exposed at least four named key silhouettes and accepted a Circle selection. Persistence and pixel-perfect geometry are not inferred from this one view.",
+      "evidence": "calculator/evidence/user-c10.png",
+      "hierarchy": "calculator/evidence/user-c10.xml"
+    },
+    {
+      "id": "H1-H2",
+      "guide_section": "H1/H2",
+      "title": "Apply Light and Dark calculator themes",
+      "status": "PASS",
+      "expected": "Light and Dark choices visibly change the calculator screen",
+      "actual": "stable-screen pixel change=98.3%; Light SHA-256=59387f009fb05b0bd19b4b050c89a0171eb6c92afda70c14d9b2f60601e2ecad; Dark SHA-256=b8c42e02d702d7eb2d3d0abc68cf1fa946bb137b6be11ad1a9534b009004e25c; expression=['CALCULATOR', '0']",
+      "comment": "Both Light and Dark choices produced visibly different calculator screens. The displayed expression reset during the settings/home route, so expression persistence is not claimed. Exact palette/caret pixels are not asserted.",
+      "evidence": "calculator/evidence/user-h1-h2.png",
+      "hierarchy": "calculator/evidence/user-h1-h2.xml"
+    },
+    {
+      "id": "ADS-CALC",
+      "guide_section": "Calculator",
+      "title": "Scan visible calculator labels for ad indicators",
+      "status": "PASS",
+      "expected": "No visible ad labels on the calculator screen",
+      "actual": "Scanned 31 visible labels; no ad indicator",
+      "comment": "No ad-like text appeared on the sampled calculator screen; this does not certify the app's network or SDK behavior.",
+      "evidence": "calculator/evidence/user-ads-calc.png",
+      "hierarchy": "calculator/evidence/user-ads-calc.xml"
+    }
+  ],
+  "limits": [
+    "Direct APK evidence comes from Android 14/API 34 emulator UI actions, screenshots and hierarchy dumps.",
+    "Only calculator screens and calculator-specific settings are exercised; other MySpace apps are out of scope.",
+    "The calculator ad check scans sampled visible text; it is not a network or third-party SDK audit.",
+    "Source-CI runs are reported separately from direct APK results."
+  ]
+}

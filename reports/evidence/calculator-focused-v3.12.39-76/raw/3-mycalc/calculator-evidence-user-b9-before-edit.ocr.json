@@ -1,0 +1,175 @@
+{
+  "screenshot": "calculator/evidence/user-b9-before-edit.png",
+  "engine": "tesseract TSV",
+  "words": [
+    {
+      "text": "1:22",
+      "left": 10,
+      "top": 6,
+      "width": 47,
+      "height": 12,
+      "conf": 81.358307,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u00a9",
+      "left": 46,
+      "top": 0,
+      "width": 14,
+      "height": 27,
+      "conf": 94.127136,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "746",
+      "left": 248,
+      "top": 4,
+      "width": 44,
+      "height": 14,
+      "conf": 53.773651,
+      "line": [
+        "2",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MyCalc",
+      "left": 61,
+      "top": 44,
+      "width": 66,
+      "height": 19,
+      "conf": 87.742355,
+      "line": [
+        "3",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "|",
+      "left": 25,
+      "top": 97,
+      "width": 2,
+      "height": 3,
+      "conf": 60.188225,
+      "line": [
+        "4",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "1,23,456|",
+      "left": 65,
+      "top": 129,
+      "width": 207,
+      "height": 69,
+      "conf": 46.384197,
+      "line": [
+        "4",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "|",
+      "left": 298,
+      "top": 92,
+      "width": 4,
+      "height": 18,
+      "conf": 74.975449,
+      "line": [
+        "4",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "=",
+      "left": 219,
+      "top": 280,
+      "width": 9,
+      "height": 6,
+      "conf": 87.574806,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "1,23,456",
+      "left": 236,
+      "top": 276,
+      "width": 71,
+      "height": 17,
+      "conf": 87.555435,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "v",
+      "left": 151,
+      "top": 308,
+      "width": 17,
+      "height": 16,
+      "conf": 61.320465,
+      "line": [
+        "6",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "AC",
+      "left": 36,
+      "top": 358,
+      "width": 27,
+      "height": 16,
+      "conf": 96.3274,
+      "line": [
+        "7",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "0",
+      "left": 114,
+      "top": 356,
+      "width": 18,
+      "height": 23,
+      "conf": 27.314995,
+      "line": [
+        "8",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "%",
+      "left": 189,
+      "top": 356,
+      "width": 14,
+      "height": 18,
+      "conf": 92.327225,
+      "line": [
+        "9",
+        "1",
+        "1"
+      ]
+    }
+  ]
+}

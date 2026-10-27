@@ -1,0 +1,109 @@
+{
+  "report_title": "MySpace calculator-only APK QA",
+  "created_utc": "2026-10-27T13:16:09+00:00",
+  "suite": "myspace-features",
+  "artifact": {
+    "file": "MySpace-v3.12.39-76-lite-dist.apk",
+    "package": "app.space.one",
+    "size_bytes": 2281228,
+    "sha256": "7ae98fd05c25554c3b90c32fbc2aeda789c25d0551fab81d071e804106a2a2ad",
+    "version_name": "3.12.39",
+    "version_code": 76
+  },
+  "device": {
+    "emulator_api": 34,
+    "screen": "320x640",
+    "ui_inspection_method": "uiautomator-compressed"
+  },
+  "source": {
+    "commit": "a09e52f2c3f141bfc2d3a95f667a38fcac08b54a",
+    "guide_sha256": "a3d0b131c7beb99f8bc12712eebf8c01e5a8873de7996a23f943905768578fc4",
+    "direct_apk_evidence": true
+  },
+  "calculator_summary": {
+    "PASS": 1
+  },
+  "calculator_results": [
+    {
+      "id": "TC-CALC-001",
+      "title": "Operator precedence",
+      "status": "PASS",
+      "expected": "14",
+      "actual": "CALCULATOR | 14",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/user-v3.12.39-shard-2/calculator/evidence/tc-calc-001-target.png"
+    }
+  ],
+  "runtime_diagnostics": {
+    "package_pid_at_end": "4723",
+    "matching_log_lines": 342,
+    "path": "diagnostics/target-crash-scan.txt"
+  },
+  "user_summary": {
+    "PASS": 2,
+    "BLOCKED": 3
+  },
+  "user_results": [
+    {
+      "id": "B12",
+      "guide_section": "B12",
+      "title": "Store a number with MAdd and use it in an expression",
+      "status": "PASS",
+      "expected": "MUse replaces the selected 4 in 3+4 with 123456; result 123459",
+      "actual": "after MUse=CALCULATOR | 3+1,23,456 | = 1,23,459; after equals=CALCULATOR | 1,23,459",
+      "comment": "MAdd stored 123456 and MUse replaced the selected operand in 3+4; the grouped result equals 123459.",
+      "evidence": "calculator/evidence/user-b12.png",
+      "hierarchy": "calculator/evidence/user-b12.xml"
+    },
+    {
+      "id": "B12-CARET",
+      "guide_section": "B12",
+      "title": "Insert a stored value at a mid-expression caret",
+      "status": "BLOCKED",
+      "expected": "MUse inserts 123456 between '+' and 4 in 3+4",
+      "actual": "The hold produced a text-selection toolbar, so MUse insertion at an empty caret was not proven.",
+      "comment": "The user-facing control was not available to this emulator run.",
+      "evidence": "calculator/evidence/user-b12-caret.png",
+      "hierarchy": "calculator/evidence/user-b12-caret.xml"
+    },
+    {
+      "id": "E3-MEMORY",
+      "guide_section": "E3",
+      "title": "Open the calculator memory list",
+      "status": "BLOCKED",
+      "expected": "Saved value 123456 is visible in View memory",
+      "actual": "Calculator overflow did not expose View memory: ['MySpace home', 'MySpace', 'CALCULATOR', 'History', 'World time', 'More options', '3+4', '= 7', 'Toggle the scientific keys', 'Open the extra keys', 'AC', '( )', '%', '÷', '7', '8', '9', '×', '4', '5', '6', '−', '1', '2', '3', '+', '0', '.', '⌫', '=', 'Apps', 'Clock', 'Calculator']",
+      "comment": "The user-facing control was not available to this emulator run.",
+      "evidence": "calculator/evidence/user-e3-memory.png",
+      "hierarchy": "calculator/evidence/user-e3-memory.xml"
+    },
+    {
+      "id": "E4",
+      "guide_section": "E4",
+      "title": "Choose a calculator keypress effect",
+      "status": "PASS",
+      "expected": "Effects picker opens and accepts an animation choice",
+      "actual": "choices=✓ Spring · bounce back with overshoot; Pulse · quick fade pulse; bounce; Pulse; fade; pulse; selected one option",
+      "comment": "The Effects picker exposed user-selectable calculator animation options. This smoke test confirms access and selection, not frame-by-frame animation timing.",
+      "evidence": "calculator/evidence/user-e4.png",
+      "hierarchy": "calculator/evidence/user-e4.xml"
+    },
+    {
+      "id": "C11",
+      "guide_section": "C11",
+      "title": "Select a calculator key theme",
+      "status": "BLOCKED",
+      "expected": "Key-theme picker exposes Rose and applies a visible keypad palette",
+      "actual": "Could not return to calculator controls through MySpace's Apps route: ['Tue, Oct 27', 'Home', 'Phone', 'Messages', 'MySpace', 'Predicted app: MySpace', 'Chrome', 'Camera', 'Search', 'Google app', 'Voice search', 'Google Lens']",
+      "comment": "The user-facing control was not available to this emulator run.",
+      "evidence": "calculator/evidence/user-c11.png",
+      "hierarchy": "calculator/evidence/user-c11.xml"
+    }
+  ],
+  "limits": [
+    "Direct APK evidence comes from Android 14/API 34 emulator UI actions, screenshots and hierarchy dumps.",
+    "Only calculator screens and calculator-specific settings are exercised; other MySpace apps are out of scope.",
+    "The calculator ad check scans sampled visible text; it is not a network or third-party SDK audit.",
+    "Source-CI runs are reported separately from direct APK results."
+  ]
+}
