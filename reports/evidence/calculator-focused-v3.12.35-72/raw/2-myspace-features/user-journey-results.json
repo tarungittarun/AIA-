@@ -1,6 +1,6 @@
 {
   "report_title": "MySpace calculator-only APK QA",
-  "created_utc": "2026-10-27T08:58:55+00:00",
+  "created_utc": "2026-10-27T09:19:00+00:00",
   "suite": "myspace-features",
   "artifact": {
     "file": "MySpace-v3.12.35-72-lite-dist.apk",
@@ -35,8 +35,8 @@
     }
   ],
   "runtime_diagnostics": {
-    "package_pid_at_end": "4728",
-    "matching_log_lines": 198,
+    "package_pid_at_end": "4786",
+    "matching_log_lines": 253,
     "path": "diagnostics/target-crash-scan.txt"
   },
   "user_summary": {
@@ -60,7 +60,7 @@
       "title": "Open the calculator memory list",
       "status": "PASS",
       "expected": "Saved value 123456 is visible in View memory",
-      "actual": "Memory | Close memory | 1,23,456 | Move up from place 1 | Move down from place 1 | 858 | © | eat | CALCULATOR | B | MySpace | > | 159 | Memory | 1,23,456 | e | a0 | ® | a | 80 | © | Calculator | Apps | Clock",
+      "actual": "Memory | Close memory | 1,23,456 | Move up from place 1 | Move down from place 1 | 918 | © | eat | CALCULATOR | B | MySpace | > | 159 | Memory | 1,23,456 | e | a0 | ® | a | 80 | © | Calculator | Apps | Clock",
       "comment": "The calculator's memory list displayed the value saved through MAdd.",
       "evidence": "calculator/evidence/user-e3-memory.png",
       "hierarchy": "calculator/evidence/user-e3-memory.xml"

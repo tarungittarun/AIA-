@@ -1,6 +1,6 @@
 {
   "report_title": "Standalone MyCalc calculator-only APK QA",
-  "created_utc": "2026-10-27T09:08:48+00:00",
+  "created_utc": "2026-10-27T09:25:18+00:00",
   "suite": "mycalc",
   "artifact": {
     "file": "MyCalc-v1.0.33-34.apk",
@@ -93,7 +93,7 @@
       "title": "History persists after activity restart and can restore an expression",
       "status": "PASS",
       "expected": "History shows 1+1 = 2 and restores the expression",
-      "actual": "history=History · 7 | Clear | Close history | = 0.3 | 200+10% | 27th Oct, 08:59 | = 220 | √(9) | = 3 | sin(30) | = 0.5 | 1+1 | 27th Oct, 09:00 | = 2; restored=MyCalc | STANDALONE | 1+1 | = 2",
+      "actual": "history=History · 7 | Clear | Close history | = 0.3 | 200+10% | 27th Oct, 09:15 | = 220 | √(9) | = 3 | sin(30) | 27th Oct, 09:16 | = 0.5 | 1+1 | = 2; restored=MyCalc | STANDALONE | 1+1 | = 2",
       "comment": "The history entry survived process restart and restored its expression.",
       "evidence": "reports/e2e/user-v3.12.35-shard-3/calculator/evidence/tc-calc-007-history.png"
     },
@@ -126,8 +126,8 @@
     }
   ],
   "runtime_diagnostics": {
-    "package_pid_at_end": "7806",
-    "matching_log_lines": 360,
+    "package_pid_at_end": "7628",
+    "matching_log_lines": 378,
     "path": "diagnostics/target-crash-scan.txt"
   },
   "user_summary": {
@@ -263,7 +263,7 @@
       "title": "Clear a held selection with AC",
       "status": "PASS",
       "expected": "Held text and selection toolbar both clear",
-      "actual": "display=MyCalc | STANDALONE | 0; OCR after AC=9:06 © v.46 3 FA MyCalc STANDALONE > p v AC 0 %",
+      "actual": "display=MyCalc | STANDALONE | 0; OCR after AC=922 © v.46 3 FA MyCalc STANDALONE > p v AC 0 %",
       "comment": "AC removed the held text and dismissed the floating selection toolbar.",
       "evidence": "calculator/evidence/user-b7.png",
       "hierarchy": "calculator/evidence/user-b7.xml"
@@ -307,7 +307,7 @@
       "title": "Open the three-dot menu",
       "status": "PASS",
       "expected": "Overflow exposes Effects and the calculator actions",
-      "actual": "Haptics: On | Clear memory | View memory | Show as fraction | Key shape | Effects | 907 | © | wa | ‘STANDALONE, | MyCalc | Haptics: | On | Clear | memory | View | memory | Show | as | fraction | Key | shape | Effects | . | 8",
+      "actual": "Haptics: On | Clear memory | View memory | Show as fraction | Key shape | Effects | 923 | © | wa | ‘STANDALONE, | MyCalc | Haptics: | On | Clear | memory | View | memory | Show | as | fraction | Key | shape | Effects | . | 8",
       "comment": "The overflow menu exposed Effects plus calculator menu actions. This smoke check does not verify the exact item count or reorder behavior.",
       "evidence": "calculator/evidence/user-e3.png",
       "hierarchy": "calculator/evidence/user-e3.xml"
@@ -326,10 +326,10 @@
     {
       "id": "H1-H2",
       "guide_section": "H1/H2",
-      "title": "Switch calculator between Light and Dark themes",
+      "title": "Apply Light and Dark calculator themes",
       "status": "BLOCKED",
-      "expected": "Both themes apply to the calculator while its expression remains visible",
-      "actual": "Could not return to calculator controls through MySpace's Apps route: ['World time', 'MyCalc', 'STANDALONE', 'History', 'More options', '0', 'Toggle the scientific keys', 'Open the extra keys', 'AC', '( )', '%', '÷', '7', '8', '9', '×', '4', '5', '6', '−', '1', '2', '3', '+', '.', '⌫', '=']",
+      "expected": "Light and Dark choices visibly change the calculator screen",
+      "actual": "Settings was not exposed from the calculator's MySpace home: ['Haptics: On', 'Clear memory', 'View memory', 'Show as fraction', 'Key shape', 'Effects']",
       "comment": "The user-facing control was not available to this emulator run.",
       "evidence": "calculator/evidence/user-h1-h2.png",
       "hierarchy": "calculator/evidence/user-h1-h2.xml"
@@ -340,7 +340,7 @@
       "title": "Scan visible calculator labels for ad indicators",
       "status": "PASS",
       "expected": "No visible ad labels on the calculator screen",
-      "actual": "Scanned 27 visible labels; no ad indicator",
+      "actual": "Scanned 6 visible labels; no ad indicator",
       "comment": "No ad-like text appeared on the sampled calculator screen; this does not certify the app's network or SDK behavior.",
       "evidence": "calculator/evidence/user-ads-calc.png",
       "hierarchy": "calculator/evidence/user-ads-calc.xml"
@@ -362,7 +362,7 @@
       "title": "Open the calculator memory list",
       "status": "PASS",
       "expected": "Saved value 123456 is visible in View memory",
-      "actual": "Memory | Close memory | 1,23,456 | Move up from place 1 | Move down from place 1 | 9:08 | © | v.46 | 3 | FA | MyCalc | ‘STANDALONE | 159 | Memory | 1,23,456 | 7 | 8 | 9 | 4 | ) | 1 | 2",
+      "actual": "Memory | Close memory | 1,23,456 | Move up from place 1 | Move down from place 1 | 925 | © | 746 | 3 | FA | MyCalc | ‘STANDALONE | 159 | Memory | 1,23,456 | 7 | 8 | 9 | 4 | ) | 1 | 2",
       "comment": "The calculator's memory list displayed the value saved through MAdd.",
       "evidence": "calculator/evidence/user-e3-memory.png",
       "hierarchy": "calculator/evidence/user-e3-memory.xml"

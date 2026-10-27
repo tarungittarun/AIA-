@@ -1,6 +1,6 @@
 {
   "report_title": "MySpace calculator-only APK QA",
-  "created_utc": "2026-10-27T09:08:51+00:00",
+  "created_utc": "2026-10-27T09:25:08+00:00",
   "suite": "myspace-core",
   "artifact": {
     "file": "MySpace-v3.12.35-72-lite-dist.apk",
@@ -85,7 +85,7 @@
       "title": "History persists after activity restart and can restore an expression",
       "status": "PASS",
       "expected": "History shows 1+1 = 2 and restores the expression",
-      "actual": "history=History · 7 | Clear | Close history | = 0.3 | 200+10% | 27th Oct, 08:59 | = 220 | √(9) | = 3 | sin(30) | = 0.5 | 1+1 | 27th Oct, 09:00 | = 2; restored=CALCULATOR | 1+1 | = 2",
+      "actual": "history=History · 7 | Clear | Close history | = 0.3 | 200+10% | 27th Oct, 09:15 | = 220 | √(9) | = 3 | sin(30) | = 0.5 | 1+1 | 27th Oct, 09:16 | = 2; restored=CALCULATOR | 1+1 | = 2",
       "comment": "The history entry survived process restart and restored its expression.",
       "evidence": "reports/e2e/user-v3.12.35-shard-1/calculator/evidence/tc-calc-007-history.png"
     },
@@ -127,13 +127,13 @@
     }
   ],
   "runtime_diagnostics": {
-    "package_pid_at_end": "7749",
+    "package_pid_at_end": "7632",
     "matching_log_lines": 306,
     "path": "diagnostics/target-crash-scan.txt"
   },
   "user_summary": {
-    "PASS": 15,
-    "FAIL": 2,
+    "PASS": 16,
+    "FAIL": 1,
     "BLOCKED": 1
   },
   "user_results": [
@@ -253,7 +253,7 @@
       "title": "Clear a held selection with AC",
       "status": "PASS",
       "expected": "Held text and selection toolbar both clear",
-      "actual": "display=CALCULATOR | 0; OCR after AC=9:06 © van A MySpace eatcutaror 2) > p v AC % QO 80 a0 Calculator",
+      "actual": "display=CALCULATOR | 0; OCR after AC=922 © van ~ MySpace eatcutaror p v AC % QO 80 a0 Calculator",
       "comment": "AC removed the held text and dismissed the floating selection toolbar.",
       "evidence": "calculator/evidence/user-b7.png",
       "hierarchy": "calculator/evidence/user-b7.xml"
@@ -297,7 +297,7 @@
       "title": "Open the three-dot menu",
       "status": "PASS",
       "expected": "Overflow exposes Effects and the calculator actions",
-      "actual": "Haptics: On | Clear memory | View memory | Show as fraction | Key shape | Effects | 907 | © | 746 | CALCULATOR | B | MySpace | Haptics: | On | Clear | memory | View | memory | Show | as | fraction | Key | shape | AC | Effects | fo) | 5) | 2 | e | a0 | a | 80 | ® | © | g | Calculator | Clock | Apps",
+      "actual": "Haptics: On | Clear memory | View memory | Show as fraction | Key shape | Effects | 923 | © | v.46 | CALCULATOR | B | MySpace | Haptics: | On | Clear | memory | View | memory | Show | as | fraction | Key | shape | AC | Effects | fo) | 5) | 2 | e | a0 | a | 80 | ® | © | g | Calculator | Clock | Apps",
       "comment": "The overflow menu exposed Effects plus calculator menu actions. This smoke check does not verify the exact item count or reorder behavior.",
       "evidence": "calculator/evidence/user-e3.png",
       "hierarchy": "calculator/evidence/user-e3.xml"
@@ -316,11 +316,11 @@
     {
       "id": "H1-H2",
       "guide_section": "H1/H2",
-      "title": "Switch calculator between Light and Dark themes",
-      "status": "FAIL",
-      "expected": "Both themes apply to the calculator while its expression remains visible",
-      "actual": "expression after theme switch=CALCULATOR | 0",
-      "comment": "The entered expression did not remain visible after switching themes.",
+      "title": "Apply Light and Dark calculator themes",
+      "status": "PASS",
+      "expected": "Light and Dark choices visibly change the calculator screen",
+      "actual": "stable-screen pixel change=98.3%; Light SHA-256=a226db3a9948746f70062858eae2aa8b3fe48c1c90d0d5825f07ac102bc03ca3; Dark SHA-256=d4fabd9acbbe3f30f5b604c519e7f917b299066b080f4fef74ddd4bc6f30463f; expression=['CALCULATOR', '0']",
+      "comment": "Both Light and Dark choices produced visibly different calculator screens. The displayed expression reset during the settings/home route, so expression persistence is not claimed. Exact palette/caret pixels are not asserted.",
       "evidence": "calculator/evidence/user-h1-h2.png",
       "hierarchy": "calculator/evidence/user-h1-h2.xml"
     },

@@ -3,12 +3,12 @@
   "engine": "tesseract TSV",
   "words": [
     {
-      "text": "8:58",
-      "left": 9,
+      "text": "18",
+      "left": 21,
       "top": 6,
-      "width": 48,
+      "width": 36,
       "height": 12,
-      "conf": 84.600044,
+      "conf": 87.076843,
       "line": [
         "1",
         "1",
@@ -17,11 +17,11 @@
     },
     {
       "text": "\u00a9",
-      "left": 48,
+      "left": 46,
       "top": 0,
       "width": 14,
-      "height": 26,
-      "conf": 81.802231,
+      "height": 27,
+      "conf": 87.076843,
       "line": [
         "1",
         "1",
@@ -86,7 +86,7 @@
       "top": 98,
       "width": 20,
       "height": 10,
-      "conf": 70.588791,
+      "conf": 67.378815,
       "line": [
         "5",
         "1",
@@ -99,7 +99,7 @@
       "top": 98,
       "width": 30,
       "height": 13,
-      "conf": 65.946297,
+      "conf": 67.378815,
       "line": [
         "5",
         "1",
@@ -112,7 +112,7 @@
       "top": 98,
       "width": 35,
       "height": 10,
-      "conf": 62.611359,
+      "conf": 70.23143,
       "line": [
         "5",
         "1",
@@ -120,12 +120,25 @@
       ]
     },
     {
-      "text": "MU:",
+      "text": "\u2014",
+      "left": 192,
+      "top": 89,
+      "width": 8,
+      "height": 29,
+      "conf": 57.973396,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MUse",
       "left": 203,
       "top": 98,
-      "width": 19,
+      "width": 33,
       "height": 10,
-      "conf": 33.802658,
+      "conf": 76.598793,
       "line": [
         "5",
         "1",
@@ -137,8 +150,21 @@
       "left": 64,
       "top": 154,
       "width": 202,
-      "height": 42,
+      "height": 49,
       "conf": 91.076767,
+      "line": [
+        "6",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "|",
+      "left": 298,
+      "top": 111,
+      "width": 4,
+      "height": 11,
+      "conf": 67.861885,
       "line": [
         "6",
         "1",
@@ -148,9 +174,9 @@
     {
       "text": "=",
       "left": 219,
-      "top": 267,
+      "top": 263,
       "width": 9,
-      "height": 2,
+      "height": 6,
       "conf": 87.574806,
       "line": [
         "7",
@@ -163,7 +189,7 @@
       "left": 236,
       "top": 259,
       "width": 71,
-      "height": 14,
+      "height": 17,
       "conf": 87.555435,
       "line": [
         "7",
@@ -224,12 +250,12 @@
       ]
     },
     {
-      "text": "Calculati",
+      "text": "Calculator",
       "left": 253,
       "top": 602,
-      "width": 46,
+      "width": 53,
       "height": 10,
-      "conf": 0.0,
+      "conf": 94.747574,
       "line": [
         "12",
         "1",

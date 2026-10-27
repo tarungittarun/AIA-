@@ -4,39 +4,39 @@ Requested permissions: app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 Activity Resolver Table:
   Non-Data Actions:
       android.intent.action.MAIN:
-        6570cac app.space.calc/.CalcActivity filter 1f4fd75
+        b75b352 app.space.calc/.CalcActivity filter 12c8623
           Action: "android.intent.action.MAIN"
           Category: "android.intent.category.LAUNCHER"
 
 Domain verification status:
 
 Permissions:
-  Permission [app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION] (611112d):
+  Permission [app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION] (ed596a):
     sourcePackage=app.space.calc
     uid=10192 gids=[] type=0 prot=signature
-    perm=PermissionInfo{e4e3662 app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION}
+    perm=PermissionInfo{8498e5b app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION}
     flags=0x0
 
 Registered ContentProviders:
   app.space.calc/androidx.core.content.FileProvider:
-    Provider{dab33f3 app.space.calc/androidx.core.content.FileProvider}
+    Provider{61386f8 app.space.calc/androidx.core.content.FileProvider}
 
 ContentProvider Authorities:
   [app.space.calc.myspace_files]:
-    Provider{dab33f3 app.space.calc/androidx.core.content.FileProvider}
-      applicationInfo=ApplicationInfo{cab58b0 app.space.calc}
+    Provider{61386f8 app.space.calc/androidx.core.content.FileProvider}
+      applicationInfo=ApplicationInfo{54037d1 app.space.calc}
 
 Key Set Manager:
   [app.space.calc]
       Signing KeySets: 56
 
 Packages:
-  Package [app.space.calc] (21a9329):
+  Package [app.space.calc] (9ffa236):
     appId=10192
-    pkg=Package{8dd56ae app.space.calc}
-    codePath=/data/app/~~PZkRVNBp2H4_gf9xtKZY6A==/app.space.calc-A8j_a--5UAwNxmmWHLAbTQ==
-    resourcePath=/data/app/~~PZkRVNBp2H4_gf9xtKZY6A==/app.space.calc-A8j_a--5UAwNxmmWHLAbTQ==
-    legacyNativeLibraryDir=/data/app/~~PZkRVNBp2H4_gf9xtKZY6A==/app.space.calc-A8j_a--5UAwNxmmWHLAbTQ==/lib
+    pkg=Package{108b537 app.space.calc}
+    codePath=/data/app/~~u_DwAaeQHy5qBzXqbNPK4Q==/app.space.calc-xJj9OJF-BVHs5dLz3GIwBQ==
+    resourcePath=/data/app/~~u_DwAaeQHy5qBzXqbNPK4Q==/app.space.calc-xJj9OJF-BVHs5dLz3GIwBQ==
+    legacyNativeLibraryDir=/data/app/~~u_DwAaeQHy5qBzXqbNPK4Q==/app.space.calc-xJj9OJF-BVHs5dLz3GIwBQ==/lib
     extractNativeLibs=false
     primaryCpuAbi=null
     secondaryCpuAbi=null
@@ -52,15 +52,15 @@ Packages:
     forceQueryable=false
     dataDir=/data/user/0/app.space.calc
     supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
-    timeStamp=2026-10-27 08:57:25
-    lastUpdateTime=2026-10-27 08:57:26
+    timeStamp=2026-10-27 09:13:28
+    lastUpdateTime=2026-10-27 09:13:29
     installerPackageName=null
     installerPackageUid=-1
     initiatingPackageName=com.android.shell
     originatingPackageName=null
     packageSource=1
     appMetadataFilePath=null
-    signatures=PackageSignatures{f3b1c4f version:2, signatures:[2af023da], past signatures:[]}
+    signatures=PackageSignatures{7761aa4 version:2, signatures:[2af023da], past signatures:[]}
     installPermissionsFixed=true
     pkgFlags=[ HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
     privatePkgFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PARTIALLY_DIRECT_BOOT_AWARE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
@@ -71,15 +71,15 @@ Packages:
       app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
     install permissions:
       app.space.calc.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION: granted=true
-    User 0: ceDataInode=320256 installed=true hidden=false suspended=false distractionFlags=0 stopped=false notLaunched=false enabled=0 instant=false virtual=false
+    User 0: ceDataInode=320102 installed=true hidden=false suspended=false distractionFlags=0 stopped=false notLaunched=false enabled=0 instant=false virtual=false
       installReason=0
-      firstInstallTime=2026-10-27 08:57:26
+      firstInstallTime=2026-10-27 09:13:29
       uninstallReason=0
       overlay paths:
         /product/overlay/NavigationBarModeGestural/NavigationBarModeGesturalOverlay.apk
-        /data/resource-cache/com.android.systemui-neutral-pfzR.frro
-        /data/resource-cache/com.android.systemui-accent-a9e9.frro
-        /data/resource-cache/com.android.systemui-dynamic-kCwV.frro
+        /data/resource-cache/com.android.systemui-neutral-wu6o.frro
+        /data/resource-cache/com.android.systemui-accent-ws7k.frro
+        /data/resource-cache/com.android.systemui-dynamic-NwnQ.frro
       legacy overlay paths:
         /product/overlay/NavigationBarModeGestural/NavigationBarModeGesturalOverlay.apk
       runtime permissions:
@@ -93,7 +93,7 @@ Queries:
       app.space.calc
   queryable via interaction:
     User 0:
-      [com.android.wallpaperbackup,com.android.providers.settings,com.android.server.telecom,com.android.dynsystem,com.android.emulator.multidisplay,com.android.location.fused,com.android.inputdevices,com.android.localtransport,android,com.android.keychain,com.android.settings]:
+      [com.android.emulator.multidisplay,com.android.dynsystem,com.android.wallpaperbackup,com.android.keychain,com.android.server.telecom,com.android.settings,com.android.inputdevices,android,com.android.location.fused,com.android.providers.settings,com.android.localtransport]:
         app.space.calc
       com.google.android.inputmethod.latin:
         app.space.calc
@@ -101,10 +101,10 @@ Queries:
 
 Dexopt state:
   [app.space.calc]
-    path: /data/app/~~PZkRVNBp2H4_gf9xtKZY6A==/app.space.calc-A8j_a--5UAwNxmmWHLAbTQ==/base.apk
+    path: /data/app/~~u_DwAaeQHy5qBzXqbNPK4Q==/app.space.calc-xJj9OJF-BVHs5dLz3GIwBQ==/base.apk
       x86_64: [status=verify] [reason=install] [primary-abi]
-        [location is /data/app/~~PZkRVNBp2H4_gf9xtKZY6A==/app.space.calc-A8j_a--5UAwNxmmWHLAbTQ==/oat/x86_64/base.odex]
+        [location is /data/app/~~u_DwAaeQHy5qBzXqbNPK4Q==/app.space.calc-xJj9OJF-BVHs5dLz3GIwBQ==/oat/x86_64/base.odex]
 
 Compiler stats:
   [app.space.calc]
-     base.apk - 805
+     base.apk - 863

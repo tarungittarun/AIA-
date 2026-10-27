@@ -1,364 +1,382 @@
 Package: app.space.calc
-PID at end of run: 7806
-Captured logcat lines: 3192
+PID at end of run: 7628
+Captured logcat lines: 3151
 
-10-27 09:07:51.067  7806  7824 D EGL_emulation: app_time_stats: avg=343.10ms min=29.80ms max=505.34ms count=3
-10-27 09:07:51.219   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:07:51.219   418   518 D audioserver: -129
-10-27 09:07:51.484 12396 12396 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:07:51.488 12396 12396 I AndroidRuntime: Using default boot image
-10-27 09:07:51.488 12396 12396 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:07:51.490 12396 12396 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:07:51.490 12396 12396 I app_process: Using CollectorTypeCC GC.
-10-27 09:07:51.571 12396 12396 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:07:51.581 12396 12396 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:07:51.604 12396 12396 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:07:51.605 12396 12396 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:07:51.605 12396 12396 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:07:51.606 12396 12396 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:07:51.608 12396 12396 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:07:51.608 12396 12396 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:07:51.608 12396 12396 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:07:51.603 12396 12396 W main    : type=1400 audit(0.0:688): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:07:53.666   418   518 D AudioFlinger: mixer(0x7de7c6ab2930) throttle end: throttle time(34)
-10-27 09:07:53.870   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:07:53.870   418   518 D audioserver: -129
-10-27 09:07:54.079 12423 12423 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:07:54.083 12423 12423 I AndroidRuntime: Using default boot image
-10-27 09:07:54.083 12423 12423 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:07:54.085 12423 12423 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:07:54.085 12423 12423 I app_process: Using CollectorTypeCC GC.
-10-27 09:07:54.146 12423 12423 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:07:54.156 12423 12423 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:07:54.179 12423 12423 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:07:54.179 12423 12423 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:07:54.179 12423 12423 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:07:54.181 12423 12423 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:07:54.175 12423 12423 W main    : type=1400 audit(0.0:691): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:07:54.184 12423 12423 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:07:54.185 12423 12423 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:07:54.185 12423 12423 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:07:56.250   418   434 D audioserver: -129
-10-27 09:07:56.477   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:07:56.477   418   518 D audioserver: -129
-10-27 09:07:56.676 12450 12450 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:07:56.681 12450 12450 I AndroidRuntime: Using default boot image
-10-27 09:07:56.681 12450 12450 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:07:56.683 12450 12450 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:07:56.683 12450 12450 I app_process: Using CollectorTypeCC GC.
-10-27 09:07:56.744 12450 12450 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:07:56.752 12450 12450 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:07:56.770 12450 12450 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:07:56.771 12450 12450 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:07:56.771 12450 12450 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:07:56.772 12450 12450 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:07:56.774 12450 12450 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:07:56.774 12450 12450 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:07:56.774 12450 12450 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:07:56.767 12450 12450 W main    : type=1400 audit(0.0:694): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:07:58.836   418   434 D audioserver: -129
-10-27 09:07:59.061   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:07:59.062   418   518 D audioserver: -129
-10-27 09:07:59.262 12477 12477 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:07:59.266 12477 12477 I AndroidRuntime: Using default boot image
-10-27 09:07:59.266 12477 12477 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:07:59.268 12477 12477 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:07:59.268 12477 12477 I app_process: Using CollectorTypeCC GC.
-10-27 09:07:59.335 12477 12477 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:07:59.343 12477 12477 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:07:59.363 12477 12477 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:07:59.363 12477 12477 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:07:59.363 12477 12477 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:07:59.364 12477 12477 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:07:59.367 12477 12477 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:07:59.367 12477 12477 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:07:59.367 12477 12477 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:07:59.359 12477 12477 W main    : type=1400 audit(0.0:697): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:01.430   418   434 D audioserver: -129
-10-27 09:08:01.645   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:01.645   418   518 D audioserver: -129
-10-27 09:08:01.854 12504 12504 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:01.858 12504 12504 I AndroidRuntime: Using default boot image
-10-27 09:08:01.858 12504 12504 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:01.860 12504 12504 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:01.860 12504 12504 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:01.924 12504 12504 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:01.932 12504 12504 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:01.951 12504 12504 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:01.951 12504 12504 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:01.951 12504 12504 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:01.952 12504 12504 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:01.954 12504 12504 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:01.954 12504 12504 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:01.954 12504 12504 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:01.947 12504 12504 W main    : type=1400 audit(0.0:700): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:04.024   418   434 D audioserver: -129
-10-27 09:08:04.252   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:04.252   418   518 D audioserver: -129
-10-27 09:08:04.450 12533 12533 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:04.455 12533 12533 I AndroidRuntime: Using default boot image
-10-27 09:08:04.455 12533 12533 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:04.457 12533 12533 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:04.458 12533 12533 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:04.524 12533 12533 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:04.533 12533 12533 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:04.554 12533 12533 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:04.554 12533 12533 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:04.554 12533 12533 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:04.555 12533 12533 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:04.557 12533 12533 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:04.557 12533 12533 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:04.557 12533 12533 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:04.551 12533 12533 W main    : type=1400 audit(0.0:703): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:06.625   418   434 D audioserver: -129
-10-27 09:08:06.858   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:06.858   418   518 D audioserver: -129
-10-27 09:08:07.052 12560 12560 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:07.056 12560 12560 I AndroidRuntime: Using default boot image
-10-27 09:08:07.056 12560 12560 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:07.058 12560 12560 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:07.058 12560 12560 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:07.122 12560 12560 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:07.131 12560 12560 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:07.153 12560 12560 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:07.153 12560 12560 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:07.154 12560 12560 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:07.155 12560 12560 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:07.151 12560 12560 W main    : type=1400 audit(0.0:706): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:07.158 12560 12560 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:07.158 12560 12560 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:07.158 12560 12560 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:10.456  7806  7824 D EGL_emulation: app_time_stats: avg=368.52ms min=170.90ms max=700.96ms count=3
-10-27 09:08:10.592   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:10.592   418   518 D audioserver: -129
-10-27 09:08:10.750 12598 12598 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:10.754 12598 12598 I AndroidRuntime: Using default boot image
-10-27 09:08:10.754 12598 12598 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:10.756 12598 12598 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:10.756 12598 12598 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:10.819 12598 12598 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:10.829 12598 12598 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:10.850 12598 12598 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:10.850 12598 12598 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:10.851 12598 12598 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:10.852 12598 12598 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:10.854 12598 12598 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:10.854 12598 12598 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:10.854 12598 12598 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:10.847 12598 12598 W main    : type=1400 audit(0.0:709): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:13.064   418   518 D AudioFlinger: mixer(0x7de7c6ab2930) throttle end: throttle time(36)
-10-27 09:08:13.267   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:13.267   418   518 D audioserver: -129
-10-27 09:08:13.458 12625 12625 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:13.461 12625 12625 I AndroidRuntime: Using default boot image
-10-27 09:08:13.461 12625 12625 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:13.463 12625 12625 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:13.464 12625 12625 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:13.527 12625 12625 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:13.536 12625 12625 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:13.558 12625 12625 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:13.560 12625 12625 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:13.560 12625 12625 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:13.561 12625 12625 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:13.555 12625 12625 W main    : type=1400 audit(0.0:713): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:13.564 12625 12625 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:13.564 12625 12625 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:13.564 12625 12625 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:15.617   418   434 D audioserver: -129
-10-27 09:08:15.851   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:15.851   418   518 D audioserver: -129
-10-27 09:08:16.048 12652 12652 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:16.053 12652 12652 I AndroidRuntime: Using default boot image
-10-27 09:08:16.053 12652 12652 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:16.055 12652 12652 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:16.055 12652 12652 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:16.116 12652 12652 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:16.126 12652 12652 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:16.153 12652 12652 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:16.153 12652 12652 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:16.154 12652 12652 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:16.155 12652 12652 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:16.151 12652 12652 W main    : type=1400 audit(0.0:715): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:16.158 12652 12652 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:16.158 12652 12652 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:16.158 12652 12652 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:18.203   418   434 D audioserver: -129
-10-27 09:08:18.435   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:18.435   418   518 D audioserver: -129
-10-27 09:08:18.629 12692 12692 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:18.633 12692 12692 I AndroidRuntime: Using default boot image
-10-27 09:08:18.633 12692 12692 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:18.635 12692 12692 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:18.635 12692 12692 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:18.698 12692 12692 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:18.707 12692 12692 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:18.729 12692 12692 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:18.730 12692 12692 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:18.730 12692 12692 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:18.732 12692 12692 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:18.727 12692 12692 W main    : type=1400 audit(0.0:720): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:18.735 12692 12692 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:18.735 12692 12692 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:18.735 12692 12692 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:22.639  7806  7824 D EGL_emulation: app_time_stats: avg=379.07ms min=167.40ms max=706.44ms count=3
-10-27 09:08:22.833   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:22.833   418   518 D audioserver: -129
-10-27 09:08:22.921 12738 12738 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:22.926 12738 12738 I AndroidRuntime: Using default boot image
-10-27 09:08:22.927 12738 12738 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:22.929 12738 12738 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:22.929 12738 12738 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:22.991 12738 12738 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:22.999 12738 12738 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:23.019 12738 12738 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:23.019 12738 12738 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:23.019 12738 12738 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:23.020 12738 12738 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:23.022 12738 12738 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:23.022 12738 12738 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:23.022 12738 12738 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:23.015 12738 12738 W main    : type=1400 audit(0.0:723): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:25.218  7806  7824 D EGL_emulation: app_time_stats: avg=461.31ms min=385.24ms max=502.13ms count=3
-10-27 09:08:25.439   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:25.439   418   518 D audioserver: -129
-10-27 09:08:25.635 12766 12766 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:25.640 12766 12766 I AndroidRuntime: Using default boot image
-10-27 09:08:25.640 12766 12766 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:25.643 12766 12766 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:25.643 12766 12766 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:25.706 12766 12766 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:25.714 12766 12766 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:25.737 12766 12766 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:25.737 12766 12766 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:25.738 12766 12766 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:25.739 12766 12766 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:25.735 12766 12766 W main    : type=1400 audit(0.0:726): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:25.741 12766 12766 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:25.741 12766 12766 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:25.741 12766 12766 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:26.958  1739  2293 I NgaEntryPointEventSendr: State changed: Ready => Disconnected (onOpaDisconnected)
-10-27 09:08:26.959  1893  2693 W SearchServiceCore: Abort, client detached.
-10-27 09:08:27.933  7806  7824 D EGL_emulation: app_time_stats: avg=505.72ms min=497.99ms max=517.82ms count=3
-10-27 09:08:28.097 12788 12788 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:28.100 12788 12788 I AndroidRuntime: Using default boot image
-10-27 09:08:28.100 12788 12788 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:28.102 12788 12788 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:28.102 12788 12788 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:28.162 12788 12788 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:28.170 12788 12788 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:28.189 12788 12788 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:28.189 12788 12788 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:28.190 12788 12788 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:28.191 12788 12788 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:28.187 12788 12788 W main    : type=1400 audit(0.0:729): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:28.194 12788 12788 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:28.194 12788 12788 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:28.194 12788 12788 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:30.990  1652  1652 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
-10-27 09:08:31.103   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:31.103   418   518 D audioserver: -129
-10-27 09:08:31.376 12822 12822 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:31.380 12822 12822 I AndroidRuntime: Using default boot image
-10-27 09:08:31.380 12822 12822 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:31.382 12822 12822 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:31.382 12822 12822 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:31.444 12822 12822 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:31.458 12822 12822 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:31.485 12822 12822 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:31.485 12822 12822 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:31.485 12822 12822 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:31.486 12822 12822 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:31.488 12822 12822 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:31.488 12822 12822 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:31.483 12822 12822 W main    : type=1400 audit(0.0:732): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:31.490   548  3154 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
-10-27 09:08:33.474   548   643 D ActivityManager: freezing 5493 com.google.android.gms
-10-27 09:08:33.619   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:33.619   418   518 D audioserver: -129
-10-27 09:08:34.057 12849 12849 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:34.061 12849 12849 I AndroidRuntime: Using default boot image
-10-27 09:08:34.061 12849 12849 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:34.064 12849 12849 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:34.064 12849 12849 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:34.127 12849 12849 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:34.137 12849 12849 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:34.158 12849 12849 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:34.158 12849 12849 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:34.158 12849 12849 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:34.159 12849 12849 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:34.161 12849 12849 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:34.161 12849 12849 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:34.161 12849 12849 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:34.155 12849 12849 W main    : type=1400 audit(0.0:735): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:36.351  1652  1652 I GoogleInputMethodService: GoogleInputMethodService.shouldHideHeaderOnInitialState():4008 ShouldHideHeaderOnInitialState = false
-10-27 09:08:36.351  1652  1652 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
-10-27 09:08:36.486   363  4860 D android.hardware.audio@7.1-impl.ranchu: threadLoop: entering standby, frames: 25818240
-10-27 09:08:36.898 12878 12878 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:36.902 12878 12878 I AndroidRuntime: Using default boot image
-10-27 09:08:36.902 12878 12878 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:36.904 12878 12878 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:36.905 12878 12878 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:36.950  7806  7824 D EGL_emulation: app_time_stats: avg=250.19ms min=18.83ms max=501.70ms count=4
-10-27 09:08:36.977 12878 12878 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:37.009 12878 12878 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:37.009 12878 12878 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:37.009 12878 12878 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:37.010 12878 12878 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:37.013 12878 12878 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:37.013 12878 12878 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:37.013 12878 12878 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:37.007 12878 12878 W main    : type=1400 audit(0.0:738): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:39.969  1652  1652 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
-10-27 09:08:40.097   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:40.097   418   518 D audioserver: -129
-10-27 09:08:40.365 12910 12910 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:40.369 12910 12910 I AndroidRuntime: Using default boot image
-10-27 09:08:40.369 12910 12910 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:40.371 12910 12910 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:40.372 12910 12910 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:40.439 12910 12910 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:40.448 12910 12910 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:40.476 12910 12910 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:40.476 12910 12910 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:40.476 12910 12910 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:40.477 12910 12910 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:40.475 12910 12910 W main    : type=1400 audit(0.0:741): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:40.483 12910 12910 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:40.483 12910 12910 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:40.483 12910 12910 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:42.435  1652  1652 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
-10-27 09:08:42.613   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:42.613   418   518 D audioserver: -129
-10-27 09:08:42.806 12936 12936 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:42.810 12936 12936 I AndroidRuntime: Using default boot image
-10-27 09:08:42.810 12936 12936 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:42.811 12936 12936 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:42.812 12936 12936 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:42.874 12936 12936 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:42.881 12936 12936 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:42.901 12936 12936 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:42.901 12936 12936 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:42.901 12936 12936 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:42.903 12936 12936 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:42.899 12936 12936 W main    : type=1400 audit(0.0:744): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-10-27 09:08:42.906 12936 12936 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:42.906 12936 12936 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:42.906 12936 12936 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:45.356   418   518 D audioserver: FGS Logger Transaction failed
-10-27 09:08:45.356   418   518 D audioserver: -129
-10-27 09:08:45.502  7806  7824 D EGL_emulation: app_time_stats: avg=2772.74ms min=26.82ms max=5518.66ms count=2
-10-27 09:08:45.810 12967 12967 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 09:08:45.814 12967 12967 I AndroidRuntime: Using default boot image
-10-27 09:08:45.814 12967 12967 I AndroidRuntime: Leaving lock profiling enabled
-10-27 09:08:45.816 12967 12967 I app_process: Core platform API reporting enabled, enforcing=false
-10-27 09:08:45.816 12967 12967 I app_process: Using CollectorTypeCC GC.
-10-27 09:08:45.880 12967 12967 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-10-27 09:08:45.888 12967 12967 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-10-27 09:08:45.907 12967 12967 W libc    : Access denied finding property "ro.product.name_for_attestation"
-10-27 09:08:45.907 12967 12967 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-10-27 09:08:45.907 12967 12967 W libc    : Access denied finding property "ro.product.model_for_attestation"
-10-27 09:08:45.908 12967 12967 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-27 09:08:45.910 12967 12967 D UiAutomationConnection: Created on user UserHandle{0}
-10-27 09:08:45.910 12967 12967 I UiAutomation: Initialized for user 0 on display 0
-10-27 09:08:45.910 12967 12967 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-10-27 09:08:45.907 12967 12967 W main    : type=1400 audit(0.0:747): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+10-27 09:24:19.421  1681  1681 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1877 onStartInput(EditorInfo{inputType=0x0(NULL) imeOptions=0x0 privateImeOptions=null actionName=UNSPECIFIED actionLabel=null actionId=0 initialSelStart=-1 initialSelEnd=-1 initialCapsMode=0x0 hintText=null label=null packageName=app.space.calc fieldId=0 fieldName=null extras=null}, false)
+10-27 09:24:19.421  1681  1681 I GoogleInputMethodService: GoogleInputMethodService.shouldHideHeaderOnInitialState():4008 ShouldHideHeaderOnInitialState = false
+10-27 09:24:19.421  1681  1681 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
+10-27 09:24:19.700 12698 12698 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:19.703 12698 12698 I AndroidRuntime: Using default boot image
+10-27 09:24:19.703 12698 12698 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:19.705 12698 12698 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:19.705 12698 12698 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:19.751 12698 12698 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:19.759 12698 12698 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:19.776 12698 12698 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:19.776 12698 12698 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:19.776 12698 12698 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:19.777 12698 12698 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:19.780 12698 12698 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:19.780 12698 12698 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:19.780 12698 12698 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+--------- beginning of system
+10-27 09:24:21.964   422   854 D audioserver: -129
+10-27 09:24:22.125   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:24:22.125   422   524 D audioserver: -129
+10-27 09:24:22.379 12727 12727 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:22.383 12727 12727 I AndroidRuntime: Using default boot image
+10-27 09:24:22.383 12727 12727 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:22.385 12727 12727 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:22.386 12727 12727 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:22.446 12727 12727 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:22.455 12727 12727 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:22.474 12727 12727 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:22.475 12727 12727 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:22.475 12727 12727 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:22.476 12727 12727 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:22.478 12727 12727 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:22.478 12727 12727 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:22.478 12727 12727 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:22.472 12727 12727 W main    : type=1400 audit(0.0:738): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+10-27 09:24:24.572   422   524 D AudioFlinger: mixer(0x71148989a930) throttle end: throttle time(35)
+10-27 09:24:24.777   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:24:24.777   422   524 D audioserver: -129
+10-27 09:24:24.959 12754 12754 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:24.962 12754 12754 I AndroidRuntime: Using default boot image
+10-27 09:24:24.962 12754 12754 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:24.964 12754 12754 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:24.964 12754 12754 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:25.014 12754 12754 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:25.022 12754 12754 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:25.041 12754 12754 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:25.041 12754 12754 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:25.041 12754 12754 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:25.042 12754 12754 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:25.045 12754 12754 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:25.045 12754 12754 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:25.045 12754 12754 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:25.040 12754 12754 W main    : type=1400 audit(0.0:741): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+10-27 09:24:27.123   422   854 D audioserver: -129
+10-27 09:24:27.338   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:24:27.338   422   524 D audioserver: -129
+10-27 09:24:27.537 12781 12781 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:27.540 12781 12781 I AndroidRuntime: Using default boot image
+10-27 09:24:27.540 12781 12781 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:27.542 12781 12781 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:27.542 12781 12781 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:27.598 12781 12781 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:27.606 12781 12781 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:27.626 12781 12781 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:27.626 12781 12781 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:27.626 12781 12781 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:27.628 12781 12781 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:27.630 12781 12781 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:27.630 12781 12781 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:27.630 12781 12781 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:27.624 12781 12781 W main    : type=1400 audit(0.0:744): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+10-27 09:24:29.700   422   854 D audioserver: -129
+10-27 09:24:29.922   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:24:29.922   422   524 D audioserver: -129
+10-27 09:24:30.114 12808 12808 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:30.117 12808 12808 I AndroidRuntime: Using default boot image
+10-27 09:24:30.117 12808 12808 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:30.119 12808 12808 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:30.119 12808 12808 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:30.166 12808 12808 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:30.174 12808 12808 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:30.190 12808 12808 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:30.190 12808 12808 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:30.191 12808 12808 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:30.192 12808 12808 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:30.194 12808 12808 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:30.194 12808 12808 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:30.194 12808 12808 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:30.188 12808 12808 W main    : type=1400 audit(0.0:747): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+10-27 09:24:32.287   422   854 D audioserver: -129
+10-27 09:24:32.506   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:24:32.506   422   524 D audioserver: -129
+10-27 09:24:32.700 12835 12835 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:32.703 12835 12835 I AndroidRuntime: Using default boot image
+10-27 09:24:32.703 12835 12835 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:32.704 12835 12835 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:32.705 12835 12835 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:32.752 12835 12835 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:32.759 12835 12835 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:32.776 12835 12835 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:32.776 12835 12835 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:32.777 12835 12835 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:32.778 12835 12835 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:32.780 12835 12835 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:32.780 12835 12835 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:32.780 12835 12835 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:32.781   550  2287 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
+10-27 09:24:34.863   422   854 D audioserver: -129
+10-27 09:24:35.090   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:24:35.090   422   524 D audioserver: -129
+10-27 09:24:35.274 12862 12862 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:35.278 12862 12862 I AndroidRuntime: Using default boot image
+10-27 09:24:35.278 12862 12862 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:35.279 12862 12862 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:35.279 12862 12862 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:35.326 12862 12862 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:35.333 12862 12862 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:35.351 12862 12862 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:35.351 12862 12862 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:35.351 12862 12862 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:35.351 12862 12862 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:35.348 12862 12862 W main    : type=1400 audit(0.0:753): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+10-27 09:24:35.356 12862 12862 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:35.356 12862 12862 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:35.356 12862 12862 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:37.431   422   854 D audioserver: -129
+10-27 09:24:37.651   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:24:37.651   422   524 D audioserver: -129
+10-27 09:24:37.842 12889 12889 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:37.845 12889 12889 I AndroidRuntime: Using default boot image
+10-27 09:24:37.845 12889 12889 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:37.847 12889 12889 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:37.847 12889 12889 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:37.896 12889 12889 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:37.903 12889 12889 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:37.920 12889 12889 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:37.920 12889 12889 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:37.920 12889 12889 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:37.922 12889 12889 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:37.925 12889 12889 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:37.925 12889 12889 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:37.925 12889 12889 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:37.920 12889 12889 W main    : type=1400 audit(0.0:756): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+10-27 09:24:41.252   550  2420 W InputManager-JNI: Input channel object 'a61c677 PopupWindow:58592d7 (client)' was disposed without first being removed with the input manager!
+10-27 09:24:41.397   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:24:41.397   422   524 D audioserver: -129
+10-27 09:24:41.534 12927 12927 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:41.537 12927 12927 I AndroidRuntime: Using default boot image
+10-27 09:24:41.537 12927 12927 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:41.538 12927 12927 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:41.539 12927 12927 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:41.587 12927 12927 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:41.594 12927 12927 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:41.611 12927 12927 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:41.611 12927 12927 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:41.611 12927 12927 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:41.612 12927 12927 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:41.614 12927 12927 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:41.614 12927 12927 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:41.614 12927 12927 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:41.615   550  2420 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
+10-27 09:24:43.822   422   524 D AudioFlinger: mixer(0x71148989a930) throttle end: throttle time(34)
+10-27 09:24:44.026   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:24:44.027   422   524 D audioserver: -129
+10-27 09:24:44.223 12955 12955 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:44.226 12955 12955 I AndroidRuntime: Using default boot image
+10-27 09:24:44.226 12955 12955 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:44.228 12955 12955 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:44.228 12955 12955 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:44.277 12955 12955 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:44.284 12955 12955 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:44.301 12955 12955 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:44.301 12955 12955 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:44.302 12955 12955 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:44.303 12955 12955 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:44.306 12955 12955 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:44.306 12955 12955 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:44.306 12955 12955 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:44.307   550  2492 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
+10-27 09:24:46.415   908   908 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-27 09:24:46.610   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:24:46.611   422   524 D audioserver: -129
+10-27 09:24:46.797 12981 12981 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:46.800 12981 12981 I AndroidRuntime: Using default boot image
+10-27 09:24:46.800 12981 12981 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:46.802 12981 12981 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:46.802 12981 12981 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:46.849 12981 12981 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:46.856 12981 12981 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:46.873 12981 12981 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:46.873 12981 12981 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:46.874 12981 12981 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:46.874 12981 12981 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:46.877 12981 12981 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:46.877 12981 12981 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:46.877 12981 12981 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:46.872 12981 12981 W main    : type=1400 audit(0.0:765): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+10-27 09:24:48.969   422   854 D audioserver: -129
+10-27 09:24:49.194   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:24:49.195   422   524 D audioserver: -129
+10-27 09:24:49.385 13008 13008 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:49.388 13008 13008 I AndroidRuntime: Using default boot image
+10-27 09:24:49.388 13008 13008 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:49.389 13008 13008 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:49.390 13008 13008 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:49.441 13008 13008 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:49.448 13008 13008 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:49.466 13008 13008 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:49.467 13008 13008 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:49.467 13008 13008 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:49.468 13008 13008 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:49.471 13008 13008 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:49.471 13008 13008 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:49.471 13008 13008 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:49.464 13008 13008 W main    : type=1400 audit(0.0:768): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+10-27 09:24:53.409  7628  7647 D EGL_emulation: app_time_stats: avg=385.15ms min=169.05ms max=703.24ms count=3
+10-27 09:24:53.614   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:24:53.614   422   524 D audioserver: -129
+10-27 09:24:53.693 13054 13054 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:53.696 13054 13054 I AndroidRuntime: Using default boot image
+10-27 09:24:53.696 13054 13054 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:53.698 13054 13054 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:53.698 13054 13054 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:53.746 13054 13054 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:53.753 13054 13054 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:53.771 13054 13054 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:53.771 13054 13054 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:53.771 13054 13054 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:53.772 13054 13054 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:53.775 13054 13054 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:53.775 13054 13054 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:53.775 13054 13054 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:53.768 13054 13054 W main    : type=1400 audit(0.0:771): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+10-27 09:24:55.987  7628  7647 D EGL_emulation: app_time_stats: avg=460.45ms min=383.66ms max=501.63ms count=3
+10-27 09:24:56.198   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:24:56.199   422   524 D audioserver: -129
+10-27 09:24:56.384 13081 13081 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:56.387 13081 13081 I AndroidRuntime: Using default boot image
+10-27 09:24:56.387 13081 13081 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:56.389 13081 13081 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:56.389 13081 13081 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:56.415   908   908 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-27 09:24:56.438 13081 13081 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:56.462 13081 13081 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:56.462 13081 13081 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:56.462 13081 13081 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:56.463 13081 13081 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:56.465 13081 13081 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:56.466 13081 13081 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:56.466 13081 13081 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:56.467   550   629 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
+10-27 09:24:57.715  1835  2239 I NgaEntryPointEventSendr: State changed: Ready => Disconnected (onOpaDisconnected)
+10-27 09:24:57.716  1917  2548 W SearchServiceCore: Abort, client detached.
+10-27 09:24:58.686  7628  7647 D EGL_emulation: app_time_stats: avg=499.77ms min=495.80ms max=504.04ms count=3
+10-27 09:24:58.838 13104 13104 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:24:58.841 13104 13104 I AndroidRuntime: Using default boot image
+10-27 09:24:58.841 13104 13104 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:24:58.843 13104 13104 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:24:58.843 13104 13104 I app_process: Using CollectorTypeCC GC.
+10-27 09:24:58.891 13104 13104 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:24:58.898 13104 13104 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:24:58.915 13104 13104 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:24:58.915 13104 13104 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:24:58.915 13104 13104 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:24:58.916 13104 13104 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:24:58.918 13104 13104 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:24:58.919 13104 13104 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:24:58.919 13104 13104 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:24:58.912 13104 13104 W main    : type=1400 audit(0.0:777): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+10-27 09:25:01.705   422   524 D AudioFlinger: mixer(0x71148989a930) throttle end: throttle time(33)
+10-27 09:25:01.818   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:25:01.819   422   524 D audioserver: -129
+10-27 09:25:02.077 13136 13136 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:25:02.081 13136 13136 I AndroidRuntime: Using default boot image
+10-27 09:25:02.081 13136 13136 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:25:02.083 13136 13136 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:25:02.083 13136 13136 I app_process: Using CollectorTypeCC GC.
+10-27 09:25:02.131 13136 13136 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:25:02.138 13136 13136 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:25:02.155 13136 13136 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:25:02.155 13136 13136 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:25:02.155 13136 13136 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:25:02.156 13136 13136 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:25:02.158 13136 13136 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:25:02.158 13136 13136 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:25:02.159 13136 13136 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:25:02.160   550  2492 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
+10-27 09:25:04.266   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:25:04.266   422   524 D audioserver: -129
+10-27 09:25:04.705  7628  7647 D EGL_emulation: app_time_stats: avg=500.61ms min=500.41ms max=500.81ms count=2
+10-27 09:25:04.711 13162 13162 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:25:04.714 13162 13162 I AndroidRuntime: Using default boot image
+10-27 09:25:04.714 13162 13162 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:25:04.716 13162 13162 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:25:04.716 13162 13162 I app_process: Using CollectorTypeCC GC.
+10-27 09:25:04.766 13162 13162 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:25:04.773 13162 13162 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:25:04.791 13162 13162 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:25:04.791 13162 13162 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:25:04.791 13162 13162 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:25:04.792 13162 13162 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:25:04.794 13162 13162 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:25:04.794 13162 13162 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:25:04.794 13162 13162 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:25:04.788 13162 13162 W main    : type=1400 audit(0.0:783): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+10-27 09:25:07.087  1681  1681 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
+10-27 09:25:07.105  7628  7647 D EGL_emulation: app_time_stats: avg=459.35ms min=384.71ms max=499.24ms count=3
+10-27 09:25:07.134   366  4881 D android.hardware.audio@7.1-impl.ranchu: threadLoop: entering standby, frames: 26607040
+10-27 09:25:07.614 13192 13192 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:25:07.618 13192 13192 I AndroidRuntime: Using default boot image
+10-27 09:25:07.618 13192 13192 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:25:07.619 13192 13192 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:25:07.620 13192 13192 I app_process: Using CollectorTypeCC GC.
+10-27 09:25:07.667 13192 13192 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:25:07.674 13192 13192 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:25:07.691 13192 13192 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:25:07.691 13192 13192 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:25:07.691 13192 13192 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:25:07.692 13192 13192 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:25:07.695 13192 13192 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:25:07.695 13192 13192 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:25:07.695 13192 13192 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:25:07.688 13192 13192 W main    : type=1400 audit(0.0:786): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+10-27 09:25:10.723  1681  1681 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
+10-27 09:25:10.850   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:25:10.850   422   524 D audioserver: -129
+10-27 09:25:11.105 13226 13226 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:25:11.108 13226 13226 I AndroidRuntime: Using default boot image
+10-27 09:25:11.108 13226 13226 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:25:11.109 13226 13226 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:25:11.110 13226 13226 I app_process: Using CollectorTypeCC GC.
+10-27 09:25:11.157 13226 13226 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:25:11.165 13226 13226 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:25:11.182 13226 13226 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:25:11.182 13226 13226 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:25:11.182 13226 13226 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:25:11.183 13226 13226 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:25:11.185 13226 13226 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:25:11.185 13226 13226 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:25:11.185 13226 13226 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:25:11.187   550  2479 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
+10-27 09:25:13.237  7628  7647 D EGL_emulation: app_time_stats: avg=500.04ms min=496.56ms max=503.12ms count=3
+10-27 09:25:13.298   422   524 D audioserver: FGS Logger Transaction failed
+10-27 09:25:13.298   422   524 D audioserver: -129
+10-27 09:25:13.477 13252 13252 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:25:13.480 13252 13252 I AndroidRuntime: Using default boot image
+10-27 09:25:13.480 13252 13252 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:25:13.482 13252 13252 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:25:13.482 13252 13252 I app_process: Using CollectorTypeCC GC.
+10-27 09:25:13.529 13252 13252 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:25:13.537 13252 13252 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:25:13.554 13252 13252 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:25:13.554 13252 13252 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:25:13.554 13252 13252 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:25:13.555 13252 13252 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:25:13.558 13252 13252 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:25:13.559 13252 13252 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:25:13.559 13252 13252 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:25:13.560   550  2286 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
+10-27 09:25:16.018   422   524 D audioserver: -129
+10-27 09:25:16.254  7628  7647 D EGL_emulation: app_time_stats: avg=2772.61ms min=29.45ms max=5515.77ms count=2
+10-27 09:25:16.415   908   908 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-27 09:25:16.452 13282 13282 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-27 09:25:16.455 13282 13282 I AndroidRuntime: Using default boot image
+10-27 09:25:16.455 13282 13282 I AndroidRuntime: Leaving lock profiling enabled
+10-27 09:25:16.457 13282 13282 I app_process: Core platform API reporting enabled, enforcing=false
+10-27 09:25:16.457 13282 13282 I app_process: Using CollectorTypeCC GC.
+10-27 09:25:16.505 13282 13282 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-27 09:25:16.512 13282 13282 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+10-27 09:25:16.530 13282 13282 W libc    : Access denied finding property "ro.product.name_for_attestation"
+10-27 09:25:16.530 13282 13282 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+10-27 09:25:16.530 13282 13282 W libc    : Access denied finding property "ro.product.model_for_attestation"
+10-27 09:25:16.531 13282 13282 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-27 09:25:16.533 13282 13282 D UiAutomationConnection: Created on user UserHandle{0}
+10-27 09:25:16.533 13282 13282 I UiAutomation: Initialized for user 0 on display 0
+10-27 09:25:16.533 13282 13282 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-27 09:25:16.534   550  2493 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users

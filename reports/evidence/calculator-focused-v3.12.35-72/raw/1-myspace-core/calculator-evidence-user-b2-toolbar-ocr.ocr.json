@@ -3,12 +3,12 @@
   "engine": "tesseract TSV",
   "words": [
     {
-      "text": "04",
-      "left": 21,
+      "text": "1\u00ae@",
+      "left": 29,
       "top": 6,
-      "width": 35,
+      "width": 27,
       "height": 11,
-      "conf": 84.940598,
+      "conf": 14.432945,
       "line": [
         "1",
         "1",
@@ -16,27 +16,27 @@
       ]
     },
     {
-      "text": "\u00a9",
-      "left": 47,
-      "top": 0,
-      "width": 14,
-      "height": 26,
-      "conf": 84.940598,
-      "line": [
-        "1",
-        "1",
-        "1"
-      ]
-    },
-    {
-      "text": "746",
+      "text": "v.46",
       "left": 248,
       "top": 4,
       "width": 44,
       "height": 14,
-      "conf": 53.773651,
+      "conf": 29.276672,
       "line": [
         "2",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "CALCULATOR",
+      "left": 229,
+      "top": 52,
+      "width": 73,
+      "height": 7,
+      "conf": 96.219383,
+      "line": [
+        "3",
         "1",
         "1"
       ]
@@ -49,7 +49,7 @@
       "height": 40,
       "conf": 88.787643,
       "line": [
-        "3",
+        "4",
         "1",
         "1"
       ]
@@ -61,19 +61,6 @@
       "width": 93,
       "height": 22,
       "conf": 95.794647,
-      "line": [
-        "3",
-        "1",
-        "1"
-      ]
-    },
-    {
-      "text": "CALCULATOR",
-      "left": 229,
-      "top": 52,
-      "width": 73,
-      "height": 7,
-      "conf": 96.219383,
       "line": [
         "4",
         "1",
@@ -188,9 +175,9 @@
       "text": "%",
       "left": 189,
       "top": 334,
-      "width": 17,
-      "height": 19,
-      "conf": 92.373474,
+      "width": 14,
+      "height": 18,
+      "conf": 92.081291,
       "line": [
         "10",
         "1",

@@ -12,7 +12,7 @@
 | ID | Section | User action | Outcome | Observed | Comment |
 |---|---|---|---|---|---|
 | B12 | B12 | Store a number with MAdd and use it in an expression | PASS | after MUse=CALCULATOR \| 3+1,23,456 \| = 1,23,459; after equals=CALCULATOR \| 1,23,459 | MAdd stored 123456 and MUse replaced the selected operand in 3+4; the grouped result equals 123459. |
-| E3-MEMORY | E3 | Open the calculator memory list | PASS | Memory \| Close memory \| 1,23,456 \| Move up from place 1 \| Move down from place 1 \| 858 \| © \| eat \| CALCULATOR \| B \| MySpace \| > \| 159 \| Memory \| 1,23,456 \| e \| a0 \| ® \| a \| 80 \| © \| Calculator \| Apps \| Clock | The calculator's memory list displayed the value saved through MAdd. |
+| E3-MEMORY | E3 | Open the calculator memory list | PASS | Memory \| Close memory \| 1,23,456 \| Move up from place 1 \| Move down from place 1 \| 918 \| © \| eat \| CALCULATOR \| B \| MySpace \| > \| 159 \| Memory \| 1,23,456 \| e \| a0 \| ® \| a \| 80 \| © \| Calculator \| Apps \| Clock | The calculator's memory list displayed the value saved through MAdd. |
 | E4 | E4 | Choose a calculator keypress effect | PASS | choices=✓ Spring · bounce back with overshoot; Pulse · quick fade pulse; bounce; Pulse; fade; pulse; selected one option | The Effects picker exposed user-selectable calculator animation options. This smoke test confirms access and selection, not frame-by-frame animation timing. |
 
 Screenshots and UI hierarchy XML are in `evidence/`; calculator case JSON is under `calculator/`.
