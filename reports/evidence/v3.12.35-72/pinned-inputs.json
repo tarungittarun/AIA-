@@ -1,0 +1,15 @@
+{
+  "guide": {
+    "url": "https://github.com/tarungittarun/TicTic/blob/0727a2e3b9974d6df70153d76dc8e629e0a0b839/TEST-GUIDE.md",
+    "sha256": "d494cf934f12f0c5b1e77da2254d026438d1c10d233c9b53e4620beb7014db92"
+  },
+  "source_commit": "0727a2e3b9974d6df70153d76dc8e629e0a0b839",
+  "myspace_apk": {
+    "url": "https://github.com/tarungittarun/TicTic/raw/0727a2e3b9974d6df70153d76dc8e629e0a0b839/artifacts/MySpace-v3.12.35-72-lite-dist.apk",
+    "sha256": "f3257177dc098cf62f54a6f77df526195323d36b23ed5a69f9ff07ddf96b45fb"
+  },
+  "mycalc_apk": {
+    "url": "https://github.com/tarungittarun/TicTic/raw/0727a2e3b9974d6df70153d76dc8e629e0a0b839/artifacts/MyCalc-v1.0.33-34.apk",
+    "sha256": "99c65435e455e241dd3eb65ea6494abcabf2099f5024f6a82c6cf8a621a6bf6b"
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "report_title": "MySpace user-facing APK QA",
+  "created_utc": "2026-10-27T07:13:43+00:00",
+  "suite": "myspace-modules",
+  "artifact": {
+    "file": "MySpace-v3.12.35-72-lite-dist.apk",
+    "package": "app.space.one",
+    "size_bytes": 2274980,
+    "sha256": "f3257177dc098cf62f54a6f77df526195323d36b23ed5a69f9ff07ddf96b45fb",
+    "version_name": "3.12.35",
+    "version_code": 72
+  },
+  "device": {
+    "emulator_api": 34,
+    "screen": "320x640",
+    "ui_inspection_method": "uiautomator-compressed"
+  },
+  "source": {
+    "commit": "0727a2e3b9974d6df70153d76dc8e629e0a0b839",
+    "guide_sha256": "d494cf934f12f0c5b1e77da2254d026438d1c10d233c9b53e4620beb7014db92",
+    "direct_apk_evidence": true
+  },
+  "calculator_summary": {
+    "PASS": 1
+  },
+  "calculator_results": [
+    {
+      "id": "TC-CALC-001",
+      "title": "Operator precedence",
+      "status": "PASS",
+      "expected": "14",
+      "actual": "CALCULATOR | 14",
+      "comment": "Observed result matched the expected calculator value.",
+      "evidence": "reports/e2e/user-v3.12.35-shard-2/calculator/evidence/tc-calc-001-target.png"
+    }
+  ],
+  "runtime_diagnostics": {
+    "package_pid_at_end": "4695",
+    "matching_log_lines": 311,
+    "path": "diagnostics/target-crash-scan.txt"
+  },
+  "user_summary": {
+    "PASS": 9,
+    "BLOCKED": 2
+  },
+  "user_results": [
+    {
+      "id": "A2",
+      "guide_section": "A2",
+      "title": "Inspect MySpace header identity",
+      "status": "PASS",
+      "expected": "MySpace identity and mark are visible in the app header",
+      "actual": "MySpace home | MySpace | CALCULATOR | History | World time | More options | 14 | Toggle the scientific keys | Open the extra keys | AC | ( ) | % | ÷ | 7 | 8 | 9 | × | 4 | 5 | 6 | − | 1 | 2 | 3 | + | 0 | . | ⌫ | = | Apps | Clock | Calculator",
+      "comment": "The app header exposes the MySpace identity; the accompanying screenshot shows the installed app's user-visible mark. The launcher-drawer icon was not separately pixel-tested.",
+      "evidence": "calculator/evidence/user-a2.png",
+      "hierarchy": "calculator/evidence/user-a2.xml"
+    },
+    {
+      "id": "G-HUB",
+      "guide_section": "G",
+      "title": "Open the Apps hub",
+      "status": "PASS",
+      "expected": "Visible app destinations open from Apps",
+      "actual": "feature entries=Notes; Calendar; Music; Recorder; Scanner; Files; labels=Apps | World time | Clock | Calculator | Notes | Habits | Expenses | Calendar | Tasks | Weather | Recorder | Files | Documents | Messages | Music | Scanner | Email | RECENT",
+      "comment": "The user-visible Apps destination exposed multiple guide features; their individual landing screens are reported separately.",
+      "evidence": "calculator/evidence/user-g-hub.png",
+      "hierarchy": "calculator/evidence/user-g-hub.xml"
+    },
+    {
+      "id": "ADS-SAMPLE",
+      "guide_section": "A/G",
+      "title": "Check sampled home surfaces for ad indicators",
+      "status": "PASS",
+      "expected": "No visible ad labels on sampled user screens",
+      "actual": "Scanned 18 accessible labels; no ad/advertisement/sponsored label found",
+      "comment": "No ad indicators appeared in the sampled Apps hub labels. This does not prove an app-wide or network-level ad audit.",
+      "evidence": "calculator/evidence/user-ads-sample.png",
+      "hierarchy": "calculator/evidence/user-ads-sample.xml"
+    },
+    {
+      "id": "G-NOTES",
+      "guide_section": "G",
+      "title": "Open Notes from Apps",
+      "status": "BLOCKED",
+      "expected": "User can reach the Notes landing screen",
+      "actual": "Notes entry was not exposed in the Apps hub after four screen scrolls.",
+      "comment": "The user-facing control was not available to this emulator run.",
+      "evidence": "calculator/evidence/user-g-notes.png",
+      "hierarchy": "calculator/evidence/user-g-notes.xml"
+    },
+    {
+      "id": "G-CALENDAR",
+      "guide_section": "G",
+      "title": "Open Calendar from Apps",
+      "status": "PASS",
+      "expected": "User can reach the Calendar landing screen",
+      "actual": "opened=Calendar; screen changed=True; calculator screen=False; labels=MySpace home | MySpace | CALENDAR | « | ‹ | October | 2026 | › | » | Month | Week | Day | ⚙ | Today | Sun | Mon | Tue | Wed | Thu | Fri | Sat | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | Tuesday 27 Oct | 0 events | Add event | World time | Apps | Clock | Calendar",
+      "comment": "The feature landing screen opened from the Apps hub. Its deep workflow (e.g., reminders, recording, scanning or editing) is not inferred from opening it.",
+      "evidence": "calculator/evidence/user-g-calendar.png",
+      "hierarchy": "calculator/evidence/user-g-calendar.xml"
+    },
+    {
+      "id": "G-MUSIC",
+      "guide_section": "G",
+      "title": "Open Music from Apps",
+      "status": "PASS",
+      "expected": "User can reach the Music landing screen",
+      "actual": "opened=Music; screen changed=True; calculator screen=False; labels=MySpace home | MySpace | MUSIC | Music | 0 tracks · Repeat all | Grant music access | Without it the player can only see files you add by hand. | Nothing playing | Your library, your own files, and streams you add yourself. | ⏮ | ▶ | ⏭ | ⇄ | ⟳ | Add music files | Add a stream URL | No playable audio yet. Add your own music files, or a stream URL you trust. | World time | Apps | Clock",
+      "comment": "The feature landing screen opened from the Apps hub. Its deep workflow (e.g., reminders, recording, scanning or editing) is not inferred from opening it.",
+      "evidence": "calculator/evidence/user-g-music.png",
+      "hierarchy": "calculator/evidence/user-g-music.xml"
+    },
+    {
+      "id": "G-RECORDER",
+      "guide_section": "G",
+      "title": "Open Recorder from Apps",
+      "status": "PASS",
+      "expected": "User can reach the Recorder landing screen",
+      "actual": "opened=Recorder; screen changed=True; calculator screen=False; labels=MySpace home | MySpace | RECORDER | Recorder | No recordings yet. | 0:00 | Microphone permission needed. | Record | World time | Apps | Clock",
+      "comment": "The feature landing screen opened from the Apps hub. Its deep workflow (e.g., reminders, recording, scanning or editing) is not inferred from opening it.",
+      "evidence": "calculator/evidence/user-g-recorder.png",
+      "hierarchy": "calculator/evidence/user-g-recorder.xml"
+    },
+    {
+      "id": "G-SCANNER",
+      "guide_section": "G",
+      "title": "Open Scanner from Apps",
+      "status": "PASS",
+      "expected": "User can reach the Scanner landing screen",
+      "actual": "opened=Scanner; screen changed=True; calculator screen=False; labels=MySpace home | MySpace | SCANNER | Scanner | No pages yet. | Pick images, then save them as one PDF. | Take a page with the system camera or pick existing images, then save them as one PDF. Captures land in a private inbox through a hand-rolled provider. In-app live-preview capture stays deferred: wiring a camera pipeline with no device to see it on is a gamble, not a slice. | Take a photo | Pick images | A4 | Save PDF | Saved PDFs | None yet. | World time | Apps | Clock",
+      "comment": "The feature landing screen opened from the Apps hub. Its deep workflow (e.g., reminders, recording, scanning or editing) is not inferred from opening it.",
+      "evidence": "calculator/evidence/user-g-scanner.png",
+      "hierarchy": "calculator/evidence/user-g-scanner.xml"
+    },
+    {
+      "id": "G-FILES",
+      "guide_section": "G",
+      "title": "Open Files from Apps",
+      "status": "PASS",
+      "expected": "User can reach the Files landing screen",
+      "actual": "opened=Files; screen changed=True; calculator screen=False; labels=MySpace home | MySpace | FILES | Files | 0 files · 0 B | search files | × | Images | 0 files | › | Videos | Audio | Documents | Sheets | Other | Internal storage | World time | Apps | Clock",
+      "comment": "The feature landing screen opened from the Apps hub. Its deep workflow (e.g., reminders, recording, scanning or editing) is not inferred from opening it.",
+      "evidence": "calculator/evidence/user-g-files.png",
+      "hierarchy": "calculator/evidence/user-g-files.xml"
+    },
+    {
+      "id": "G-DIAGNOSTICS",
+      "guide_section": "G",
+      "title": "Open Settings and Diagnostics",
+      "status": "BLOCKED",
+      "expected": "Reach the log collector screen",
+      "actual": "Settings entry was not visible from Apps or the calculator overflow.",
+      "comment": "The user-facing control was not available to this emulator run.",
+      "evidence": "calculator/evidence/user-g-diagnostics.png",
+      "hierarchy": "calculator/evidence/user-g-diagnostics.xml"
+    },
+    {
+      "id": "ADS-FEATURE",
+      "guide_section": "A/G",
+      "title": "Sample a feature screen for ad indicators",
+      "status": "PASS",
+      "expected": "No ad labels on the sampled feature screen",
+      "actual": "Scanned current screen: 6 accessible labels; no ad indicator",
+      "comment": "No ad-like labels were visible on the final sampled feature screen; this is not a complete advertising/privacy audit.",
+      "evidence": "calculator/evidence/user-ads-feature.png",
+      "hierarchy": "calculator/evidence/user-ads-feature.xml"
+    }
+  ],
+  "limits": [
+    "Direct APK evidence comes from Android 14/API 34 emulator UI actions, screenshots and hierarchy dumps.",
+    "Feature-page opens are smoke checks, not proof that every deep workflow works.",
+    "Ad checks scan visible text on sampled screens; they are not a network or whole-app ad audit.",
+    "Source-CI runs are reported separately from direct APK results."
+  ]
+}
