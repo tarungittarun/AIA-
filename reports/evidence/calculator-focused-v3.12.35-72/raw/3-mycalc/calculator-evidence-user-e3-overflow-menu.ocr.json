@@ -1,0 +1,266 @@
+{
+  "screenshot": "calculator/evidence/user-e3-overflow-menu.png",
+  "engine": "tesseract TSV",
+  "words": [
+    {
+      "text": "851",
+      "left": 9,
+      "top": 7,
+      "width": 23,
+      "height": 10,
+      "conf": 91.845245,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u00a9",
+      "left": 45,
+      "top": 6,
+      "width": 12,
+      "height": 12,
+      "conf": 84.156311,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "wa",
+      "left": 248,
+      "top": 5,
+      "width": 42,
+      "height": 13,
+      "conf": 17.514389,
+      "line": [
+        "2",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Ey",
+      "left": 26,
+      "top": 55,
+      "width": 14,
+      "height": 4,
+      "conf": 37.531769,
+      "line": [
+        "3",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u2018STANDALONE,",
+      "left": 228,
+      "top": 48,
+      "width": 74,
+      "height": 7,
+      "conf": 48.380013,
+      "line": [
+        "4",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MyCalc",
+      "left": 61,
+      "top": 44,
+      "width": 66,
+      "height": 19,
+      "conf": 62.844231,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Haptics:",
+      "left": 109,
+      "top": 141,
+      "width": 47,
+      "height": 13,
+      "conf": 86.938797,
+      "line": [
+        "6",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "On",
+      "left": 163,
+      "top": 141,
+      "width": 16,
+      "height": 10,
+      "conf": 93.843445,
+      "line": [
+        "6",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Clear",
+      "left": 109,
+      "top": 181,
+      "width": 30,
+      "height": 11,
+      "conf": 90.764404,
+      "line": [
+        "7",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "memory",
+      "left": 144,
+      "top": 184,
+      "width": 49,
+      "height": 11,
+      "conf": 91.651321,
+      "line": [
+        "7",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "View",
+      "left": 108,
+      "top": 223,
+      "width": 29,
+      "height": 10,
+      "conf": 89.676804,
+      "line": [
+        "8",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "memory",
+      "left": 142,
+      "top": 225,
+      "width": 49,
+      "height": 11,
+      "conf": 96.558403,
+      "line": [
+        "8",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Show",
+      "left": 109,
+      "top": 263,
+      "width": 33,
+      "height": 11,
+      "conf": 96.318916,
+      "line": [
+        "9",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "as",
+      "left": 147,
+      "top": 255,
+      "width": 10,
+      "height": 28,
+      "conf": 96.846382,
+      "line": [
+        "9",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "fraction",
+      "left": 155,
+      "top": 263,
+      "width": 57,
+      "height": 11,
+      "conf": 95.96627,
+      "line": [
+        "9",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Key",
+      "left": 109,
+      "top": 305,
+      "width": 21,
+      "height": 13,
+      "conf": 88.459862,
+      "line": [
+        "10",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "shape",
+      "left": 135,
+      "top": 304,
+      "width": 37,
+      "height": 14,
+      "conf": 88.459862,
+      "line": [
+        "10",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Effects",
+      "left": 109,
+      "top": 345,
+      "width": 43,
+      "height": 11,
+      "conf": 81.070663,
+      "line": [
+        "11",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": ".",
+      "left": 117,
+      "top": 377,
+      "width": 4,
+      "height": 2,
+      "conf": 29.444496,
+      "line": [
+        "12",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "8",
+      "left": 117,
+      "top": 413,
+      "width": 13,
+      "height": 22,
+      "conf": 96.247246,
+      "line": [
+        "13",
+        "1",
+        "1"
+      ]
+    }
+  ]
+}

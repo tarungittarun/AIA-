@@ -1,0 +1,227 @@
+{
+  "screenshot": "calculator/evidence/user-e3-memory-list.png",
+  "engine": "tesseract TSV",
+  "words": [
+    {
+      "text": "852",
+      "left": 9,
+      "top": 7,
+      "width": 25,
+      "height": 10,
+      "conf": 92.158798,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u00a9",
+      "left": 45,
+      "top": 6,
+      "width": 12,
+      "height": 12,
+      "conf": 75.664558,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "v.46",
+      "left": 248,
+      "top": 4,
+      "width": 44,
+      "height": 14,
+      "conf": 29.276672,
+      "line": [
+        "2",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "3",
+      "left": 27,
+      "top": 55,
+      "width": 12,
+      "height": 4,
+      "conf": 64.667953,
+      "line": [
+        "3",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "FA",
+      "left": 27,
+      "top": 49,
+      "width": 12,
+      "height": 4,
+      "conf": 29.375626,
+      "line": [
+        "4",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MyCalc",
+      "left": 61,
+      "top": 44,
+      "width": 66,
+      "height": 19,
+      "conf": 62.844231,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u2018STANDALONE",
+      "left": 228,
+      "top": 48,
+      "width": 73,
+      "height": 7,
+      "conf": 60.444607,
+      "line": [
+        "6",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "159",
+      "left": 283,
+      "top": 130,
+      "width": 24,
+      "height": 13,
+      "conf": 91.790283,
+      "line": [
+        "7",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Memory",
+      "left": 45,
+      "top": 143,
+      "width": 51,
+      "height": 13,
+      "conf": 96.713669,
+      "line": [
+        "8",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "1,23,456",
+      "left": 46,
+      "top": 181,
+      "width": 63,
+      "height": 14,
+      "conf": 91.207726,
+      "line": [
+        "9",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "7",
+      "left": 42,
+      "top": 414,
+      "width": 15,
+      "height": 21,
+      "conf": 96.771393,
+      "line": [
+        "10",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "8",
+      "left": 117,
+      "top": 413,
+      "width": 13,
+      "height": 22,
+      "conf": 96.175728,
+      "line": [
+        "11",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "9",
+      "left": 190,
+      "top": 413,
+      "width": 14,
+      "height": 22,
+      "conf": 96.499657,
+      "line": [
+        "12",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "4",
+      "left": 42,
+      "top": 472,
+      "width": 15,
+      "height": 22,
+      "conf": 96.379555,
+      "line": [
+        "13",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": ")",
+      "left": 117,
+      "top": 473,
+      "width": 14,
+      "height": 21,
+      "conf": 16.011246,
+      "line": [
+        "14",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "1",
+      "left": 43,
+      "top": 532,
+      "width": 9,
+      "height": 21,
+      "conf": 96.870865,
+      "line": [
+        "15",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "2",
+      "left": 116,
+      "top": 531,
+      "width": 15,
+      "height": 22,
+      "conf": 96.99041,
+      "line": [
+        "16",
+        "1",
+        "1"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,591 @@
+{
+  "screenshot": "calculator/evidence/user-e4-effects-picker.png",
+  "engine": "tesseract TSV",
+  "words": [
+    {
+      "text": "852",
+      "left": 9,
+      "top": 7,
+      "width": 25,
+      "height": 10,
+      "conf": 92.158798,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u00a9",
+      "left": 45,
+      "top": 6,
+      "width": 12,
+      "height": 12,
+      "conf": 75.664558,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "v.46",
+      "left": 248,
+      "top": 4,
+      "width": 44,
+      "height": 14,
+      "conf": 29.276672,
+      "line": [
+        "2",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "=",
+      "left": 26,
+      "top": 44,
+      "width": 14,
+      "height": 2,
+      "conf": 94.949875,
+      "line": [
+        "3",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "3",
+      "left": 27,
+      "top": 55,
+      "width": 12,
+      "height": 4,
+      "conf": 64.667953,
+      "line": [
+        "4",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MyCalc",
+      "left": 61,
+      "top": 44,
+      "width": 66,
+      "height": 19,
+      "conf": 62.844231,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u2018STANDALONE",
+      "left": 228,
+      "top": 48,
+      "width": 73,
+      "height": 7,
+      "conf": 60.444607,
+      "line": [
+        "6",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Haptics:",
+      "left": 109,
+      "top": 141,
+      "width": 46,
+      "height": 13,
+      "conf": 86.938797,
+      "line": [
+        "7",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "On",
+      "left": 163,
+      "top": 141,
+      "width": 16,
+      "height": 10,
+      "conf": 93.843445,
+      "line": [
+        "7",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Fever",
+      "left": 60,
+      "top": 158,
+      "width": 79,
+      "height": 30,
+      "conf": 0.0,
+      "line": [
+        "8",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "inanon",
+      "left": 144,
+      "top": 184,
+      "width": 49,
+      "height": 4,
+      "conf": 0.0,
+      "line": [
+        "8",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Button",
+      "left": 56,
+      "top": 207,
+      "width": 35,
+      "height": 9,
+      "conf": 87.475067,
+      "line": [
+        "9",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "effects",
+      "left": 96,
+      "top": 206,
+      "width": 40,
+      "height": 10,
+      "conf": 95.824196,
+      "line": [
+        "9",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u00a5",
+      "left": 52,
+      "top": 229,
+      "width": 8,
+      "height": 31,
+      "conf": 38.23098,
+      "line": [
+        "10",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Spring",
+      "left": 74,
+      "top": 240,
+      "width": 40,
+      "height": 13,
+      "conf": 84.103386,
+      "line": [
+        "10",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "-",
+      "left": 122,
+      "top": 244,
+      "width": 2,
+      "height": 2,
+      "conf": 57.754562,
+      "line": [
+        "10",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "bounce",
+      "left": 132,
+      "top": 239,
+      "width": 45,
+      "height": 11,
+      "conf": 95.007851,
+      "line": [
+        "10",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "back",
+      "left": 183,
+      "top": 239,
+      "width": 27,
+      "height": 11,
+      "conf": 93.718376,
+      "line": [
+        "10",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "with",
+      "left": 214,
+      "top": 239,
+      "width": 26,
+      "height": 11,
+      "conf": 93.718376,
+      "line": [
+        "10",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u2018overshoot",
+      "left": 55,
+      "top": 256,
+      "width": 63,
+      "height": 11,
+      "conf": 61.726624,
+      "line": [
+        "11",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Squeeze",
+      "left": 71,
+      "top": 298,
+      "width": 51,
+      "height": 13,
+      "conf": 96.752419,
+      "line": [
+        "12",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "squash",
+      "left": 139,
+      "top": 297,
+      "width": 44,
+      "height": 14,
+      "conf": 95.706383,
+      "line": [
+        "13",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "lke",
+      "left": 188,
+      "top": 297,
+      "width": 19,
+      "height": 11,
+      "conf": 90.358414,
+      "line": [
+        "13",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "gel",
+      "left": 211,
+      "top": 297,
+      "width": 16,
+      "height": 14,
+      "conf": 96.350601,
+      "line": [
+        "13",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Glow",
+      "left": 71,
+      "top": 338,
+      "width": 30,
+      "height": 11,
+      "conf": 94.419853,
+      "line": [
+        "14",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "soften",
+      "left": 119,
+      "top": 338,
+      "width": 38,
+      "height": 11,
+      "conf": 95.360924,
+      "line": [
+        "15",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "and",
+      "left": 162,
+      "top": 339,
+      "width": 22,
+      "height": 10,
+      "conf": 96.663689,
+      "line": [
+        "15",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "dim",
+      "left": 189,
+      "top": 339,
+      "width": 21,
+      "height": 10,
+      "conf": 96.380417,
+      "line": [
+        "15",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Lift",
+      "left": 71,
+      "top": 379,
+      "width": 19,
+      "height": 11,
+      "conf": 95.977875,
+      "line": [
+        "16",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "rise",
+      "left": 108,
+      "top": 382,
+      "width": 21,
+      "height": 8,
+      "conf": 91.723114,
+      "line": [
+        "17",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "off",
+      "left": 133,
+      "top": 369,
+      "width": 12,
+      "height": 31,
+      "conf": 96.849121,
+      "line": [
+        "17",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "the",
+      "left": 155,
+      "top": 379,
+      "width": 18,
+      "height": 11,
+      "conf": 93.836006,
+      "line": [
+        "17",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "pad",
+      "left": 177,
+      "top": 380,
+      "width": 22,
+      "height": 13,
+      "conf": 93.836006,
+      "line": [
+        "17",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Pulse",
+      "left": 71,
+      "top": 420,
+      "width": 33,
+      "height": 11,
+      "conf": 96.997223,
+      "line": [
+        "18",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "quick",
+      "left": 121,
+      "top": 420,
+      "width": 32,
+      "height": 14,
+      "conf": 94.824783,
+      "line": [
+        "19",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "fade",
+      "left": 157,
+      "top": 420,
+      "width": 27,
+      "height": 11,
+      "conf": 96.550125,
+      "line": [
+        "19",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "pulse",
+      "left": 188,
+      "top": 420,
+      "width": 32,
+      "height": 14,
+      "conf": 96.814041,
+      "line": [
+        "19",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "4",
+      "left": 42,
+      "top": 472,
+      "width": 15,
+      "height": 22,
+      "conf": 96.337807,
+      "line": [
+        "20",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": ")",
+      "left": 117,
+      "top": 473,
+      "width": 14,
+      "height": 21,
+      "conf": 16.011246,
+      "line": [
+        "21",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "6",
+      "left": 191,
+      "top": 473,
+      "width": 13,
+      "height": 21,
+      "conf": 96.83197,
+      "line": [
+        "22",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "1",
+      "left": 43,
+      "top": 532,
+      "width": 9,
+      "height": 21,
+      "conf": 96.870865,
+      "line": [
+        "23",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "2",
+      "left": 116,
+      "top": 531,
+      "width": 15,
+      "height": 22,
+      "conf": 96.99041,
+      "line": [
+        "24",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "3",
+      "left": 190,
+      "top": 531,
+      "width": 14,
+      "height": 22,
+      "conf": 96.445763,
+      "line": [
+        "25",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u00ab",
+      "left": 186,
+      "top": 593,
+      "width": 22,
+      "height": 16,
+      "conf": 82.894867,
+      "line": [
+        "26",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u00a9",
+      "left": 256,
+      "top": 575,
+      "width": 40,
+      "height": 50,
+      "conf": 95.255188,
+      "line": [
+        "26",
+        "1",
+        "1"
+      ]
+    }
+  ]
+}

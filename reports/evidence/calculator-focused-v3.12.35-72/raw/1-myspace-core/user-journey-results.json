@@ -1,6 +1,6 @@
 {
   "report_title": "MySpace calculator-only APK QA",
-  "created_utc": "2026-10-27T08:34:18+00:00",
+  "created_utc": "2026-10-27T08:52:18+00:00",
   "suite": "myspace-core",
   "artifact": {
     "file": "MySpace-v3.12.35-72-lite-dist.apk",
@@ -85,7 +85,7 @@
       "title": "History persists after activity restart and can restore an expression",
       "status": "PASS",
       "expected": "History shows 1+1 = 2 and restores the expression",
-      "actual": "history=History · 7 | Clear | Close history | = 0.3 | 200+10% | 27th Oct, 08:26 | = 220 | √(9) | = 3 | sin(30) | = 0.5 | 1+1 | 27th Oct, 08:27 | = 2; restored=CALCULATOR | 1+1 | = 2",
+      "actual": "history=History · 7 | Clear | Close history | = 0.3 | 200+10% | 27th Oct, 08:43 | = 220 | √(9) | = 3 | sin(30) | = 0.5 | 1+1 | 27th Oct, 08:44 | = 2; restored=CALCULATOR | 1+1 | = 2",
       "comment": "The history entry survived process restart and restored its expression.",
       "evidence": "reports/e2e/user-v3.12.35-shard-1/calculator/evidence/tc-calc-007-history.png"
     },
@@ -127,15 +127,14 @@
     }
   ],
   "runtime_diagnostics": {
-    "package_pid_at_end": "7695",
-    "matching_log_lines": 324,
+    "package_pid_at_end": "7721",
+    "matching_log_lines": 349,
     "path": "diagnostics/target-crash-scan.txt"
   },
   "user_summary": {
     "PASS": 15,
     "FAIL": 1,
-    "BLOCKED": 1,
-    "ERROR": 1
+    "BLOCKED": 2
   },
   "user_results": [
     {
@@ -254,7 +253,7 @@
       "title": "Clear a held selection with AC",
       "status": "PASS",
       "expected": "Held text and selection toolbar both clear",
-      "actual": "display=CALCULATOR | 0; OCR after AC=8:33 © van A MySpace eatcutaror 2) > p v AC % QO 80 a0 Calculator",
+      "actual": "display=CALCULATOR | 0; OCR after AC=8:50 © van A MySpace eatcutaror 2) > p v AC % QO 80 a0 Calculator",
       "comment": "AC removed the held text and dismissed the floating selection toolbar.",
       "evidence": "calculator/evidence/user-b7.png",
       "hierarchy": "calculator/evidence/user-b7.xml"
@@ -298,7 +297,7 @@
       "title": "Open the three-dot menu",
       "status": "PASS",
       "expected": "Overflow exposes Effects and the calculator actions",
-      "actual": "Haptics: On | Clear memory | View memory | Show as fraction | Key shape | Effects | 834 | © | 746 | CALCULATOR | B | MySpace | Haptics: | On | Clear | memory | View | memory | Show | as | fraction | Key | shape | AC | Effects | fo) | 5) | 2 | e | a0 | a | 80 | ® | © | g | Calculator | Clock | Apps",
+      "actual": "Haptics: On | Clear memory | View memory | Show as fraction | Key shape | Effects | 851 | © | v.46 | CALCULATOR | B | MySpace | Haptics: | On | Clear | memory | View | memory | Show | as | fraction | Key | shape | AC | Effects | fo) | 5) | 2 | e | a0 | a | 80 | ® | © | g | Calculator | Clock | Apps",
       "comment": "The overflow menu exposed Effects plus calculator menu actions. This smoke check does not verify the exact item count or reorder behavior.",
       "evidence": "calculator/evidence/user-e3.png",
       "hierarchy": "calculator/evidence/user-e3.xml"
@@ -318,10 +317,10 @@
       "id": "H1-H2",
       "guide_section": "H1/H2",
       "title": "Switch calculator between Light and Dark themes",
-      "status": "ERROR",
+      "status": "BLOCKED",
       "expected": "Both themes apply to the calculator while its expression remains visible",
-      "actual": "QaError: Could not find tappable UI label 'AC'; visible labels: ['Haptics: On', 'Clear memory', 'View memory', 'Show as fraction', 'Key shape', 'Effects']",
-      "comment": "The probe could not complete; this is not counted as a product pass or a confirmed product defect.",
+      "actual": "Could not return to the calculator after changing theme: ['MySpace home', 'MySpace', 'Settings', '🌤️ Good morning', '8:52:11 AM', 'TUE, 27TH OCTOBER', 'ALARMS', '＋ Add', 'Alarm', 'No alarms yet', 'Add an alarm', 'Your shortcuts', 'Timer', 'Quick timer', 'Countdown', 'Routines', 'Schedules', 'WORLD CLOCKS', '＋ Add time zone', 'World time', 'Apps', 'Clock', 'Reminders']",
+      "comment": "The user-facing control was not available to this emulator run.",
       "evidence": "calculator/evidence/user-h1-h2.png",
       "hierarchy": "calculator/evidence/user-h1-h2.xml"
     },
@@ -331,7 +330,7 @@
       "title": "Scan visible calculator labels for ad indicators",
       "status": "PASS",
       "expected": "No visible ad labels on the calculator screen",
-      "actual": "Scanned 6 visible labels; no ad indicator",
+      "actual": "Scanned 23 visible labels; no ad indicator",
       "comment": "No ad-like text appeared on the sampled calculator screen; this does not certify the app's network or SDK behavior.",
       "evidence": "calculator/evidence/user-ads-calc.png",
       "hierarchy": "calculator/evidence/user-ads-calc.xml"

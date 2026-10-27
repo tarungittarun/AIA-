@@ -1,6 +1,6 @@
 {
   "report_title": "MySpace calculator-only APK QA",
-  "created_utc": "2026-10-27T08:26:08+00:00",
+  "created_utc": "2026-10-27T08:43:11+00:00",
   "suite": "myspace-features",
   "artifact": {
     "file": "MySpace-v3.12.35-72-lite-dist.apk",
@@ -35,8 +35,8 @@
     }
   ],
   "runtime_diagnostics": {
-    "package_pid_at_end": "4792",
-    "matching_log_lines": 220,
+    "package_pid_at_end": "4657",
+    "matching_log_lines": 198,
     "path": "diagnostics/target-crash-scan.txt"
   },
   "user_summary": {
@@ -50,8 +50,8 @@
       "title": "Store a number with MAdd and use it in an expression",
       "status": "FAIL",
       "expected": "MUse replaces the selected 4 in 3+4 with 123456; result 123459",
-      "actual": "after MUse=CALCULATOR | 3+41,23,456 | = 41,23,459",
-      "comment": "MUse did not replace only the held 4 with the previously stored 123456.",
+      "actual": "after MUse=CALCULATOR | 3+1,23,456 | = 1,23,459; after equals=CALCULATOR | 1,23,459",
+      "comment": "The stored value appeared in the expression but the calculator did not evaluate the expected sum 123459.",
       "evidence": "calculator/evidence/user-b12.png",
       "hierarchy": "calculator/evidence/user-b12.xml"
     },
@@ -61,7 +61,7 @@
       "title": "Open the calculator memory list",
       "status": "PASS",
       "expected": "Saved value 123456 is visible in View memory",
-      "actual": "Memory | Close memory | 1,23,456 | Move up from place 1 | Move down from place 1 | 825 | © | v.46 | a | MySpace | catcutaTor | Memory | R | 1,23,456 | 59 | 45 | e | a0 | a | 80 | Calculator | Apps | Clock",
+      "actual": "Memory | Close memory | 1,23,456 | Move up from place 1 | Move down from place 1 | 842 | © | eat | CALCULATOR | B | MySpace | > | 159 | Memory | 1,23,456 | e | a0 | ® | a | 80 | © | Calculator | Apps | Clock",
       "comment": "The calculator's memory list displayed the value saved through MAdd.",
       "evidence": "calculator/evidence/user-e3-memory.png",
       "hierarchy": "calculator/evidence/user-e3-memory.xml"

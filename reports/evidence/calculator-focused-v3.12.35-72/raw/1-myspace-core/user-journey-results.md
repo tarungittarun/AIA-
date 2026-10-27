@@ -7,7 +7,7 @@
 - Source commit: `0727a2e3b9974d6df70153d76dc8e629e0a0b839`
 - Emulator: Android 14/API 34, 320x640
 - Calculator counts: `{'PASS': 8, 'FAIL': 2, 'BLOCKED': 1}`
-- User journey counts: `{'PASS': 15, 'FAIL': 1, 'BLOCKED': 1, 'ERROR': 1}`
+- User journey counts: `{'PASS': 15, 'FAIL': 1, 'BLOCKED': 2}`
 
 | ID | Section | User action | Outcome | Observed | Comment |
 |---|---|---|---|---|---|
@@ -21,13 +21,13 @@
 | B2 | B2 | Drag while holding to change the selected portion | BLOCKED | The emulator input API could not reproduce the app-specific stationary hold-then-drag gesture; no product failure is inferred from this attempt. | The user-facing control was not available to this emulator run. |
 | B4 | B4 | Copy then paste within the calculator | PASS | CALCULATOR \| 1,23,456 \| = 1,23,456 | Copy then Paste restored the digits within the calculator app; external app handoff was intentionally not tested. |
 | B5 | B5 | Cut a held number and type into the gap | PASS | CALCULATOR \| 7 \| = 7 | Cut removed the held number and the next keypad digit became the expression. |
-| B7 | B7 | Clear a held selection with AC | PASS | display=CALCULATOR \| 0; OCR after AC=8:33 © van A MySpace eatcutaror 2) > p v AC % QO 80 a0 Calculator | AC removed the held text and dismissed the floating selection toolbar. |
+| B7 | B7 | Clear a held selection with AC | PASS | display=CALCULATOR \| 0; OCR after AC=8:50 © van A MySpace eatcutaror 2) > p v AC % QO 80 a0 Calculator | AC removed the held text and dismissed the floating selection toolbar. |
 | B9 | B9 | Tap inside a number and insert a digit | PASS | CALCULATOR \| 12,39,456 \| = 12,39,456 | OCR located the expression and a tap 58% across its visible glyph bounds inserted 9 between existing digits. |
 | B11 | B11 | Hold empty expression-box space for caret menu | PASS | OCR caret menu=MUse; Paste; Select all | The screenshot shows the empty-box caret menu; OCR is used because the Android floating menu is omitted from UiAutomator. |
 | C9 | C9 | Verify tapping the expression does not open a device keyboard | PASS | input_method not shown | Android's input-method diagnostics did not report a visible software keyboard after tapping the expression. |
-| E3 | E3 | Open the three-dot menu | PASS | Haptics: On \| Clear memory \| View memory \| Show as fraction \| Key shape \| Effects \| 834 \| © \| 746 \| CALCULATOR \| B \| MySpace \| Haptics: \| On \| Clear \| memory \| View \| memory \| Show \| as \| fraction \| Key \| shape \| AC \| Effects \| fo) \| 5) \| 2 \| e \| a0 \| a \| 80 \| ® \| © \| g \| Calculator \| Clock \| Apps | The overflow menu exposed Effects plus calculator menu actions. This smoke check does not verify the exact item count or reorder behavior. |
+| E3 | E3 | Open the three-dot menu | PASS | Haptics: On \| Clear memory \| View memory \| Show as fraction \| Key shape \| Effects \| 851 \| © \| v.46 \| CALCULATOR \| B \| MySpace \| Haptics: \| On \| Clear \| memory \| View \| memory \| Show \| as \| fraction \| Key \| shape \| AC \| Effects \| fo) \| 5) \| 2 \| e \| a0 \| a \| 80 \| ® \| © \| g \| Calculator \| Clock \| Apps | The overflow menu exposed Effects plus calculator menu actions. This smoke check does not verify the exact item count or reorder behavior. |
 | C10 | C10 | Open key-shape picker and select Circle | PASS | picker=Circle; Squircle; Pill; Rounded square; No shape; selected=Circle | The picker exposed at least four named key silhouettes and accepted a Circle selection. Persistence and pixel-perfect geometry are not inferred from this one view. |
-| H1-H2 | H1/H2 | Switch calculator between Light and Dark themes | ERROR | QaError: Could not find tappable UI label 'AC'; visible labels: ['Haptics: On', 'Clear memory', 'View memory', 'Show as fraction', 'Key shape', 'Effects'] | The probe could not complete; this is not counted as a product pass or a confirmed product defect. |
-| ADS-CALC | Calculator | Scan visible calculator labels for ad indicators | PASS | Scanned 6 visible labels; no ad indicator | No ad-like text appeared on the sampled calculator screen; this does not certify the app's network or SDK behavior. |
+| H1-H2 | H1/H2 | Switch calculator between Light and Dark themes | BLOCKED | Could not return to the calculator after changing theme: ['MySpace home', 'MySpace', 'Settings', '🌤️ Good morning', '8:52:11 AM', 'TUE, 27TH OCTOBER', 'ALARMS', '＋ Add', 'Alarm', 'No alarms yet', 'Add an alarm', 'Your shortcuts', 'Timer', 'Quick timer', 'Countdown', 'Routines', 'Schedules', 'WORLD CLOCKS', '＋ Add time zone', 'World time', 'Apps', 'Clock', 'Reminders'] | The user-facing control was not available to this emulator run. |
+| ADS-CALC | Calculator | Scan visible calculator labels for ad indicators | PASS | Scanned 23 visible labels; no ad indicator | No ad-like text appeared on the sampled calculator screen; this does not certify the app's network or SDK behavior. |
 
 Screenshots and UI hierarchy XML are in `evidence/`; calculator case JSON is under `calculator/`.

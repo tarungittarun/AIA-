@@ -11,8 +11,8 @@
 
 | ID | Section | User action | Outcome | Observed | Comment |
 |---|---|---|---|---|---|
-| B12 | B12 | Store a number with MAdd and use it in an expression | FAIL | after MUse=CALCULATOR \| 3+41,23,456 \| = 41,23,459 | MUse did not replace only the held 4 with the previously stored 123456. |
-| E3-MEMORY | E3 | Open the calculator memory list | PASS | Memory \| Close memory \| 1,23,456 \| Move up from place 1 \| Move down from place 1 \| 825 \| © \| v.46 \| a \| MySpace \| catcutaTor \| Memory \| R \| 1,23,456 \| 59 \| 45 \| e \| a0 \| a \| 80 \| Calculator \| Apps \| Clock | The calculator's memory list displayed the value saved through MAdd. |
+| B12 | B12 | Store a number with MAdd and use it in an expression | FAIL | after MUse=CALCULATOR \| 3+1,23,456 \| = 1,23,459; after equals=CALCULATOR \| 1,23,459 | The stored value appeared in the expression but the calculator did not evaluate the expected sum 123459. |
+| E3-MEMORY | E3 | Open the calculator memory list | PASS | Memory \| Close memory \| 1,23,456 \| Move up from place 1 \| Move down from place 1 \| 842 \| © \| eat \| CALCULATOR \| B \| MySpace \| > \| 159 \| Memory \| 1,23,456 \| e \| a0 \| ® \| a \| 80 \| © \| Calculator \| Apps \| Clock | The calculator's memory list displayed the value saved through MAdd. |
 | E4 | E4 | Choose a calculator keypress effect | PASS | choices=✓ Spring · bounce back with overshoot; Pulse · quick fade pulse; bounce; Pulse; fade; pulse; selected one option | The Effects picker exposed user-selectable calculator animation options. This smoke test confirms access and selection, not frame-by-frame animation timing. |
 
 Screenshots and UI hierarchy XML are in `evidence/`; calculator case JSON is under `calculator/`.
