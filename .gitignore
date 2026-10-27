@@ -1,6 +1,10 @@
 # Runtime-generated Android E2E reports, screenshots, and UI hierarchy dumps
 /reports/e2e/
 
+# Temporary downloads of GitHub Actions proof artifacts
+/reports/evidence/incoming/
+/reports/evidence/incoming-v3.12.35/
+
 # Python bytecode from the lightweight QA harness
 __pycache__/
 *.py[cod]

@@ -1,0 +1,86 @@
+name: Publish MySpace v3.12.35 user QA PDF and proof bundle
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: GitHub Actions run ID that produced the three direct APK evidence shards
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  publish-report:
+    name: Build and publish the user-facing PDF
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Check out the session branch
+        uses: actions/checkout@v4
+
+      - name: Confirm publication stays on the session branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_REF_NAME" != "arena/e4dfeee3-aia" ]]; then
+            echo "Refusing to publish on unexpected branch: $GITHUB_REF_NAME" >&2
+            exit 2
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PDF generator
+        run: python -m pip install --disable-pip-version-check 'reportlab>=4,<5' 'pypdf>=5,<7'
+
+      - name: Download the three direct APK evidence shards
+        uses: actions/download-artifact@v4
+        with:
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: myspace-user-v3.12.35-shard-*
+          merge-multiple: false
+          path: reports/evidence/incoming-v3.12.35
+
+      - name: Build the PDF and preserve original evidence
+        env:
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+        run: |
+          set -euo pipefail
+          python3 qa/build_myspace_user_pdf.py \
+            --artifact-root reports/evidence/incoming-v3.12.35 \
+            --output reports/myspace-user-qa-v3.12.35-72.pdf \
+            --evidence-output reports/evidence/v3.12.35-72 \
+            --source-run-id "$SOURCE_RUN_ID"
+          python3 - <<'PY'
+          from pathlib import Path
+          from pypdf import PdfReader
+          path = Path('reports/myspace-user-qa-v3.12.35-72.pdf')
+          data = path.read_bytes()
+          assert data.startswith(b'%PDF-'), 'missing PDF signature'
+          reader = PdfReader(str(path))
+          assert len(reader.pages) >= 10, f'unexpectedly short report: {len(reader.pages)} pages'
+          embedded = sum(len(page.images) for page in reader.pages)
+          assert embedded >= 6, f'expected original screenshots to be embedded, found {embedded}'
+          print(f'PDF verified: {len(reader.pages)} pages, {embedded} embedded screenshots, {len(data):,} bytes')
+          PY
+
+      - name: Publish PDF and proof bundle on the session branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/myspace-user-qa-v3.12.35-72.pdf reports/evidence/v3.12.35-72/
+          if git diff --cached --quiet; then
+            echo "No PDF or evidence updates to publish."
+          else
+            git commit -m "Publish MySpace v3.12.35 user APK QA report"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi

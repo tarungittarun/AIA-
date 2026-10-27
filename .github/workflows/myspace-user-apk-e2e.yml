@@ -1,0 +1,169 @@
+name: MySpace v3.12.35 user-facing APK QA
+
+on:
+  push:
+    branches: [arena/e4dfeee3-aia]
+    paths:
+      - .github/workflows/myspace-user-apk-e2e.yml
+      - qa/myspace_user_qa.py
+      - qa/test_myspace_user_qa.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: myspace-user-apk-qa-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  apk-user-journeys:
+    name: ${{ matrix.title }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        include:
+          - shard: 1
+            title: MySpace calculator and editing journeys
+            suite: myspace-core
+            package: app.space.one
+            apk: MySpace-v3.12.35-72-lite-dist.apk
+            sha256: f3257177dc098cf62f54a6f77df526195323d36b23ed5a69f9ff07ddf96b45fb
+          - shard: 2
+            title: MySpace app navigation and feature screens
+            suite: myspace-modules
+            package: app.space.one
+            apk: MySpace-v3.12.35-72-lite-dist.apk
+            sha256: f3257177dc098cf62f54a6f77df526195323d36b23ed5a69f9ff07ddf96b45fb
+          - shard: 3
+            title: Standalone MyCalc user flows
+            suite: mycalc
+            package: app.space.calc
+            apk: MyCalc-v1.0.33-34.apk
+            sha256: 99c65435e455e241dd3eb65ea6494abcabf2099f5024f6a82c6cf8a621a6bf6b
+
+    steps:
+      - name: Check out the QA harness
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Unit-test the user-facing QA harness
+        run: python3 -m unittest discover -s qa -p 'test_*.py'
+
+      - name: Install screenshot OCR fallback
+        shell: bash
+        run: |
+          if ! command -v tesseract >/dev/null 2>&1; then
+            if ! sudo apt-get update -qq || ! sudo apt-get install --no-install-recommends -y tesseract-ocr; then
+              echo "::warning::Tesseract could not be installed; UI hierarchy checks and screenshots will still run."
+            fi
+          fi
+          if command -v tesseract >/dev/null 2>&1; then
+            tesseract --version | head -n 1
+          else
+            echo "::warning::Screenshot OCR fallback unavailable because Tesseract is missing."
+          fi
+
+      - name: Check out pinned guide and release APKs
+        uses: actions/checkout@v4
+        with:
+          repository: tarungittarun/TicTic
+          ref: 0727a2e3b9974d6df70153d76dc8e629e0a0b839
+          path: linked-source
+          sparse-checkout: |
+            TEST-GUIDE.md
+            artifacts/MySpace-v3.12.35-72-lite-dist.apk
+            artifacts/MyCalc-v1.0.33-34.apk
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Verify guide and exact APK identities
+        shell: bash
+        env:
+          EXPECTED_APK: ${{ matrix.apk }}
+          EXPECTED_SHA256: ${{ matrix.sha256 }}
+        run: |
+          set -euo pipefail
+          python3 - "$GITHUB_WORKSPACE/linked-source" "$EXPECTED_APK" "$EXPECTED_SHA256" <<'PY'
+          import hashlib
+          import pathlib
+          import sys
+          import zipfile
+
+          root = pathlib.Path(sys.argv[1])
+          expected_apk = sys.argv[2]
+          expected_sha = sys.argv[3]
+          pins = {
+              "TEST-GUIDE.md": "d494cf934f12f0c5b1e77da2254d026438d1c10d233c9b53e4620beb7014db92",
+              "artifacts/MySpace-v3.12.35-72-lite-dist.apk": "f3257177dc098cf62f54a6f77df526195323d36b23ed5a69f9ff07ddf96b45fb",
+              "artifacts/MyCalc-v1.0.33-34.apk": "99c65435e455e241dd3eb65ea6494abcabf2099f5024f6a82c6cf8a621a6bf6b",
+          }
+          for relative, digest in pins.items():
+              path = root / relative
+              actual = hashlib.sha256(path.read_bytes()).hexdigest()
+              if actual != digest:
+                  raise SystemExit(f"SHA-256 mismatch for {relative}: expected {digest}, got {actual}")
+              if path.suffix == ".apk":
+                  with zipfile.ZipFile(path) as archive:
+                      bad = archive.testzip()
+                  if bad:
+                      raise SystemExit(f"APK ZIP integrity error in {relative}: {bad}")
+              print(f"Verified {relative}: {actual} ({path.stat().st_size:,} bytes)")
+          apk_relative = f"artifacts/{expected_apk}"
+          actual_apk = hashlib.sha256((root / apk_relative).read_bytes()).hexdigest()
+          if actual_apk != expected_sha:
+              raise SystemExit(f"Matrix APK pin mismatch: {actual_apk} != {expected_sha}")
+          print(f"Verified requested test APK: {apk_relative}")
+          PY
+          echo "APK_PATH=$GITHUB_WORKSPACE/linked-source/artifacts/$EXPECTED_APK" >> "$GITHUB_ENV"
+          echo "EXPECTED_APK_SHA256=$EXPECTED_SHA256" >> "$GITHUB_ENV"
+          {
+            echo '### Inputs pinned and verified'
+            echo '- Guide and both binaries are pinned to source commit `0727a2e3b9974d6df70153d76dc8e629e0a0b839`.'
+            echo '- MySpace `3.12.35` / code `72` / package `app.space.one`.'
+            echo '- Standalone MyCalc `1.0.33` / code `34` / package `app.space.calc`.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Boot Android 14 and run user-facing APK journeys
+        uses: ReactiveCircus/android-emulator-runner@v2
+        env:
+          QA_SUITE: ${{ matrix.suite }}
+          QA_PACKAGE: ${{ matrix.package }}
+          QA_REPORT_DIR: reports/e2e/user-v3.12.35-shard-${{ matrix.shard }}
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          cores: 4
+          ram-size: 3072M
+          disable-animations: true
+          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect
+          script: >-
+            python3 -u qa/myspace_user_qa.py
+            --apk "$APK_PATH"
+            --package "$QA_PACKAGE"
+            --expected-sha256 "$EXPECTED_APK_SHA256"
+            --suite "$QA_SUITE"
+            --report-dir "$QA_REPORT_DIR"
+
+      - name: Upload direct APK screenshots, hierarchies and results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: myspace-user-v3.12.35-shard-${{ matrix.shard }}-${{ github.run_number }}
+          path: reports/e2e/user-v3.12.35-shard-${{ matrix.shard }}/
+          if-no-files-found: warn
+          retention-days: 60
