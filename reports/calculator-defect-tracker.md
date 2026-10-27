@@ -1,5 +1,7 @@
 # MySpace Calculator — Defect Tracker & E2E QA Report
 
+> **Current release addendum (27 October 2026):** The calculator-only direct APK QA for **MySpace 3.12.39 (76) / MyCalc 1.0.37 (38)** is recorded in [`calculator-defect-tracker-v3.12.39-76.md`](calculator-defect-tracker-v3.12.39-76.md), with screenshots and provenance in [`myspace-calculator-qa-v3.12.39-76.pdf`](myspace-calculator-qa-v3.12.39-76.pdf). The older report below is retained verbatim as historical context; its run numbers and version-specific claims are not superseded or rewritten.
+
 **Report ID:** `CALC-QA-2026-10-26-01`
 **Prepared:** 26 October 2026 (Asia/Kolkata)
 **Status:** Active — runs 19, 20, and 23 reached calculator E2E tests on Android 14 Google APIs ATD. Run 23 validated both alternate recovery paths: standard UIAutomator recovered after malformed compressed output, and one bounded emulator reboot recovered navigation after a persistent system ANR. TC-CALC-001–004 passed again; TC-CALC-008 now confirms the chained-precision failure. TC-CALC-005/006/009 still show uncommitted or undelivered input, TC-CALC-007 and TC-CALC-010 have no visible annotations, and Google Calculator parity is not established.
