@@ -6,6 +6,7 @@ from myspace_user_qa import (
     EXPECTED_VERSION,
     PINNED_APK_SHA256,
     PINNED_GUIDE_SHA256,
+    PINNED_SOURCE_COMMIT,
     STANDALONE_PACKAGE,
     UserQa,
     case_insensitive_match,
@@ -17,16 +18,17 @@ class UserQaContractTests(unittest.TestCase):
     def test_release_hashes_and_version_codes_are_pinned(self):
         self.assertEqual(
             PINNED_APK_SHA256[DEFAULT_PACKAGE],
-            "f3257177dc098cf62f54a6f77df526195323d36b23ed5a69f9ff07ddf96b45fb",
+            "7ae98fd05c25554c3b90c32fbc2aeda789c25d0551fab81d071e804106a2a2ad",
         )
         self.assertEqual(
             PINNED_APK_SHA256[STANDALONE_PACKAGE],
-            "99c65435e455e241dd3eb65ea6494abcabf2099f5024f6a82c6cf8a621a6bf6b",
+            "09b1dc8f91ac249643cb92aa74670fdd2db8430af6c0b8c7052d8e906efcf1d4",
         )
         self.assertEqual(PINNED_GUIDE_SHA256,
-                         "d494cf934f12f0c5b1e77da2254d026438d1c10d233c9b53e4620beb7014db92")
-        self.assertEqual(EXPECTED_VERSION[DEFAULT_PACKAGE], ("3.12.35", 72))
-        self.assertEqual(EXPECTED_VERSION[STANDALONE_PACKAGE], ("1.0.33", 34))
+                         "a3d0b131c7beb99f8bc12712eebf8c01e5a8873de7996a23f943905768578fc4")
+        self.assertEqual(PINNED_SOURCE_COMMIT, "a09e52f2c3f141bfc2d3a95f667a38fcac08b54a")
+        self.assertEqual(EXPECTED_VERSION[DEFAULT_PACKAGE], ("3.12.39", 76))
+        self.assertEqual(EXPECTED_VERSION[STANDALONE_PACKAGE], ("1.0.37", 38))
 
     def test_core_case_set_covers_all_myspace_calculator_ids(self):
         self.assertEqual(CALCULATOR_CASES[DEFAULT_PACKAGE],

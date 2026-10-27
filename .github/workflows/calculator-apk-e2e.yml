@@ -1,13 +1,8 @@
 name: MySpace v3.12.24-61 Test Guide E2E QA
 
 on:
-  push:
-    branches: [arena/e4dfeee3-aia]
-    paths:
-      - .github/workflows/calculator-apk-e2e.yml
-      - qa/calculator_e2e.py
-      - qa/test_calculator_e2e.py
-      - qa/run_prebooted_emulator_e2e.sh
+  # Retained as a manually dispatched historical v3.12.24 regression workflow.
+  # The current release workflow owns automatic APK testing with a three-runner cap.
   workflow_dispatch:
 
 permissions:

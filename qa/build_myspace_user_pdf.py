@@ -32,15 +32,15 @@ from reportlab.platypus import (
     TableStyle,
 )
 
-SOURCE_COMMIT = "0727a2e3b9974d6df70153d76dc8e629e0a0b839"
-GUIDE_SHA256 = "d494cf934f12f0c5b1e77da2254d026438d1c10d233c9b53e4620beb7014db92"
-MYSPACE_SHA256 = "f3257177dc098cf62f54a6f77df526195323d36b23ed5a69f9ff07ddf96b45fb"
-MYCALC_SHA256 = "99c65435e455e241dd3eb65ea6494abcabf2099f5024f6a82c6cf8a621a6bf6b"
-GUIDE_URL = "https://github.com/tarungittarun/TicTic/blob/0727a2e3b9974d6df70153d76dc8e629e0a0b839/TEST-GUIDE.md"
-MYSPACE_URL = "https://github.com/tarungittarun/TicTic/raw/0727a2e3b9974d6df70153d76dc8e629e0a0b839/artifacts/MySpace-v3.12.35-72-lite-dist.apk"
-MYCALC_URL = "https://github.com/tarungittarun/TicTic/raw/0727a2e3b9974d6df70153d76dc8e629e0a0b839/artifacts/MyCalc-v1.0.33-34.apk"
-TESTS_RUN_URL = "https://github.com/tarungittarun/TicTic/actions/runs/40461608769"
-ANDROID_CI_RUN_URL = "https://github.com/tarungittarun/TicTic/actions/runs/40461608678"
+SOURCE_COMMIT = "a09e52f2c3f141bfc2d3a95f667a38fcac08b54a"
+GUIDE_SHA256 = "a3d0b131c7beb99f8bc12712eebf8c01e5a8873de7996a23f943905768578fc4"
+MYSPACE_SHA256 = "7ae98fd05c25554c3b90c32fbc2aeda789c25d0551fab81d071e804106a2a2ad"
+MYCALC_SHA256 = "09b1dc8f91ac249643cb92aa74670fdd2db8430af6c0b8c7052d8e906efcf1d4"
+GUIDE_URL = "https://github.com/tarungittarun/TicTic/blob/a09e52f2c3f141bfc2d3a95f667a38fcac08b54a/TEST-GUIDE.md"
+MYSPACE_URL = "https://github.com/tarungittarun/TicTic/raw/a09e52f2c3f141bfc2d3a95f667a38fcac08b54a/artifacts/MySpace-v3.12.39-76-lite-dist.apk"
+MYCALC_URL = "https://github.com/tarungittarun/TicTic/raw/a09e52f2c3f141bfc2d3a95f667a38fcac08b54a/artifacts/MyCalc-v1.0.37-38.apk"
+TESTS_RUN_URL = "https://github.com/tarungittarun/TicTic/actions/runs/40504883690"
+ANDROID_CI_RUN_URL = "https://github.com/tarungittarun/TicTic/actions/runs/40504883668"
 
 NAVY = colors.HexColor("#18345d")
 BLUE = colors.HexColor("#1d5fa7")
@@ -184,9 +184,21 @@ def load_reports(root: Path) -> list[tuple[Path, dict[str, Any]]]:
             raise ReportError(f"Unexpected upstream commit in {path}")
         if data.get("source", {}).get("guide_sha256") != GUIDE_SHA256:
             raise ReportError(f"Guide hash mismatch in {path}")
-        expected = MYSPACE_SHA256 if data.get("artifact", {}).get("package") == "app.space.one" else MYCALC_SHA256
-        if data.get("artifact", {}).get("sha256") != expected:
-            raise ReportError(f"Unexpected APK SHA-256 in {path}: {data.get('artifact', {}).get('sha256')}")
+        artifact = data.get("artifact", {})
+        package = artifact.get("package")
+        expected_identity = {
+            "app.space.one": ("3.12.39", 76, "MySpace-v3.12.39-76-lite-dist.apk", MYSPACE_SHA256),
+            "app.space.calc": ("1.0.37", 38, "MyCalc-v1.0.37-38.apk", MYCALC_SHA256),
+        }
+        if package not in expected_identity:
+            raise ReportError(f"Unexpected APK package in {path}: {package!r}")
+        version_name, version_code, filename, expected_sha = expected_identity[package]
+        if artifact.get("sha256") != expected_sha:
+            raise ReportError(f"Unexpected APK SHA-256 in {path}: {artifact.get('sha256')}")
+        if artifact.get("version_name") != version_name or artifact.get("version_code") != version_code:
+            raise ReportError(f"Installed package version mismatch in {path}: {artifact.get('version_name')} ({artifact.get('version_code')})")
+        if artifact.get("file") != filename:
+            raise ReportError(f"Unexpected APK filename in {path}: {artifact.get('file')!r}")
         reports.append((path, data))
     return reports
 
@@ -378,12 +390,12 @@ def build(args: argparse.Namespace) -> None:
     doc = SimpleDocTemplate(
         str(args.output), pagesize=A4, rightMargin=17 * mm, leftMargin=17 * mm,
         topMargin=19 * mm, bottomMargin=18 * mm,
-        title="MySpace 3.12.35 / MyCalc 1.0.33 calculator-focused APK QA",
+        title="MySpace 3.12.39 / MyCalc 1.0.37 calculator-focused APK QA",
         author="Arena Agent Mode QA",
         subject="Direct black-box Android APK testing with original screenshots and provenance",
     )
     story: list[Any] = []
-    story.append(Paragraph("MySpace 3.12.35 (72)<br/>Standalone MyCalc 1.0.33 (34)", styles["title"]))
+    story.append(Paragraph("MySpace 3.12.39 (76)<br/>Standalone MyCalc 1.0.37 (38)", styles["title"]))
     story.append(Paragraph("Calculator-only Android APK QA · direct user journeys, findings, and coverage boundaries", styles["subtitle"]))
     story.append(Paragraph(f"<b>REPORT DATE:</b> 27 OCTOBER 2026&nbsp;&nbsp; | &nbsp;&nbsp;<b>DEVICE:</b> {device}&nbsp;&nbsp; | &nbsp;&nbsp;<b>DIRECT RUN:</b> {esc(source_run)}", styles["small"]))
     story.append(Spacer(1, 5))
@@ -401,16 +413,20 @@ def build(args: argparse.Namespace) -> None:
         "This report stays on the <b>calculator UI</b>: entering and editing expressions, trying selection and clipboard actions, storing/using memory, replaying history, and changing calculator options such as key shape, effects, and theme. It does not test Notes, Scanner, Calendar, or other MySpace apps. Every direct finding is tied to the APK SHA-256, pinned guide snapshot, Android Actions run, and saved screenshot/UI hierarchy. Where a floating control is absent from Android's accessibility tree, the test uses screenshot OCR or labels the probe BLOCKED rather than inventing a failure.", styles["body"]
     ))
     story.append(Paragraph(
-        "<b>Interpretation rule:</b> PASS/FAIL are direct assertions against the installed binaries. BLOCKED means the emulator or accessibility surface prevented a fair assertion. NOT RUN means no direct APK test was attempted. Green upstream CI is useful corroboration, but it is separately labeled source-CI—not converted into an APK pass.", styles["body"]
+        "<b>Interpretation rule:</b> PASS/FAIL are direct assertions against the installed binaries. BLOCKED means the emulator or accessibility surface prevented a fair assertion. NOT RUN means no direct APK test was attempted. Upstream source-CI successes or failures are reported separately and never converted into APK outcomes.", styles["body"]
     ))
     story.append(Paragraph("Build identity and provenance", styles["h1"]))
     identity_rows = [
         ["Artifact", "Package / version", "Size", "SHA-256"],
-        ["MySpace-v3.12.35-72-lite-dist.apk", "app.space.one · 3.12.35 (72)", f"{myspace_data['artifact'].get('size_bytes', 0):,} bytes", MYSPACE_SHA256],
-        ["MyCalc-v1.0.33-34.apk", "app.space.calc · 1.0.33 (34)", f"{mycalc_data['artifact'].get('size_bytes', 0):,} bytes", MYCALC_SHA256],
-        ["TEST-GUIDE.md", f"source commit {SOURCE_COMMIT}", "11,842 bytes", GUIDE_SHA256],
+        ["MySpace-v3.12.39-76-lite-dist.apk", "app.space.one · 3.12.39 (76)", f"{myspace_data['artifact'].get('size_bytes', 0):,} bytes", MYSPACE_SHA256],
+        ["MyCalc-v1.0.37-38.apk", "app.space.calc · 1.0.37 (38)", f"{mycalc_data['artifact'].get('size_bytes', 0):,} bytes", MYCALC_SHA256],
+        ["TEST-GUIDE.md", f"source commit {SOURCE_COMMIT}", "13,555 bytes", GUIDE_SHA256],
     ]
     story.append(table(identity_rows, [54 * mm, 42 * mm, 24 * mm, available_width - 120 * mm], styles))
+    story.append(Paragraph(
+        "<b>Version alignment:</b> The guide copy pasted into chat is headed MySpace 3.12.23 (60) / MyCalc 1.0.21 (22), older than the supplied MySpace APK. To avoid cross-release claims, this run uses the matching guide at the pinned source commit above, headed MySpace 3.12.39 (76) / MyCalc 1.0.37 (38).",
+        styles["small"],
+    ))
     story.append(Spacer(1, 5))
     story.append(Paragraph(
         f"<b>Guide:</b> <link href='{GUIDE_URL}' color='{BLUE.hexval()}'>pinned A–H user test guide</link><br/>"
@@ -424,13 +440,13 @@ def build(args: argparse.Namespace) -> None:
 
     story.append(PageBreak())
     story.append(Paragraph("1. Direct calculator results", styles["h1"]))
-    story.append(Paragraph("MySpace · app.space.one · 3.12.35 (72)", styles["h2"]))
+    story.append(Paragraph("MySpace · app.space.one · 3.12.39 (76)", styles["h2"]))
     rows = [["Case", "Status", "Expected", "Observed / user-visible note"]]
     for row in myspace_calc:
         rows.append([row.get("id", ""), status_badge(str(row.get("status", "")), styles["table"]), row.get("expected", ""), f"{row.get('actual', '')}\n{row.get('comment', '')}"])
     story.append(table(rows, [20 * mm, 18 * mm, 39 * mm, available_width - 77 * mm], styles))
     story.append(Spacer(1, 8))
-    story.append(Paragraph("Standalone MyCalc · app.space.calc · 1.0.33 (34)", styles["h2"]))
+    story.append(Paragraph("Standalone MyCalc · app.space.calc · 1.0.37 (38)", styles["h2"]))
     rows = [["Case", "Status", "Expected", "Observed / user-visible note"]]
     for row in mycalc_calc:
         rows.append([row.get("id", ""), status_badge(str(row.get("status", "")), styles["table"]), row.get("expected", ""), f"{row.get('actual', '')}\n{row.get('comment', '')}"])
@@ -467,8 +483,8 @@ def build(args: argparse.Namespace) -> None:
     story.append(Paragraph("3. Calculator-guide coverage: what this run proves", styles["h1"]))
     coverage = [
         ["Guide", "Direct calculator evidence", "Boundary / not claimed"],
-        ["B · Editing/memory", "Long-press selection is screenshot-OCR checked; calculator-only copy/paste and cut are attempted; AC clear, mid-number insertion, caret menu, and MAdd→MUse are probed.", "B2 continuous hold-then-drag is blocked if adb cannot reproduce the app's custom hold gesture. Handle dragging, all margins, scroll arbitration, and external-app paste are not claimed unless their rows pass."],
-        ["C · Expression", "No-keyboard check, key-shape picker, calculator entry/editing, percent and scientific-key examples are reported from installed APK actions.", "Pixel-level caret blink, exact LED colors, whole-line autoscroll, and every bracket/cursor edge case are not certified."],
+        ["B · Editing/memory", "Long-press selection is screenshot-OCR checked; in-calculator copy/paste and cut are attempted; AC clear, tap-to-release plus caret insertion, mid-number insertion, caret menu, and both selected-value replacement and empty-caret MUse are probed.", "B2 continuous hold-then-drag is blocked if adb cannot reproduce the app's custom hold gesture. Handle dragging, all margins, scroll arbitration, and external-app paste are not claimed unless their rows pass."],
+        ["C · Expression", "No-keyboard check, key-shape and key-theme pickers, calculator entry/editing, percent and scientific-key examples are reported from installed APK actions.", "Pixel-level caret blink, exact LED colors, whole-line autoscroll, every bracket/cursor edge case, and exhaustive verification of all eight key-theme choices are not certified."],
         ["D · Calculator", "Selected D1–D9 behavior, history replay, arithmetic and scientific cases are exercised on the installed binaries; observed values are in the result tables.", "D10 timing/race and an official Google Calculator comparison are not claimed as passes; no AOSP substitute is used."],
         ["E · History/effects", "History persistence/replay, calculator memory list, overflow actions, and opening/selecting an Effects option are probed.", "Memory reordering and frame-by-frame animation behavior are not claimed unless explicitly observed in the run."],
         ["F · Standalone", "The standalone MyCalc binary is directly launched and its calculator flows are tested; its requested permissions come from the installed PackageManager dump.", "The guide's literal zero-requested-permissions wording is checked separately from dangerous/runtime permission prompts."],
@@ -480,7 +496,7 @@ def build(args: argparse.Namespace) -> None:
         "<b>Ads:</b> The label scan is limited to sampled calculator screens. A clean visible-text scan is not a network-level, whole-app or third-party SDK audit; this report does not make a broader ad-free certification.", styles["body"]
     ))
     story.append(Paragraph(
-        "<b>Source-CI corroboration (separate evidence):</b> At the exact source commit, the upstream <link href='{0}' color='{1}'>Tests workflow</link> completed green, including its JVM/end-to-end and UI emulator jobs; the <link href='{2}' color='{1}'>Android CI workflow</link> also completed green for Python source contracts, unit tests and a debug build. These are source-build results, not direct tests of the two distributed binaries used above.".format(TESTS_RUN_URL, BLUE.hexval(), ANDROID_CI_RUN_URL), styles["body"]
+        "<b>Source-CI context (separate evidence):</b> At the pinned source commit, the upstream <link href='{0}' color='{1}'>Tests workflow</link> completed with a failure in its UI emulator end-to-end job; its source-contract and JVM unit/end-to-end jobs passed. The <link href='{2}' color='{1}'>Android CI workflow</link> succeeded for Python source contracts and the debug build. These are source-level results—not direct tests of the distributed APKs—and are not counted as APK outcomes.".format(TESTS_RUN_URL, BLUE.hexval(), ANDROID_CI_RUN_URL), styles["body"]
     ))
 
     story.append(PageBreak())
@@ -529,14 +545,19 @@ def build(args: argparse.Namespace) -> None:
         ("myspace-core", "user-b2.png", "B2 · hold-then-drag result / emulator limitation"),
         ("myspace-core", "user-b4.png", "B4 · in-calculator copy/paste"),
         ("myspace-core", "user-b5.png", "B5 · cut then type"),
+        ("myspace-core", "user-b6.png", "B6 · tap inside selection to release it and insert at the caret"),
         ("myspace-core", "user-b9.png", "B9 · mid-number caret insertion"),
         ("myspace-core", "user-b11.png", "B11 · empty-box caret menu"),
         ("myspace-core", "h1-light-theme.png", "H1 · Light theme screenshot"),
         ("myspace-core", "h2-dark-theme.png", "H2 · Dark theme screenshot"),
         ("myspace-core", "user-c10.png", "C10 · key-shape picker"),
-        ("myspace-features", "user-b12.png", "B12 · MAdd then MUse result"),
+        ("myspace-features", "user-b12.png", "B12 · MAdd then selected-operand MUse result"),
+        ("myspace-features", "user-b12-caret.png", "B12 · empty-caret MUse insertion result"),
+        ("myspace-features", "user-b12-caret-menu.png", "B12 · caret menu exposes MUse and Paste"),
+        ("myspace-features", "user-c11-key-theme-rose.png", "C11 · calculator after selecting the Rose key theme"),
         ("myspace-features", "user-e3-memory.png", "E3 · calculator memory list"),
         ("myspace-features", "user-e4.png", "E4 · effects picker and selection"),
+        ("myspace-features", "user-c11.png", "C11 · key-theme selection outcome"),
         ("mycalc", "user-f-header.png", "F · standalone MyCalc screen"),
         ("mycalc", "user-b1.png", "MyCalc · selection toolbar, verified from screenshot OCR"),
         ("mycalc", "user-b9.png", "MyCalc · OCR-targeted mid-number insertion"),

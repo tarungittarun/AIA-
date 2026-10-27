@@ -1,4 +1,4 @@
-name: Calculator-focused APK QA · MySpace 3.12.35 and MyCalc 1.0.33
+name: Calculator-focused APK QA · MySpace 3.12.39 and MyCalc 1.0.37
 
 on:
   push:
@@ -32,20 +32,20 @@ jobs:
             title: MySpace calculator and editing journeys
             suite: myspace-core
             package: app.space.one
-            apk: MySpace-v3.12.35-72-lite-dist.apk
-            sha256: f3257177dc098cf62f54a6f77df526195323d36b23ed5a69f9ff07ddf96b45fb
+            apk: MySpace-v3.12.39-76-lite-dist.apk
+            sha256: 7ae98fd05c25554c3b90c32fbc2aeda789c25d0551fab81d071e804106a2a2ad
           - shard: 2
             title: MySpace calculator memory and customization
             suite: myspace-features
             package: app.space.one
-            apk: MySpace-v3.12.35-72-lite-dist.apk
-            sha256: f3257177dc098cf62f54a6f77df526195323d36b23ed5a69f9ff07ddf96b45fb
+            apk: MySpace-v3.12.39-76-lite-dist.apk
+            sha256: 7ae98fd05c25554c3b90c32fbc2aeda789c25d0551fab81d071e804106a2a2ad
           - shard: 3
             title: Standalone MyCalc calculator flows
             suite: mycalc
             package: app.space.calc
-            apk: MyCalc-v1.0.33-34.apk
-            sha256: 99c65435e455e241dd3eb65ea6494abcabf2099f5024f6a82c6cf8a621a6bf6b
+            apk: MyCalc-v1.0.37-38.apk
+            sha256: 09b1dc8f91ac249643cb92aa74670fdd2db8430af6c0b8c7052d8e906efcf1d4
 
     steps:
       - name: Check out the QA harness
@@ -80,12 +80,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: tarungittarun/TicTic
-          ref: 0727a2e3b9974d6df70153d76dc8e629e0a0b839
+          ref: a09e52f2c3f141bfc2d3a95f667a38fcac08b54a
           path: linked-source
           sparse-checkout: |
             TEST-GUIDE.md
-            artifacts/MySpace-v3.12.35-72-lite-dist.apk
-            artifacts/MyCalc-v1.0.33-34.apk
+            artifacts/MySpace-v3.12.39-76-lite-dist.apk
+            artifacts/MyCalc-v1.0.37-38.apk
           sparse-checkout-cone-mode: false
           persist-credentials: false
 
@@ -106,9 +106,9 @@ jobs:
           expected_apk = sys.argv[2]
           expected_sha = sys.argv[3]
           pins = {
-              "TEST-GUIDE.md": "d494cf934f12f0c5b1e77da2254d026438d1c10d233c9b53e4620beb7014db92",
-              "artifacts/MySpace-v3.12.35-72-lite-dist.apk": "f3257177dc098cf62f54a6f77df526195323d36b23ed5a69f9ff07ddf96b45fb",
-              "artifacts/MyCalc-v1.0.33-34.apk": "99c65435e455e241dd3eb65ea6494abcabf2099f5024f6a82c6cf8a621a6bf6b",
+              "TEST-GUIDE.md": "a3d0b131c7beb99f8bc12712eebf8c01e5a8873de7996a23f943905768578fc4",
+              "artifacts/MySpace-v3.12.39-76-lite-dist.apk": "7ae98fd05c25554c3b90c32fbc2aeda789c25d0551fab81d071e804106a2a2ad",
+              "artifacts/MyCalc-v1.0.37-38.apk": "09b1dc8f91ac249643cb92aa74670fdd2db8430af6c0b8c7052d8e906efcf1d4",
           }
           for relative, digest in pins.items():
               path = root / relative
@@ -131,9 +131,9 @@ jobs:
           echo "EXPECTED_APK_SHA256=$EXPECTED_SHA256" >> "$GITHUB_ENV"
           {
             echo '### Inputs pinned and verified'
-            echo '- Guide and both binaries are pinned to source commit `0727a2e3b9974d6df70153d76dc8e629e0a0b839`.'
-            echo '- MySpace `3.12.35` / code `72` / package `app.space.one`.'
-            echo '- Standalone MyCalc `1.0.33` / code `34` / package `app.space.calc`.'
+            echo '- Guide and both binaries are pinned to source commit `a09e52f2c3f141bfc2d3a95f667a38fcac08b54a`.'
+            echo '- MySpace `3.12.39` / code `76` / package `app.space.one`.'
+            echo '- Standalone MyCalc `1.0.37` / code `38` / package `app.space.calc`.'
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Enable KVM
@@ -147,7 +147,7 @@ jobs:
         env:
           QA_SUITE: ${{ matrix.suite }}
           QA_PACKAGE: ${{ matrix.package }}
-          QA_REPORT_DIR: reports/e2e/user-v3.12.35-shard-${{ matrix.shard }}
+          QA_REPORT_DIR: reports/e2e/user-v3.12.39-shard-${{ matrix.shard }}
         with:
           api-level: 34
           arch: x86_64
@@ -168,8 +168,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: myspace-user-v3.12.35-shard-${{ matrix.shard }}-${{ github.run_number }}
-          path: reports/e2e/user-v3.12.35-shard-${{ matrix.shard }}/
+          name: myspace-user-v3.12.39-shard-${{ matrix.shard }}-${{ github.run_number }}
+          path: reports/e2e/user-v3.12.39-shard-${{ matrix.shard }}/
           if-no-files-found: warn
           retention-days: 60
 
@@ -206,9 +206,9 @@ jobs:
       - name: Download this run's three calculator evidence shards
         uses: actions/download-artifact@v4
         with:
-          pattern: myspace-user-v3.12.35-shard-*
+          pattern: myspace-user-v3.12.39-shard-*
           merge-multiple: false
-          path: reports/evidence/incoming-calculator-v3.12.35
+          path: reports/evidence/incoming-calculator-v3.12.39
 
       - name: Build and verify the focused calculator report
         env:
@@ -216,14 +216,14 @@ jobs:
         run: |
           set -euo pipefail
           python3 qa/build_myspace_user_pdf.py \
-            --artifact-root reports/evidence/incoming-calculator-v3.12.35 \
-            --output reports/myspace-calculator-qa-v3.12.35-72.pdf \
-            --evidence-output reports/evidence/calculator-focused-v3.12.35-72 \
+            --artifact-root reports/evidence/incoming-calculator-v3.12.39 \
+            --output reports/myspace-calculator-qa-v3.12.39-76.pdf \
+            --evidence-output reports/evidence/calculator-focused-v3.12.39-76 \
             --source-run-id "$SOURCE_RUN_ID"
           python3 - <<'PY'
           from pathlib import Path
           from pypdf import PdfReader
-          path = Path('reports/myspace-calculator-qa-v3.12.35-72.pdf')
+          path = Path('reports/myspace-calculator-qa-v3.12.39-76.pdf')
           data = path.read_bytes()
           assert data.startswith(b'%PDF-'), 'missing PDF signature'
           reader = PdfReader(str(path))
@@ -239,7 +239,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/myspace-calculator-qa-v3.12.35-72.pdf reports/evidence/calculator-focused-v3.12.35-72/
+          git add reports/myspace-calculator-qa-v3.12.39-76.pdf reports/evidence/calculator-focused-v3.12.39-76/
           if git diff --cached --quiet; then
             echo "No calculator report updates to publish."
           else

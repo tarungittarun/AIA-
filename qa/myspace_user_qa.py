@@ -31,14 +31,14 @@ from calculator_e2e import (
 )
 
 PINNED_APK_SHA256 = {
-    DEFAULT_PACKAGE: "f3257177dc098cf62f54a6f77df526195323d36b23ed5a69f9ff07ddf96b45fb",
-    STANDALONE_PACKAGE: "99c65435e455e241dd3eb65ea6494abcabf2099f5024f6a82c6cf8a621a6bf6b",
+    DEFAULT_PACKAGE: "7ae98fd05c25554c3b90c32fbc2aeda789c25d0551fab81d071e804106a2a2ad",
+    STANDALONE_PACKAGE: "09b1dc8f91ac249643cb92aa74670fdd2db8430af6c0b8c7052d8e906efcf1d4",
 }
-PINNED_GUIDE_SHA256 = "d494cf934f12f0c5b1e77da2254d026438d1c10d233c9b53e4620beb7014db92"
-PINNED_SOURCE_COMMIT = "0727a2e3b9974d6df70153d76dc8e629e0a0b839"
+PINNED_GUIDE_SHA256 = "a3d0b131c7beb99f8bc12712eebf8c01e5a8873de7996a23f943905768578fc4"
+PINNED_SOURCE_COMMIT = "a09e52f2c3f141bfc2d3a95f667a38fcac08b54a"
 EXPECTED_VERSION = {
-    DEFAULT_PACKAGE: ("3.12.35", 72),
-    STANDALONE_PACKAGE: ("1.0.33", 34),
+    DEFAULT_PACKAGE: ("3.12.39", 76),
+    STANDALONE_PACKAGE: ("1.0.37", 38),
 }
 CALCULATOR_CASES = {
     DEFAULT_PACKAGE: {
@@ -132,7 +132,7 @@ class UserQa:
         calc_dir = self.report_dir / "calculator"
         self.qa = CalculatorQa(self.apk, self.package, calc_dir, case_ids=case_ids)
         # calculator_e2e.py keeps the prior release hashes as its defaults for
-        # regression history. Apply the separately verified, immutable v3.12.35
+        # regression history. Apply the separately verified, immutable v3.12.39
         # pin only while the shared black-box cases run.
         with patch.dict(calculator.EXPECTED_APK_SHA256_BY_PACKAGE, {
             self.package: self.expected_sha256,
@@ -154,9 +154,11 @@ class UserQa:
             "package": self.package,
         }
         expected_name, expected_code = EXPECTED_VERSION[self.package]
-        if version_name and version_name.group(1) != expected_name:
+        if not version_name or not version_code:
+            raise QaError(f"Could not read installed PackageManager version identity for {self.package}")
+        if version_name.group(1) != expected_name:
             raise QaError(f"Installed versionName mismatch: expected {expected_name}, got {version_name.group(1)}")
-        if version_code and int(version_code.group(1)) != expected_code:
+        if int(version_code.group(1)) != expected_code:
             raise QaError(f"Installed versionCode mismatch: expected {expected_code}, got {version_code.group(1)}")
 
     @property
@@ -425,11 +427,10 @@ class UserQa:
         if compact(number) not in [compact(value) for value in self.d.display_texts()]:
             raise NotAvailable(f"The expression {number!r} was not visible after keypad entry: {self.d.display_texts()!r}")
 
-    def _show_selection_menu(self) -> list[str]:
+    def _show_selection_menu(self, *, duration_ms: int = 650) -> list[str]:
         self._enter_number()
         x, y = self._text_point(fraction_from_right=0.17)
-        self._hold(x, y)
-        labels = self.d.labels()
+        self._hold(x, y, duration_ms=duration_ms)
         time.sleep(0.25)
         return self.d.labels()
 
@@ -511,7 +512,7 @@ class UserQa:
         self._case("D8", "D8", "Delete one character at the caret", "123 then Backspace leaves 12", d8)
 
         def b1() -> tuple[str, str, str]:
-            labels = self._show_selection_menu()
+            labels = self._show_selection_menu(duration_ms=400)
             _, words = self._ocr_screen("evidence/user-b1-toolbar-ocr.png")
             actions = [name for name in ("Copy", "Cut", "MAdd", "MUse", "Paste", "Select all")
                        if self._ocr_has(words, name)]
@@ -569,7 +570,35 @@ class UserQa:
             return "FAIL", " | ".join(actual), "After Cut and typing 7, the expected single-digit expression was not visible."
         self._case("B5", "B5", "Cut a held number and type into the gap", "Selection is removed; next digit is 7", b5)
 
+        def b6() -> tuple[str, str, str]:
+            self._show_selection_menu()
+            _, selected_words = self._ocr_screen("evidence/user-b6-before-ocr.png")
+            if not (self._ocr_has(selected_words, "Copy") and self._ocr_has(selected_words, "Cut")):
+                raise NotAvailable("The screenshot OCR could not confirm a held selection before tapping it.")
+            bounds = self._ocr_group(selected_words, "123456")
+            if bounds is None:
+                raise NotAvailable("OCR could not locate the selected number for the in-selection tap.")
+            left, top, right, bottom = bounds
+            x = left + round((right - left) * 0.52)
+            y = (top + bottom) // 2
+            self.d.adb("shell", "input", "tap", str(x), str(y))
+            self._invalidate()
+            self.d.key("9")
+            display = self.d.display_texts()
+            values = [compact(value) for value in display]
+            inserted = next((value for value in values if len(value) == 7 and value.count("9") == 1 and value.replace("9", "", 1) == "123456"), None)
+            _, after_words = self._ocr_screen("evidence/user-b6-after-ocr.png")
+            actions_after = [name for name in ("Copy", "Cut", "MAdd", "MUse") if self._ocr_has(after_words, name)]
+            if inserted and 0 < inserted.index("9") < len(inserted) - 1 and not actions_after:
+                return "PASS", "after tapping selected text and typing 9: " + " | ".join(display), "The held selection released on an in-selection tap, and the next digit was inserted at an interior caret position."
+            actual = "display=" + " | ".join(display) + "; lingering toolbar=" + ", ".join(actions_after)
+            if actions_after:
+                return "FAIL", actual, "The selection toolbar remained visible after a tap on the held expression."
+            return "FAIL", actual, "The tap did not release the selection and place the next digit at an interior caret position."
+        self._case("B6", "B6", "Tap the held expression to release selection and place the caret", "Selection clears; next key inserts at the tapped interior point", b6)
+
         def b7() -> tuple[str, str, str]:
+
             self._show_selection_menu()
             _, toolbar = self._ocr_screen("evidence/user-b7-toolbar-ocr.png")
             if not (self._ocr_has(toolbar, "Copy") or self._ocr_has(toolbar, "Cut")):
@@ -792,7 +821,47 @@ class UserQa:
             return "FAIL", "after MUse=" + " | ".join(expression) + "; after equals=" + " | ".join(result), "The stored value appeared in the expression but the calculator did not evaluate the expected sum 123459."
         self._case("B12", "B12", "Store a number with MAdd and use it in an expression", "MUse replaces the selected 4 in 3+4 with 123456; result 123459", b12_memory_round_trip)
 
+        def b12_caret_insert() -> tuple[str, str, str]:
+            self._enter_number("123456")
+            x, y = self._text_point(fraction_from_right=0.17)
+            self._hold(x, y)
+            _, add_toolbar = self._ocr_screen("evidence/user-b12-caret-madd-toolbar.png")
+            if not self._ocr_has(add_toolbar, "MAdd") or not self._tap_ocr(add_toolbar, "MAdd"):
+                raise NotAvailable("MAdd was not machine-readable on the floating toolbar; caret insertion was not tested.")
+
+            self.d.tap_label("AC")
+            self.d.press_sequence(["3", "+", "4"])
+            _, expression_words = self._ocr_screen("evidence/user-b12-caret-expression.png")
+            bounds = self._ocr_group(expression_words, "3+4")
+            if bounds is None:
+                raise NotAvailable("OCR could not locate 3+4 for the caret-placement attempt.")
+            left, top, right, bottom = bounds
+            # Place the caret in the gap after '+' and before the final operand.
+            x = left + round((right - left) * 0.66)
+            y = (top + bottom) // 2
+            self.d.adb("shell", "input", "tap", str(x), str(y))
+            self._invalidate()
+            self._hold(x, y)
+            _, caret_menu = self._ocr_screen("evidence/user-b12-caret-menu.png")
+            if not self._ocr_has(caret_menu, "MUse") or not self._ocr_has(caret_menu, "Paste"):
+                raise NotAvailable("The caret menu did not expose both MUse and Paste at the tapped expression position.")
+            if self._ocr_has(caret_menu, "Copy") or self._ocr_has(caret_menu, "Cut"):
+                raise NotAvailable("The hold produced a text-selection toolbar, so MUse insertion at an empty caret was not proven.")
+            if not self._tap_ocr(caret_menu, "MUse"):
+                raise NotAvailable("MUse was visible in the caret menu but could not be tapped.")
+
+            expression = self.d.display_texts()
+            if not any(compact(value) == "3+1234564" for value in expression):
+                return "FAIL", "after caret MUse=" + " | ".join(expression), "MUse did not insert 123456 at the caret between '+' and the final 4."
+            self.d.key("=")
+            result = self.d.display_texts()
+            if any(compact(value).endswith("1234567") for value in result):
+                return "PASS", "after MUse=" + " | ".join(expression) + "; after equals=" + " | ".join(result), "MAdd stored 123456; the empty-caret MUse inserted it between '+' and 4, and the expression evaluated to 1234567."
+            return "FAIL", "after MUse=" + " | ".join(expression) + "; after equals=" + " | ".join(result), "MUse inserted the stored value at the caret, but the resulting 3+1234564 expression did not evaluate to 1234567."
+        self._case("B12-CARET", "B12", "Insert a stored value at a mid-expression caret", "MUse inserts 123456 between '+' and 4 in 3+4", b12_caret_insert)
+
         def memory_list() -> tuple[str, str, str]:
+
             if self._try_tap(["More options", "More", "Menu"]) is None:
                 self.d.adb("shell", "input", "tap", str(self.d._width - 24), str(round(self.d._height * 0.17)))
                 self._invalidate()
@@ -844,6 +913,98 @@ class UserQa:
                 raise NotAvailable(f"Animation choices were visible but no selection could be made: {choices!r}")
             return "PASS", "choices=" + "; ".join(choices) + "; selected one option", "The Effects picker exposed user-selectable calculator animation options. This smoke test confirms access and selection, not frame-by-frame animation timing."
         self._case("E4", "E4", "Choose a calculator keypress effect", "Effects picker opens and accepts an animation choice", effects_picker)
+
+        def c11_key_theme() -> tuple[str, str, str]:
+            self._ensure_calculator_screen()
+            self.d.ensure_basic_panel()
+            self.d.tap_label("AC")
+            before = self.d.screenshot("evidence/user-c11-key-theme-before.png")
+            if not before:
+                raise NotAvailable("The baseline calculator screenshot could not be captured.")
+
+            theme_names = ("MySpace settings", "Graphite", "Ocean", "Sunset", "Mint", "Rose", "Lemon", "Iris")
+
+            def dismiss_to_calculator() -> None:
+                popup_items = theme_names + ("Key theme", "Key shape", "Effects", "Memory", "History")
+                for _ in range(3):
+                    labels_now = self.d.labels()
+                    popup_open = any(case_insensitive_match(labels_now, [item]) for item in popup_items)
+                    if self.d.is_calculator_screen() and not popup_open:
+                        return
+                    self.d.adb("shell", "input", "keyevent", "4")
+                    self._invalidate()
+                if not self.d.is_calculator_screen():
+                    self._ensure_calculator_screen()
+
+            def open_picker(stem: str) -> tuple[list[str], list[dict[str, Any]]]:
+                dismiss_to_calculator()
+                if self._try_tap(["More options", "More", "Menu"]) is None:
+                    self.d.adb("shell", "input", "tap", str(self.d._width - 28), str(round(self.d._height * 0.13)))
+                    self._invalidate()
+                menu_labels = self.d.labels()
+                entry = case_insensitive_match(menu_labels, ["Key theme", "Key themes"])
+                if entry is None:
+                    raise NotAvailable(f"Calculator overflow did not expose Key theme: {menu_labels!r}")
+                self.d.tap_label(entry, partial=True, timeout=2.0)
+                time.sleep(0.2)
+                labels = self.d.labels()
+                _, words = self._ocr_screen(stem)
+                return labels, words
+
+            labels, words = open_picker("evidence/user-c11-key-theme-picker-ocr.png")
+
+            def visible_themes(current_labels: list[str], current_words: list[dict[str, Any]]) -> list[str]:
+                visible = []
+                for name in theme_names:
+                    if case_insensitive_match(current_labels, [name]) or self._ocr_has(current_words, name):
+                        visible.append(name)
+                return visible
+
+            choices = visible_themes(labels, words)
+            if "Rose" not in choices:
+                # The picker is scrollable in the guide; inspect its lower rows once.
+                self._swipe(
+                    round(self.d._width * 0.7), round(self.d._height * 0.72),
+                    round(self.d._width * 0.7), round(self.d._height * 0.34), 450,
+                )
+                more_labels = self.d.labels()
+                _, more_words = self._ocr_screen("evidence/user-c11-key-theme-scroll-ocr.png")
+                choices = list(dict.fromkeys(choices + visible_themes(more_labels, more_words)))
+                labels, words = more_labels, more_words
+            if "Rose" not in choices:
+                raise NotAvailable(f"The key-theme picker did not expose Rose in its initial view or one scroll: {choices!r}")
+
+            selected = self._try_tap(["Rose"], partial=False)
+            if not selected:
+                selected = self._tap_ocr(words, "Rose")
+            if not selected:
+                raise NotAvailable("Rose was visible in the key-theme picker but could not be selected.")
+            time.sleep(0.3)
+            dismiss_to_calculator()
+            after = self.d.screenshot("evidence/user-c11-key-theme-rose.png")
+            if not after:
+                raise NotAvailable("The calculator screenshot after selecting Rose could not be captured.")
+            change = self._theme_visual_difference_ratio(Path(before), Path(after))
+
+            restored = False
+            restore_note = ""
+            try:
+                restore_labels, restore_words = open_picker("evidence/user-c11-key-theme-restore-ocr.png")
+                if not (case_insensitive_match(restore_labels, ["MySpace settings"]) or self._ocr_has(restore_words, "MySpace settings")):
+                    raise NotAvailable("MySpace settings was not readable in the picker while restoring the default key theme.")
+                restored = bool(self._try_tap(["MySpace settings"], partial=True)) or self._tap_ocr(restore_words, "MySpace settings")
+                if not restored:
+                    raise NotAvailable("The default MySpace settings key theme could not be selected.")
+                time.sleep(0.2)
+                dismiss_to_calculator()
+            except NotAvailable as exc:
+                restore_note = f"; restore note: {exc}"
+
+            actual = f"OCR-visible themes={', '.join(choices)}; Rose-to-default-keypad screen change={change:.1%}; restored MySpace settings={restored}"
+            if change >= 0.03:
+                return "PASS", actual, "The key-theme picker exposed Rose, accepted its selection, and visibly changed the calculator screen; the MySpace settings theme was restored where accessible. The eight-theme catalogue was not exhaustively audited." + restore_note
+            return "BLOCKED", actual, "Rose could be selected, but the screenshot comparison could not isolate a visible keypad-theme change; no color-accuracy claim is made." + restore_note
+        self._case("C11", "C11", "Select a calculator key theme", "Key-theme picker exposes Rose and applies a visible keypad palette", c11_key_theme)
 
     def run_standalone_cases(self) -> None:
         def header() -> tuple[str, str, str]:

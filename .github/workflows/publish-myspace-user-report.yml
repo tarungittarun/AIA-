@@ -112,9 +112,9 @@ jobs:
           repository: ${{ github.repository }}
           run-id: ${{ steps.source.outputs.run_id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          pattern: myspace-user-v3.12.35-shard-*
+          pattern: myspace-user-v3.12.39-shard-*
           merge-multiple: false
-          path: reports/evidence/incoming-calculator-v3.12.35
+          path: reports/evidence/incoming-calculator-v3.12.39
 
       - name: Build the PDF and preserve original evidence
         env:
@@ -122,14 +122,14 @@ jobs:
         run: |
           set -euo pipefail
           python3 qa/build_myspace_user_pdf.py \
-            --artifact-root reports/evidence/incoming-calculator-v3.12.35 \
-            --output reports/myspace-calculator-qa-v3.12.35-72.pdf \
-            --evidence-output reports/evidence/calculator-focused-v3.12.35-72 \
+            --artifact-root reports/evidence/incoming-calculator-v3.12.39 \
+            --output reports/myspace-calculator-qa-v3.12.39-76.pdf \
+            --evidence-output reports/evidence/calculator-focused-v3.12.39-76 \
             --source-run-id "$SOURCE_RUN_ID"
           python3 - <<'PY'
           from pathlib import Path
           from pypdf import PdfReader
-          path = Path('reports/myspace-calculator-qa-v3.12.35-72.pdf')
+          path = Path('reports/myspace-calculator-qa-v3.12.39-76.pdf')
           data = path.read_bytes()
           assert data.startswith(b'%PDF-'), 'missing PDF signature'
           reader = PdfReader(str(path))
@@ -145,7 +145,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/myspace-calculator-qa-v3.12.35-72.pdf reports/evidence/calculator-focused-v3.12.35-72/
+          git add reports/myspace-calculator-qa-v3.12.39-76.pdf reports/evidence/calculator-focused-v3.12.39-76/
           if git diff --cached --quiet; then
             echo "No calculator PDF or evidence updates to publish."
           else

@@ -1,11 +1,7 @@
 name: Publish v3.12.24 APK QA PDF with screenshots
 
 on:
-  push:
-    branches: [arena/e4dfeee3-aia]
-    paths:
-      - .github/workflows/publish-calculator-pdf.yml
-      - qa/build_calculator_pdf.py
+  # Historical v3.12.24 report publisher; kept for explicit manual rebuilds.
   workflow_dispatch:
     inputs:
       source_run_id:
