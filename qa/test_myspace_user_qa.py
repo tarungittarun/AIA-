@@ -58,6 +58,14 @@ class UserQaContractTests(unittest.TestCase):
         self.assertEqual(UserQa._ocr_group(words, "MAdd"), (20, 100, 53, 112))
         self.assertTrue(UserQa._ocr_has(words, "Copy"))
 
+    def test_ocr_groups_expression_tokens_for_precision_taps(self):
+        words = [
+            {"text": "3", "left": 170, "top": 150, "width": 24, "height": 44, "line": (1, 1, 1)},
+            {"text": "+", "left": 200, "top": 160, "width": 20, "height": 30, "line": (1, 1, 1)},
+            {"text": "4", "left": 225, "top": 150, "width": 25, "height": 44, "line": (1, 1, 1)},
+        ]
+        self.assertEqual(UserQa._ocr_group(words, "3+4"), (170, 150, 250, 194))
+
     def test_ocr_never_joins_toolbar_words_across_lines(self):
         words = [
             {"text": "M", "left": 20, "top": 100, "width": 9, "height": 12, "line": (1, 1, 1)},

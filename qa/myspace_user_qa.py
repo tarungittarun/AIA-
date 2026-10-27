@@ -232,6 +232,12 @@ class UserQa:
                 })
             except (KeyError, TypeError, ValueError):
                 continue
+        ocr_path = Path(image).with_suffix(".ocr.json")
+        ocr_path.write_text(json.dumps({
+            "screenshot": str(Path(image).relative_to(self.report_dir)),
+            "engine": "tesseract TSV",
+            "words": words,
+        }, indent=2) + "\n", encoding="utf-8")
         return image, words
 
     @classmethod
@@ -387,7 +393,18 @@ class UserQa:
         self.d.adb("shell", "input", "swipe", str(x1), str(y1), str(x2), str(y2), str(duration_ms), timeout=20)
         self._invalidate()
 
+    def _ensure_calculator_screen(self) -> None:
+        if self.d.is_calculator_screen():
+            return
+        self.d.adb("shell", "input", "keyevent", "4")
+        self._invalidate()
+        if not self.d.is_calculator_screen() and self._try_tap(["Calculator"]) is None:
+            raise NotAvailable(f"Could not return to the calculator screen: {self.d.labels()!r}")
+        if not self.d.is_calculator_screen():
+            raise NotAvailable(f"Calculator controls were not visible after navigation: {self.d.labels()!r}")
+
     def _enter_number(self, number: str = "123456") -> None:
+        self._ensure_calculator_screen()
         self.d.close_history_if_open()
         self.d.ensure_basic_panel()
         self.d.tap_label("AC")
@@ -663,6 +680,7 @@ class UserQa:
         def h1_h2() -> tuple[str, str, str]:
             light_shot = self.d.report_dir / "evidence/h1-light-theme.png"
             dark_shot = self.d.report_dir / "evidence/h2-dark-theme.png"
+            self._ensure_calculator_screen()
             self.d.ensure_basic_panel()
             self.d.tap_label("AC")
             self.d.press_sequence(list("123456"))
@@ -735,14 +753,24 @@ class UserQa:
             if not self._ocr_has(add_toolbar, "MAdd") or not self._tap_ocr(add_toolbar, "MAdd"):
                 raise NotAvailable("MAdd was not machine-readable on the floating toolbar; memory was not tested.")
 
-            # Use the stored value to replace one operand in a new expression.
+            # Use the stored value to replace exactly the final operand.
             self.d.tap_label("AC")
             self.d.press_sequence(["3", "+", "4"])
-            x, y = self._text_point(fraction_from_right=0.025)
+            _, expression_words = self._ocr_screen("evidence/user-b12-expression-before-muse.png")
+            expression_bounds = self._ocr_group(expression_words, "3+4")
+            if expression_bounds is None:
+                raise NotAvailable("OCR could not locate 3+4; a text-selection gesture was not attempted.")
+            left, top, right, bottom = expression_bounds
+            x = left + round((right - left) * 0.88)
+            y = (top + bottom) // 2
             self._hold(x, y)
             _, use_toolbar = self._ocr_screen("evidence/user-b12-muse-toolbar.png")
-            if not self._ocr_has(use_toolbar, "MUse") or not self._tap_ocr(use_toolbar, "MUse"):
-                raise NotAvailable("MUse was not machine-readable on the held operand; stored value was not re-used.")
+            if not self._ocr_has(use_toolbar, "MUse"):
+                raise NotAvailable("MUse was not visible after holding the final operand; memory reuse was not tested.")
+            if not (self._ocr_has(use_toolbar, "Copy") and self._ocr_has(use_toolbar, "Cut")):
+                raise NotAvailable("The hold exposed a caret menu, not a verifiable text selection of 4; memory replacement was not inferred.")
+            if not self._tap_ocr(use_toolbar, "MUse"):
+                raise NotAvailable("MUse was visible but could not be tapped; stored value was not re-used.")
 
             expression = self.d.display_texts()
             if not any(compact(value) == "3+123456" for value in expression):

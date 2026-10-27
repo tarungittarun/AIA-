@@ -56,7 +56,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Unit-test the user-facing QA harness
+      - name: Unit-test the calculator-only QA harness
         run: python3 -m unittest discover -s qa -p 'test_*.py'
 
       - name: Install screenshot comparison support
