@@ -199,7 +199,10 @@ def select_results(reports: list[tuple[Path, dict[str, Any]]]) -> tuple[list[dic
         suite = data.get("suite")
         package = data.get("artifact", {}).get("package")
         if suite == "myspace-core":
-            myspace_calc = data.get("calculator_results", [])
+            myspace_calc = list(data.get("calculator_results", []))
+        elif suite == "myspace-features":
+            seen = {row.get("id") for row in myspace_calc}
+            myspace_calc.extend(row for row in data.get("calculator_results", []) if row.get("id") not in seen)
         elif suite == "mycalc":
             mycalc_calc = data.get("calculator_results", [])
         for row in data.get("user_results", []):
@@ -228,7 +231,7 @@ def make_page_callbacks(source_run: str):
             canvas.line(17 * mm, height - 14 * mm, width - 17 * mm, height - 14 * mm)
             canvas.setFont("Helvetica-Bold", 7)
             canvas.setFillColor(NAVY)
-            canvas.drawString(17 * mm, height - 11 * mm, "MYSPACE / MYCALC USER-FACING APK QA")
+            canvas.drawString(17 * mm, height - 11 * mm, "CALCULATOR-FOCUSED APK QA")
             canvas.setFont("Helvetica", 7)
             canvas.setFillColor(MUTED)
             canvas.drawRightString(width - 17 * mm, height - 11 * mm, f"Source run {source_run}")
@@ -352,7 +355,7 @@ def build(args: argparse.Namespace) -> None:
     root = args.artifact_root
     reports = load_reports(root)
     by_suite = {data.get("suite"): (path, data) for path, data in reports}
-    for required in ("myspace-core", "myspace-modules", "mycalc"):
+    for required in ("myspace-core", "myspace-features", "mycalc"):
         if required not in by_suite:
             raise ReportError(f"Missing required suite evidence: {required}")
     myspace_calc, mycalc_calc, user_rows = select_results(reports)
@@ -375,27 +378,27 @@ def build(args: argparse.Namespace) -> None:
     doc = SimpleDocTemplate(
         str(args.output), pagesize=A4, rightMargin=17 * mm, leftMargin=17 * mm,
         topMargin=19 * mm, bottomMargin=18 * mm,
-        title="MySpace 3.12.35 / MyCalc 1.0.33 user-facing APK QA",
+        title="MySpace 3.12.35 / MyCalc 1.0.33 calculator-focused APK QA",
         author="Arena Agent Mode QA",
         subject="Direct black-box Android APK testing with original screenshots and provenance",
     )
     story: list[Any] = []
     story.append(Paragraph("MySpace 3.12.35 (72)<br/>Standalone MyCalc 1.0.33 (34)", styles["title"]))
-    story.append(Paragraph("User-first Android APK QA · detailed findings, direct emulator proof, and coverage boundaries", styles["subtitle"]))
+    story.append(Paragraph("Calculator-only Android APK QA · direct user journeys, findings, and coverage boundaries", styles["subtitle"]))
     story.append(Paragraph(f"<b>REPORT DATE:</b> 27 OCTOBER 2026&nbsp;&nbsp; | &nbsp;&nbsp;<b>DEVICE:</b> {device}&nbsp;&nbsp; | &nbsp;&nbsp;<b>DIRECT RUN:</b> {esc(source_run)}", styles["small"]))
     story.append(Spacer(1, 5))
 
     cards = [
         ("MySpace calculator", status_counts_text(myspace_calc), f"{len(myspace_calc)} selected direct APK cases"),
         ("MyCalc calculator", status_counts_text(mycalc_calc), f"{len(mycalc_calc)} selected direct APK cases"),
-        ("User journeys", status_counts_text(user_rows), f"{len(user_rows)} UI-facing probes across 3 jobs"),
+        ("Calculator UI flows", status_counts_text(user_rows), f"{len(user_rows)} calculator-only probes across 3 jobs"),
         ("Screenshots", str(total_screens), "original emulator PNGs preserved; selected screens embedded below"),
     ]
     story.append(card_table(cards, styles, available_width))
     story.append(Spacer(1, 8))
     story.append(Paragraph("Executive readout", styles["h1"]))
     story.append(Paragraph(
-        "This report exercises the <b>distributed APKs</b> as a user would: tapping calculator keys, holding/dragging the expression, opening the Apps hub, entering feature landing screens, and switching calculator themes. Every direct finding below is tied to the APK SHA-256, exact upstream guide snapshot, Android Actions run, and saved screenshot/UI hierarchy. A screen-open smoke check is not presented as proof that the feature's deeper workflow works.", styles["body"]
+        "This report stays on the <b>calculator UI</b>: entering and editing expressions, trying selection and clipboard actions, storing/using memory, replaying history, and changing calculator options such as key shape, effects, and theme. It does not test Notes, Scanner, Calendar, or other MySpace apps. Every direct finding is tied to the APK SHA-256, pinned guide snapshot, Android Actions run, and saved screenshot/UI hierarchy. Where a floating control is absent from Android's accessibility tree, the test uses screenshot OCR or labels the probe BLOCKED rather than inventing a failure.", styles["body"]
     ))
     story.append(Paragraph(
         "<b>Interpretation rule:</b> PASS/FAIL are direct assertions against the installed binaries. BLOCKED means the emulator or accessibility surface prevented a fair assertion. NOT RUN means no direct APK test was attempted. Green upstream CI is useful corroboration, but it is separately labeled source-CI—not converted into an APK pass.", styles["body"]
@@ -438,11 +441,11 @@ def build(args: argparse.Namespace) -> None:
     ))
 
     story.append(PageBreak())
-    story.append(Paragraph("2. User-facing journeys and observations", styles["h1"]))
+    story.append(Paragraph("2. Calculator-only journeys and observations", styles["h1"]))
     story.append(Paragraph(
-        "These tests are driven through UIAutomator/adb taps and touchscreen gestures on the installed release APK. Screenshots and UI hierarchy XML files are retained in the evidence bundle; the action log does not silently promote source tests into APK outcomes.", styles["body"]
+        "These tests are driven through UIAutomator/adb taps and touchscreen gestures on the installed calculator APKs. Floating selection and caret toolbars are inspected from screenshots because the Android accessibility tree can omit them. Screenshots and UI hierarchy XML remain in the evidence bundle; source-CI results are not counted as APK outcomes.", styles["body"]
     ))
-    for title, suite in (("MySpace calculator/editing", "myspace-core"), ("MySpace app surfaces", "myspace-modules"), ("Standalone MyCalc", "mycalc")):
+    for title, suite in (("MySpace calculator input/editing", "myspace-core"), ("MySpace calculator memory/customization", "myspace-features"), ("Standalone MyCalc calculator", "mycalc")):
         group = [row for row in user_rows if row.get("suite") == suite]
         if not group:
             continue
@@ -461,22 +464,20 @@ def build(args: argparse.Namespace) -> None:
         story.append(Spacer(1, 5))
 
     story.append(PageBreak())
-    story.append(Paragraph("3. Guide A–H coverage: what this run proves", styles["h1"]))
+    story.append(Paragraph("3. Calculator-guide coverage: what this run proves", styles["h1"]))
     coverage = [
-        ["Guide", "Direct APK evidence in this report", "Boundary / not claimed"],
-        ["A · Logo", "MySpace header identity and in-app mark screenshot (A2).", "Launcher/app-drawer icon artwork and tap-to-home behavior are not pixel-certified."],
-        ["B · Selection", "Stationary hold, hold-and-drag, copy/paste round-trip, cut, AC clear, mid-number insertion and empty-box hold are probed on the APK where the UI exposed controls.", "External Notes/Messages paste, both handles, all margins, selection/scroll arbitration and memory replacement are not fully certified by these samples."],
-        ["C · Expression", "Keyboard visibility, key-shape menu, numeric and percent interactions are exercised; source screenshots/hierarchies retained.", "Caret blink geometry, exact LED colors, whole-line autoscroll and every bracket/cursor edge case are not pixel-certified."],
-        ["D · Calculator", "D1–D4, D5 square-root, D6 degree/inverse sine, D7 clear, D8 Backspace, D9 history replay, and the two retained blind boundary probes are exercised on both installed packages; actual outcomes are in the result tables.", "D10 timing/race behavior and the live official-Google comparison are not claimed as passes; Google comparison is blocked if the official package is absent."],
-        ["E · History/effects", "Calculator suite covers process-restart history and history-card replay. Overflow menu is opened as a user journey.", "All-history ordering, swipe-down timing, memory reorder and four animation styles are not certified unless specifically shown in results."],
-        ["F · Standalone", "MyCalc launches, its calculator flows are exercised, and PackageManager requested permissions are captured.", "The guide's literal “zero permissions” wording is checked against the requested list; runtime-permission records are reported only if the dump exposes them."],
-        ["G · MySpace apps", "Apps hub and feature landing screens for Notes, Calendar, Music, Recorder, Scanner, Files and Diagnostics are attempted from the APK UI.", "Opening a screen does not prove create/save/reminder/transport/record/crop/PDF/editor/share workflows. Camera/microphone/environment limits are called out."],
-        ["H · Theme/caret", "Light/Dark theme choices are exercised and screenshots preserved if options are accessible.", "Theme bitmap color/caret exactness and instant ink re-resolution are not certified by a byte-different screenshot alone."],
+        ["Guide", "Direct calculator evidence", "Boundary / not claimed"],
+        ["B · Editing/memory", "Long-press selection is screenshot-OCR checked; calculator-only copy/paste and cut are attempted; AC clear, mid-number insertion, caret menu, and MAdd→MUse are probed.", "B2 continuous hold-then-drag is blocked if adb cannot reproduce the app's custom hold gesture. Handle dragging, all margins, scroll arbitration, and external-app paste are not claimed unless their rows pass."],
+        ["C · Expression", "No-keyboard check, key-shape picker, calculator entry/editing, percent and scientific-key examples are reported from installed APK actions.", "Pixel-level caret blink, exact LED colors, whole-line autoscroll, and every bracket/cursor edge case are not certified."],
+        ["D · Calculator", "Selected D1–D9 behavior, history replay, arithmetic and scientific cases are exercised on the installed binaries; observed values are in the result tables.", "D10 timing/race and an official Google Calculator comparison are not claimed as passes; no AOSP substitute is used."],
+        ["E · History/effects", "History persistence/replay, calculator memory list, overflow actions, and opening/selecting an Effects option are probed.", "Memory reordering and frame-by-frame animation behavior are not claimed unless explicitly observed in the run."],
+        ["F · Standalone", "The standalone MyCalc binary is directly launched and its calculator flows are tested; its requested permissions come from the installed PackageManager dump.", "The guide's literal zero-requested-permissions wording is checked separately from dangerous/runtime permission prompts."],
+        ["H · Theme/caret", "Light and Dark selections are attempted from the calculator's MySpace settings route; screenshots are retained when reachable.", "Exact theme palette, caret color, and instant ink re-resolution are not pixel-certified by screenshot hashes alone."],
     ]
-    story.append(table(coverage, [28 * mm, 74 * mm, available_width - 102 * mm], styles))
+    story.append(table(coverage, [31 * mm, 72 * mm, available_width - 103 * mm], styles))
     story.append(Spacer(1, 7))
     story.append(Paragraph(
-        "<b>Ads:</b> The test harness scans visible accessible labels on sampled MySpace and MyCalc screens for “ad”, “advertisement” or “sponsored”. A clean text scan is not a network-level, whole-app or third-party SDK audit; this report makes no broader ad-free certification.", styles["body"]
+        "<b>Ads:</b> The label scan is limited to sampled calculator screens. A clean visible-text scan is not a network-level, whole-app or third-party SDK audit; this report does not make a broader ad-free certification.", styles["body"]
     ))
     story.append(Paragraph(
         "<b>Source-CI corroboration (separate evidence):</b> At the exact source commit, the upstream <link href='{0}' color='{1}'>Tests workflow</link> completed green, including its JVM/end-to-end and UI emulator jobs; the <link href='{2}' color='{1}'>Android CI workflow</link> also completed green for Python source contracts, unit tests and a debug build. These are source-build results, not direct tests of the two distributed binaries used above.".format(TESTS_RUN_URL, BLUE.hexval(), ANDROID_CI_RUN_URL), styles["body"]
@@ -520,30 +521,33 @@ def build(args: argparse.Namespace) -> None:
         story.append(Paragraph("TC-CALC-012 was not present in the MyCalc case output; the permission claim remains unverified in this run.", styles["body"]))
     story.append(Paragraph("Important environment boundary", styles["h2"]))
     story.append(Paragraph(
-        "Android 14 emulator interaction and accessible UI text can differ from physical devices. A BLOCKED/ERROR row is not treated as an app defect without a clear app-controlled failure; an unexecuted guide step stays untested. The Diagnostics screen is only smoke-opened; local save/share is not tested. Runner logcat is supplemental evidence, not a substitute for product behavior; no external share target is used.", styles["body"]
+        "Android 14 emulator input and accessibility exposure can differ from a physical touch. BLOCKED/ERROR is not treated as a confirmed product defect without a clear app-controlled failure; an unexecuted guide step stays untested. This report intentionally excludes Notes, Scanner, and all other non-calculator app workflows. Runner logcat is supplemental evidence, not a substitute for product behavior; no external app/share target is used.", styles["body"]
     ))
 
     priority_files = [
-        ("myspace-core", "user-b1.png", "B1 · hold-to-select selection menu"),
-        ("myspace-core", "user-b2.png", "B2 · hold-and-drag selection"),
-        ("myspace-core", "user-b4.png", "B4 · copy/paste round-trip"),
+        ("myspace-core", "user-b1.png", "B1 · selection toolbar, verified from screenshot OCR"),
+        ("myspace-core", "user-b2.png", "B2 · hold-then-drag result / emulator limitation"),
+        ("myspace-core", "user-b4.png", "B4 · in-calculator copy/paste"),
         ("myspace-core", "user-b5.png", "B5 · cut then type"),
         ("myspace-core", "user-b9.png", "B9 · mid-number caret insertion"),
         ("myspace-core", "user-b11.png", "B11 · empty-box caret menu"),
         ("myspace-core", "h1-light-theme.png", "H1 · Light theme screenshot"),
         ("myspace-core", "h2-dark-theme.png", "H2 · Dark theme screenshot"),
-        ("myspace-modules", "user-g-hub.png", "G · Apps hub"),
-        ("myspace-modules", "user-g-notes.png", "G · Notes landing screen"),
-        ("myspace-modules", "user-g-calendar.png", "G · Calendar landing screen"),
-        ("myspace-modules", "user-g-music.png", "G · Music landing screen"),
-        ("myspace-modules", "user-g-recorder.png", "G · Recorder landing screen"),
-        ("myspace-modules", "user-g-scanner.png", "G · Scanner landing screen"),
-        ("myspace-modules", "user-g-files.png", "G · Files landing screen"),
-        ("mycalc", "user-f-header.png", "F · Standalone MyCalc screen"),
+        ("myspace-core", "user-c10.png", "C10 · key-shape picker"),
+        ("myspace-features", "user-b12.png", "B12 · MAdd then MUse result"),
+        ("myspace-features", "user-e3-memory.png", "E3 · calculator memory list"),
+        ("myspace-features", "user-e4.png", "E4 · effects picker and selection"),
+        ("mycalc", "user-f-header.png", "F · standalone MyCalc screen"),
+        ("mycalc", "user-b1.png", "MyCalc · selection toolbar, verified from screenshot OCR"),
+        ("mycalc", "user-b9.png", "MyCalc · OCR-targeted mid-number insertion"),
+        ("mycalc", "h1-light-theme.png", "MyCalc · Light theme screenshot"),
+        ("mycalc", "h2-dark-theme.png", "MyCalc · Dark theme screenshot"),
+        ("mycalc", "user-b12.png", "MyCalc · MAdd/MUse round-trip"),
+        ("mycalc", "user-e3-memory.png", "MyCalc · memory list"),
+        ("mycalc", "tc-calc-012-package-dump.txt", "MyCalc · PackageManager permission dump"),
         ("myspace-core", "tc-calc-008-target.png", "MySpace · chained precision case"),
         ("myspace-core", "tc-calc-009-target.png", "MySpace · exponent continuation case"),
         ("myspace-core", "tc-calc-011-replay-result.png", "MySpace · grouped history replay"),
-        ("mycalc", "tc-calc-012-package-dump.txt", "MyCalc · PackageManager permission dump"),
     ]
     image_specs: list[tuple[Path, str]] = []
     for suite, filename, caption in priority_files:

@@ -1,12 +1,8 @@
-name: Publish MySpace v3.12.35 user QA PDF and proof bundle
+name: Rebuild calculator-only APK QA report
 
 on:
-  # Rebuild the proof bundle from the newest completed APK QA run when this
-  # publisher changes on the session branch; manual dispatch can pin a run ID.
-  push:
-    branches: [arena/e4dfeee3-aia]
-    paths:
-      - .github/workflows/publish-myspace-user-report.yml
+  # The direct APK QA workflow publishes its own report. This workflow is a
+  # manual fallback for rebuilding from a specific earlier run.
   workflow_dispatch:
     inputs:
       source_run_id:
@@ -20,7 +16,7 @@ permissions:
 
 jobs:
   publish-report:
-    name: Build and publish the user-facing PDF
+    name: Build and publish the calculator-only PDF
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
@@ -84,7 +80,7 @@ jobs:
                   per_page: 100,
                 });
                 const shardCount = artifactList.artifacts.filter(artifact =>
-                  !artifact.expired && /^myspace-user-v3\.12\.35-shard-[1-3]-1$/.test(artifact.name)
+                  !artifact.expired && /^myspace-user-v3\.12\.35-shard-[1-3]-\d+$/.test(artifact.name)
                 ).length;
                 if (shardCount === 3) {
                   sourceRunId = run.id;
@@ -102,7 +98,7 @@ jobs:
               per_page: 100,
             });
             const shardCount = artifacts.artifacts.filter(artifact =>
-              !artifact.expired && /^myspace-user-v3\.12\.35-shard-[1-3]-1$/.test(artifact.name)
+              !artifact.expired && /^myspace-user-v3\.12\.35-shard-[1-3]-\d+$/.test(artifact.name)
             ).length;
             if (shardCount !== 3) {
               throw new Error(`Source run ${sourceRunId} has ${shardCount}/3 required direct APK evidence shards`);
@@ -118,7 +114,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           pattern: myspace-user-v3.12.35-shard-*
           merge-multiple: false
-          path: reports/evidence/incoming-v3.12.35
+          path: reports/evidence/incoming-calculator-v3.12.35
 
       - name: Build the PDF and preserve original evidence
         env:
@@ -126,21 +122,21 @@ jobs:
         run: |
           set -euo pipefail
           python3 qa/build_myspace_user_pdf.py \
-            --artifact-root reports/evidence/incoming-v3.12.35 \
-            --output reports/myspace-user-qa-v3.12.35-72.pdf \
-            --evidence-output reports/evidence/v3.12.35-72 \
+            --artifact-root reports/evidence/incoming-calculator-v3.12.35 \
+            --output reports/myspace-calculator-qa-v3.12.35-72.pdf \
+            --evidence-output reports/evidence/calculator-focused-v3.12.35-72 \
             --source-run-id "$SOURCE_RUN_ID"
           python3 - <<'PY'
           from pathlib import Path
           from pypdf import PdfReader
-          path = Path('reports/myspace-user-qa-v3.12.35-72.pdf')
+          path = Path('reports/myspace-calculator-qa-v3.12.35-72.pdf')
           data = path.read_bytes()
           assert data.startswith(b'%PDF-'), 'missing PDF signature'
           reader = PdfReader(str(path))
-          assert len(reader.pages) >= 10, f'unexpectedly short report: {len(reader.pages)} pages'
+          assert len(reader.pages) >= 8, f'unexpectedly short calculator report: {len(reader.pages)} pages'
           embedded = sum(len(page.images) for page in reader.pages)
-          assert embedded >= 6, f'expected original screenshots to be embedded, found {embedded}'
-          print(f'PDF verified: {len(reader.pages)} pages, {embedded} embedded screenshots, {len(data):,} bytes')
+          assert embedded >= 5, f'expected original calculator screenshots to be embedded, found {embedded}'
+          print(f'Calculator PDF verified: {len(reader.pages)} pages, {embedded} embedded screenshots, {len(data):,} bytes')
           PY
 
       - name: Publish PDF and proof bundle on the session branch
@@ -149,10 +145,10 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/myspace-user-qa-v3.12.35-72.pdf reports/evidence/v3.12.35-72/
+          git add reports/myspace-calculator-qa-v3.12.35-72.pdf reports/evidence/calculator-focused-v3.12.35-72/
           if git diff --cached --quiet; then
-            echo "No PDF or evidence updates to publish."
+            echo "No calculator PDF or evidence updates to publish."
           else
-            git commit -m "Publish MySpace v3.12.35 user APK QA report"
+            git commit -m "Publish calculator-focused MySpace and MyCalc QA report"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi

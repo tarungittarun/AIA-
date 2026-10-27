@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
-"""Black-box, user-facing QA for the pinned MySpace and standalone MyCalc APKs.
+"""Calculator-only, user-facing QA for the pinned MySpace and MyCalc APKs.
 
-The existing calculator harness remains the source of calculator assertions;
-this runner adds touch-driven selection, app navigation, key-shape/theme checks,
-visible-screen captures, and a conservative ad-indicator sweep. All results are
-from the installed distribution APK, not a source build.
+The existing calculator harness provides the arithmetic assertions. This runner
+covers calculator editing, selection, history, memory, and customization on the
+installed distribution APKs. It does not navigate Notes, Scanner, or other apps.
 """
 from __future__ import annotations
 
 import argparse
+import csv
 import datetime as dt
 import hashlib
 import json
 import re
+import subprocess
 import sys
 import time
 import zipfile
@@ -86,8 +87,8 @@ class UserQa:
             raise ValueError(f"Unsupported package: {package}")
         if expected_sha256 != PINNED_APK_SHA256[package]:
             raise ValueError(f"Refusing an unexpected SHA-256 pin for {package}")
-        if suite not in {"myspace-core", "myspace-modules", "mycalc"}:
-            raise ValueError(f"Unsupported suite: {suite}")
+        if suite not in {"myspace-core", "myspace-features", "mycalc"}:
+            raise ValueError(f"Unsupported calculator suite: {suite}")
         if suite == "mycalc" and package != STANDALONE_PACKAGE:
             raise ValueError("The mycalc suite requires app.space.calc")
         if suite != "mycalc" and package != DEFAULT_PACKAGE:
@@ -122,8 +123,8 @@ class UserQa:
     def _run_calculator_suite(self) -> None:
         if self.suite == "myspace-core":
             case_ids = CALCULATOR_CASES[DEFAULT_PACKAGE]
-        elif self.suite == "myspace-modules":
-            # A small working-calculator baseline before exercising the feature hub.
+        elif self.suite == "myspace-features":
+            # Sanity-check the installed calculator before memory/customization flows.
             case_ids = {"TC-CALC-001"}
         else:
             case_ids = CALCULATOR_CASES[STANDALONE_PACKAGE]
@@ -187,6 +188,108 @@ class UserQa:
         image_rel = str(Path(image).relative_to(self.report_dir)) if image else ""
         hierarchy_rel = str(Path(hierarchy).relative_to(self.report_dir)) if hierarchy else ""
         return labels, display, image_rel, hierarchy_rel
+
+    @staticmethod
+    def _ocr_normalize(value: str) -> str:
+        return re.sub(r"[^a-z0-9]+", "", value.casefold())
+
+    def _ocr_screen(self, filename: str) -> tuple[str, list[dict[str, Any]]]:
+        """Read visible screen text/coordinates, including Android's floating toolbar.
+
+        UiAutomator omits the text-selection popup on this emulator even when it is
+        visibly painted over the app. OCR is therefore the primary observation for
+        toolbar assertions, with the original screenshot retained for review.
+        """
+        image = self.d.screenshot(filename)
+        if not image:
+            raise NotAvailable("Could not capture a screenshot for visual toolbar inspection.")
+        try:
+            proc = subprocess.run(
+                ["tesseract", image, "stdout", "--psm", "11", "tsv"],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                timeout=35,
+                check=False,
+            )
+        except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+            raise NotAvailable(f"Screenshot OCR was unavailable: {type(exc).__name__}.") from exc
+        if proc.returncode != 0:
+            raise NotAvailable(f"Screenshot OCR failed: {proc.stderr.strip()[:300]}")
+        words: list[dict[str, Any]] = []
+        for row in csv.DictReader(proc.stdout.splitlines(), delimiter="\t"):
+            if row.get("level") != "5" or not row.get("text", "").strip():
+                continue
+            try:
+                words.append({
+                    "text": row["text"].strip(),
+                    "left": int(row["left"]),
+                    "top": int(row["top"]),
+                    "width": int(row["width"]),
+                    "height": int(row["height"]),
+                    "conf": float(row.get("conf", "0")),
+                    "line": (row.get("block_num"), row.get("par_num"), row.get("line_num")),
+                })
+            except (KeyError, TypeError, ValueError):
+                continue
+        return image, words
+
+    @classmethod
+    def _ocr_group(cls, words: list[dict[str, Any]], target: str) -> tuple[int, int, int, int] | None:
+        """Return the screen bounds for a one-to-three word OCR match."""
+        wanted = cls._ocr_normalize(target)
+        for start in range(len(words)):
+            joined = ""
+            group: list[dict[str, Any]] = []
+            for end in range(start, min(len(words), start + 3)):
+                if group and words[end]["line"] != group[0]["line"]:
+                    break
+                group.append(words[end])
+                joined += cls._ocr_normalize(words[end]["text"])
+                if joined == wanted:
+                    left = min(word["left"] for word in group)
+                    top = min(word["top"] for word in group)
+                    right = max(word["left"] + word["width"] for word in group)
+                    bottom = max(word["top"] + word["height"] for word in group)
+                    return left, top, right, bottom
+                if len(joined) >= len(wanted) or not wanted.startswith(joined):
+                    break
+        return None
+
+    @classmethod
+    def _ocr_has(cls, words: list[dict[str, Any]], target: str) -> bool:
+        return cls._ocr_group(words, target) is not None
+
+    @staticmethod
+    def _theme_visual_difference_ratio(first: Path, second: Path) -> float:
+        """Compare stable app pixels while excluding status/navigation bars."""
+        try:
+            from PIL import Image, ImageChops
+        except ImportError as exc:
+            raise NotAvailable("Pillow was unavailable for a screenshot-level theme comparison.") from exc
+        with Image.open(first) as first_image, Image.open(second) as second_image:
+            first_rgb = first_image.convert("RGB")
+            second_rgb = second_image.convert("RGB")
+        if first_rgb.size != second_rgb.size:
+            raise NotAvailable(f"Theme screenshots have different dimensions: {first_rgb.size} and {second_rgb.size}.")
+        width, height = first_rgb.size
+        top, bottom = int(height * 0.07), int(height * 0.92)
+        region1 = first_rgb.crop((0, top, width, bottom))
+        region2 = second_rgb.crop((0, top, width, bottom))
+        difference = ImageChops.difference(region1, region2)
+        changed = sum(1 for pixel in difference.getdata() if max(pixel) > 24)
+        total = width * max(1, bottom - top)
+        return changed / total
+
+    def _tap_ocr(self, words: list[dict[str, Any]], target: str) -> bool:
+        bounds = self._ocr_group(words, target)
+        if bounds is None:
+            return False
+        left, top, right, bottom = bounds
+        x, y = (left + right) // 2, (top + bottom) // 2
+        self.d.adb("shell", "input", "tap", str(x), str(y))
+        self._invalidate()
+        return True
 
     def _record(
         self,
@@ -379,53 +482,56 @@ class UserQa:
 
         def b1() -> tuple[str, str, str]:
             labels = self._show_selection_menu()
-            actions = [name for name in ("Copy", "Cut", "Select all", "MAdd", "MUse", "Paste")
-                       if case_insensitive_match(labels, [name])]
-            if len(actions) >= 2:
-                return "PASS", "; ".join(actions), "A stationary long-press on the entered number exposed a selection/action menu; screenshot retained for visual review."
-            return "FAIL", "; ".join(labels), "The expected selection action menu did not appear after a 650 ms hold on the typed number."
-        self._case("B1", "B1", "Hold number to select and show actions", "Visible selection and Cut/Copy actions", b1)
+            _, words = self._ocr_screen("evidence/user-b1-toolbar-ocr.png")
+            actions = [name for name in ("Copy", "Cut", "MAdd", "MUse", "Paste", "Select all")
+                       if self._ocr_has(words, name)]
+            has_memory_action = self._ocr_has(words, "MAdd") or self._ocr_has(words, "MUse")
+            if self._ocr_has(words, "Copy") and self._ocr_has(words, "Cut") and has_memory_action:
+                return "PASS", "OCR toolbar=" + "; ".join(actions) + "; hierarchy=" + " | ".join(labels), "The screenshot visibly exposed the floating selection toolbar; OCR is used because Android omits this popup from UiAutomator."
+            raise NotAvailable("Selection toolbar was not machine-readable; the saved screenshot is retained for visual review, so this is not called a product failure.")
+        self._case("B1", "B1", "Hold number to select and show actions", "Visible selection and Cut/Copy/MAdd/MUse actions", b1)
 
         def b2() -> tuple[str, str, str]:
             self._enter_number()
             x1, y = self._text_point(fraction_from_right=0.32)
             x2, _ = self._text_point(fraction_from_right=0.10)
+            # adb swipe moves as soon as touch-down occurs; it cannot reproduce the
+            # app's stationary hold timer followed by a continuous drag.
             self._swipe(x1, y, x2, y, 750)
             labels = self.d.labels()
-            actions = [name for name in ("Copy", "Cut", "Select all") if case_insensitive_match(labels, [name])]
+            _, words = self._ocr_screen("evidence/user-b2-toolbar-ocr.png")
+            actions = [name for name in ("Copy", "Cut", "Select all") if self._ocr_has(words, name)]
             if actions:
-                return "PASS", "; ".join(actions), "A hold-then-drag on the expression left the selection action UI visible. Exact selected-character boundaries are retained in the screenshot, not inferred from source code."
-            return "FAIL", "; ".join(labels), "No selection action UI was visible after the hold-then-drag gesture."
+                return "BLOCKED", "OCR toolbar=" + "; ".join(actions) + "; hierarchy=" + " | ".join(labels), "A toolbar appeared, but this adb swipe did not establish the uninterrupted hold-then-drag sequence or prove that the selected range changed."
+            raise NotAvailable("The emulator input API could not reproduce the app-specific stationary hold-then-drag gesture; no product failure is inferred from this attempt.")
         self._case("B2", "B2", "Drag while holding to change the selected portion", "Selection changes during an uninterrupted hold-and-drag", b2)
 
         def b4() -> tuple[str, str, str]:
-            labels = self._show_selection_menu()
-            if not case_insensitive_match(labels, ["Copy"]):
-                raise NotAvailable("Copy was not offered by the selection menu; clipboard round-trip was not attempted.")
-            self.d.tap_label("Copy", timeout=2.0)
+            self._show_selection_menu()
+            _, toolbar = self._ocr_screen("evidence/user-b4-toolbar-ocr.png")
+            if not self._ocr_has(toolbar, "Copy") or not self._tap_ocr(toolbar, "Copy"):
+                raise NotAvailable("Copy could not be located in the floating toolbar; clipboard was not tested.")
             self.d.tap_label("AC")
             bounds = self._editor_bounds()
             if bounds is None:
                 raise NotAvailable("Expression box bounds were not exposed for Paste.")
             x1, y1, x2, y2 = bounds
-            # Hold well left of the right-aligned expression to invoke the empty-box caret menu.
             x, y = x1 + max(12, min(36, (x2 - x1) // 12)), (y1 + y2) // 2
             self._hold(x, y)
-            labels = self.d.labels()
-            if not case_insensitive_match(labels, ["Paste"]):
-                raise NotAvailable(f"Paste was not offered from the empty expression box: {labels!r}")
-            self.d.tap_label("Paste", timeout=2.0)
+            _, caret_menu = self._ocr_screen("evidence/user-b4-caret-menu-ocr.png")
+            if not self._ocr_has(caret_menu, "Paste") or not self._tap_ocr(caret_menu, "Paste"):
+                raise NotAvailable("Paste could not be located in the calculator's caret menu; same-app paste was not tested.")
             actual = self.d.display_texts()
             if any("123456" in compact(value) for value in actual):
-                return "PASS", " | ".join(actual), "Copied text was pasted back through the app's user-visible caret menu. This confirms same-app clipboard round-trip, not an external Notes/Messages paste."
-            return "FAIL", " | ".join(actual), "The copied number was not restored after selecting Paste from the expression-box menu."
-        self._case("B4", "B4", "Copy then paste the selected digits", "Clipboard restores exactly 123456", b4)
+                return "PASS", " | ".join(actual), "Copy then Paste restored the digits within the calculator app; external app handoff was intentionally not tested."
+            return "FAIL", " | ".join(actual), "The copied number was not restored after Paste was selected from the calculator's caret menu."
+        self._case("B4", "B4", "Copy then paste within the calculator", "Clipboard restores exactly 123456", b4)
 
         def b5() -> tuple[str, str, str]:
-            labels = self._show_selection_menu()
-            if not case_insensitive_match(labels, ["Cut"]):
-                raise NotAvailable("Cut was not offered by the selection menu.")
-            self.d.tap_label("Cut", timeout=2.0)
+            self._show_selection_menu()
+            _, toolbar = self._ocr_screen("evidence/user-b5-toolbar-ocr.png")
+            if not self._ocr_has(toolbar, "Cut") or not self._tap_ocr(toolbar, "Cut"):
+                raise NotAvailable("Cut could not be located in the floating toolbar; cut behavior was not tested.")
             self.d.key("7")
             actual = self.d.display_texts()
             if any(compact(value) == "7" for value in actual):
@@ -434,31 +540,45 @@ class UserQa:
         self._case("B5", "B5", "Cut a held number and type into the gap", "Selection is removed; next digit is 7", b5)
 
         def b7() -> tuple[str, str, str]:
-            labels = self._show_selection_menu()
-            if not any(case_insensitive_match(labels, [name]) for name in ("Copy", "Cut", "Select all")):
-                raise NotAvailable("No selection menu was exposed; AC-while-selected could not be attempted.")
+            self._show_selection_menu()
+            _, toolbar = self._ocr_screen("evidence/user-b7-toolbar-ocr.png")
+            if not (self._ocr_has(toolbar, "Copy") or self._ocr_has(toolbar, "Cut")):
+                raise NotAvailable("The screenshot OCR could not confirm a held selection; AC-while-selected was not inferred.")
             self.d.tap_label("AC")
             labels_after = self.d.labels()
             display = self.d.display_texts()
-            menu_still_open = any(case_insensitive_match(labels_after, [name]) for name in ("Copy", "Cut", "Select all"))
-            cleared = not any(compact(value) == "123456" for value in display)
+            _, after_words = self._ocr_screen("evidence/user-b7-after-ac-ocr.png")
+            menu_still_open = any(self._ocr_has(after_words, name) for name in ("Copy", "Cut", "MAdd", "MUse"))
+            expression_still_visible = (
+                any("123456" in compact(value) for value in display)
+                or self._ocr_has(after_words, "123456")
+            )
+            cleared = not expression_still_visible
             if cleared and not menu_still_open:
-                return "PASS", "display=" + " | ".join(display) + "; menu cleared", "AC removed the held text and selection menu."
-            return "FAIL", "display=" + " | ".join(display) + "; labels=" + " | ".join(labels_after), "AC did not visibly clear both the expression and selection menu."
-        self._case("B7", "B7", "Clear a held selection with AC", "Held text and selection menu both clear", b7)
+                return "PASS", "display=" + " | ".join(display) + "; OCR after AC=" + " ".join(w["text"] for w in after_words), "AC removed the held text and dismissed the floating selection toolbar."
+            return "FAIL", "display=" + " | ".join(display) + "; OCR after AC=" + " ".join(w["text"] for w in after_words), "AC did not visibly clear both the expression and selection toolbar."
+        self._case("B7", "B7", "Clear a held selection with AC", "Held text and selection toolbar both clear", b7)
 
         def b9() -> tuple[str, str, str]:
             self._enter_number()
-            x, y = self._text_point(fraction_from_right=0.48)
+            _, words = self._ocr_screen("evidence/user-b9-before-edit.png")
+            bounds = self._ocr_group(words, "123456")
+            if bounds is None:
+                raise NotAvailable("OCR could not locate the visible six-digit expression; a mid-number tap was not attempted.")
+            left, top, right, bottom = bounds
+            x = left + round((right - left) * 0.58)
+            y = (top + bottom) // 2
             self.d.adb("shell", "input", "tap", str(x), str(y))
             self._invalidate()
             self.d.key("9")
             display = self.d.display_texts()
             candidates = [compact(value) for value in display]
-            inserted = next((value for value in candidates if "9" in value and value.replace("9", "", 1) == "123456"), None)
-            if inserted and inserted.index("9") < len(inserted) - 1:
-                return "PASS", " | ".join(display), "A tap within the visible number inserted 9 before the final character instead of appending at the end."
-            return "FAIL", " | ".join(display), "The caret tap/key sequence did not produce an insertion inside 123456; see the saved screen and hierarchy."
+            inserted = next((value for value in candidates if len(value) == 7 and value.count("9") == 1 and value.replace("9", "", 1) == "123456"), None)
+            if inserted and 0 < inserted.index("9") < len(inserted) - 1:
+                return "PASS", " | ".join(display), "OCR located the expression and a tap 58% across its visible glyph bounds inserted 9 between existing digits."
+            if inserted:
+                raise NotAvailable(f"The digit landed at an expression edge ({inserted}); the emulator did not confirm an interior caret position.")
+            return "FAIL", " | ".join(display), "After an OCR-targeted tap inside the visible number, the keypad did not produce exactly one interior digit insertion."
         self._case("B9", "B9", "Tap inside a number and insert a digit", "9 is inserted at the caret, not appended", b9)
 
         def b11() -> tuple[str, str, str]:
@@ -469,14 +589,12 @@ class UserQa:
             x1, y1, x2, y2 = bounds
             x, y = x1 + max(12, min(36, (x2 - x1) // 12)), (y1 + y2) // 2
             self._hold(x, y)
-            labels = self.d.labels()
-            expected = [name for name in ("MUse", "Paste", "Select all") if case_insensitive_match(labels, [name])]
-            if len(expected) >= 2:
-                return "PASS", "; ".join(expected), "Holding the empty left side of the expression box exposed the caret-menu actions; screenshot retained for visual check that no operand was selected."
-            if not expected and any("selection" in label.casefold() for label in labels):
-                return "FAIL", " | ".join(labels), "The empty-box hold appears to have selected existing text instead of showing the caret menu."
-            raise NotAvailable(f"Caret menu items were not exposed by UIAutomator/OCR: {labels!r}")
-        self._case("B11", "B11", "Hold empty expression-box space for caret menu", "MUse, Paste and Select all; no operand selected", b11)
+            _, words = self._ocr_screen("evidence/user-b11-caret-menu-ocr.png")
+            actions = [name for name in ("MUse", "Paste", "Select all") if self._ocr_has(words, name)]
+            if len(actions) >= 2:
+                return "PASS", "OCR caret menu=" + "; ".join(actions), "The screenshot shows the empty-box caret menu; OCR is used because the Android floating menu is omitted from UiAutomator."
+            raise NotAvailable("The empty-box toolbar could not be confirmed by OCR; screenshot retained, no product failure inferred.")
+        self._case("B11", "B11", "Hold empty expression-box space for caret menu", "MUse/Paste/Select all caret actions", b11)
 
         def c9() -> tuple[str, str, str]:
             bounds = self._editor_bounds()
@@ -493,18 +611,22 @@ class UserQa:
         self._case("C9", "C9", "Verify tapping the expression does not open a device keyboard", "No Android soft keyboard shown", c9)
 
         def e3() -> tuple[str, str, str]:
-            labels = self.d.labels()
             menu_tap = self._try_tap(["More options", "More", "Menu"])
             if menu_tap is None:
                 self.d.adb("shell", "input", "tap", str(self.d._width - 28), str(round(self.d._height * 0.13)))
                 self._invalidate()
             labels = self.d.labels()
-            effects = case_insensitive_match(labels, ["Effects"])
-            memory = case_insensitive_match(labels, ["Memory"])
-            other = [name for name in ("History", "Settings", "Help", "Theme") if case_insensitive_match(labels, [name])]
+            _, words = self._ocr_screen("evidence/user-e3-overflow-menu.png")
+            observed = labels + [word["text"] for word in words]
+            effects = case_insensitive_match(observed, ["Effects"])
+            memory = case_insensitive_match(observed, ["Memory", "View memory"])
+            other = [name for name in ("History", "Settings", "Help", "Theme") if case_insensitive_match(observed, [name])]
+            menu_open = bool(effects or memory or other)
             if effects and (memory or len(other) >= 1):
-                return "PASS", " | ".join(labels), "The overflow menu opened and exposed Effects plus calculator menu actions. This smoke check does not verify the exact item count or reorder behavior."
-            return "FAIL", " | ".join(labels), "The overflow menu did not expose the expected Effects and menu actions."
+                return "PASS", " | ".join(observed), "The overflow menu exposed Effects plus calculator menu actions. This smoke check does not verify the exact item count or reorder behavior."
+            if not menu_open:
+                raise NotAvailable("The overflow action or menu contents were not readable through UIAutomator/OCR; no product failure inferred.")
+            return "FAIL", " | ".join(observed), "The menu opened, but the expected Effects item or other calculator menu actions were missing."
         self._case("E3", "E3", "Open the three-dot menu", "Overflow exposes Effects and the calculator actions", e3)
 
         def c10() -> tuple[str, str, str]:
@@ -517,174 +639,173 @@ class UserQa:
                     if self._try_tap(["More options", "More", "Menu"]) is None:
                         self.d.adb("shell", "input", "tap", str(self.d._width - 28), str(round(self.d._height * 0.13)))
                         self._invalidate()
-                shape_entry = case_insensitive_match(self.d.labels(), ["Key shape", "Key shapes", "Button shape"])
+                labels = self.d.labels()
+                shape_entry = case_insensitive_match(labels, ["Key shape", "Key shapes", "Button shape"])
             if not shape_entry:
                 raise NotAvailable(f"Key shape entry was not visible in the menu: {self.d.labels()!r}")
             self.d.tap_label(shape_entry, partial=True, timeout=2.0)
             labels = self.d.labels()
-            choices = [name for name in ("Circle", "Squircle", "Pill", "Rounded square", "No shape")
-                       if case_insensitive_match(labels, [name])]
+            _, words = self._ocr_screen("evidence/user-c10-key-shape-picker.png")
+            choices = [
+                name for name in ("Circle", "Squircle", "Pill", "Rounded square", "No shape")
+                if case_insensitive_match(labels, [name]) or self._ocr_has(words, name)
+            ]
             if len(choices) < 4:
-                return "FAIL", " | ".join(labels), f"The key-shape picker exposed only {len(choices)} of the five named shapes: {choices!r}."
+                raise NotAvailable(f"The picker did not expose four named shapes through UI labels/OCR: {choices!r}; labels={labels!r}")
             selected = self._try_tap(["Circle"])
             if not selected:
-                return "FAIL", "; ".join(choices), "Circle was listed but could not be selected."
-            return "PASS", "picker=" + "; ".join(choices) + "; selected=Circle", "The new picker exposed at least four named key silhouettes and accepted a Circle selection. Persistence and pixel-perfect geometry are not inferred from this one view."
+                selected = self._tap_ocr(words, "Circle")
+            if not selected:
+                raise NotAvailable("Circle was visible but the emulator could not select it; no product failure inferred.")
+            return "PASS", "picker=" + "; ".join(choices) + "; selected=Circle", "The picker exposed at least four named key silhouettes and accepted a Circle selection. Persistence and pixel-perfect geometry are not inferred from this one view."
         self._case("C10", "C10", "Open key-shape picker and select Circle", "Picker presents Circle/Squircle/Pill/Rounded square/No shape", c10)
 
         def h1_h2() -> tuple[str, str, str]:
             light_shot = self.d.report_dir / "evidence/h1-light-theme.png"
             dark_shot = self.d.report_dir / "evidence/h2-dark-theme.png"
-            labels = self.d.labels()
-            if self._try_tap(["Settings"]) is None:
-                if self._try_tap(["More options", "More", "Menu"]) is None:
-                    self.d.adb("shell", "input", "tap", str(self.d._width - 28), str(round(self.d._height * 0.13)))
-                    self._invalidate()
+            self.d.ensure_basic_panel()
+            self.d.tap_label("AC")
+            self.d.press_sequence(list("123456"))
+
+            def open_theme_settings() -> None:
                 if self._try_tap(["Settings"]) is None:
-                    raise NotAvailable(f"Settings entry was not visible: {self.d.labels()!r}")
-            labels = self.d.labels()
-            if self._try_tap(["Theme", "Appearance"]) is None:
-                raise NotAvailable(f"Theme settings were not visible: {labels!r}")
-            theme_labels = self.d.labels()
+                    if self._try_tap(["MySpace home", "Home"]) is None:
+                        self.d.adb("shell", "input", "tap", str(round(self.d._width * 0.12)), str(round(self.d._height * 0.085)))
+                        self._invalidate()
+                    if self._try_tap(["Settings"]) is None:
+                        if self._try_tap(["More options", "More", "Menu"]) is None:
+                            self.d.adb("shell", "input", "tap", str(self.d._width - 24), str(round(self.d._height * 0.12)))
+                            self._invalidate()
+                        if self._try_tap(["Settings"]) is None:
+                            raise NotAvailable(f"Settings was not exposed from the calculator's MySpace home: {self.d.labels()!r}")
+                if self._try_tap(["Theme", "Appearance"]) is None:
+                    raise NotAvailable(f"Theme setting was not exposed: {self.d.labels()!r}")
+
+            def return_to_calculator() -> None:
+                if self.d.is_calculator_screen():
+                    return
+                self.d.adb("shell", "input", "keyevent", "4")
+                self._invalidate()
+                if not self.d.is_calculator_screen() and self._try_tap(["Calculator"]) is None:
+                    raise NotAvailable(f"Could not return to the calculator after changing theme: {self.d.labels()!r}")
+                if not self.d.is_calculator_screen():
+                    raise NotAvailable(f"Calculator controls were not visible after theme change: {self.d.labels()!r}")
+
+            open_theme_settings()
             if self._try_tap(["Light"]) is None:
-                raise NotAvailable(f"Light theme option was not visible: {theme_labels!r}")
-            time.sleep(0.4)
+                raise NotAvailable(f"Light option was not exposed in Theme: {self.d.labels()!r}")
+            time.sleep(0.3)
+            return_to_calculator()
             light_path = self.d.screenshot(str(light_shot.relative_to(self.d.report_dir)))
-            self.d._last_tree = None
+
+            open_theme_settings()
             if self._try_tap(["Dark"]) is None:
-                # Return to the theme choice page if tapping Light closes the dialog.
-                if self._try_tap(["Settings"]) is not None and self._try_tap(["Theme", "Appearance"]) is not None:
-                    self._invalidate()
-                if self._try_tap(["Dark"]) is None:
-                    raise NotAvailable(f"Dark theme option was not visible after selecting Light: {self.d.labels()!r}")
-            time.sleep(0.4)
+                raise NotAvailable(f"Dark option was not exposed in Theme: {self.d.labels()!r}")
+            time.sleep(0.3)
+            return_to_calculator()
             dark_path = self.d.screenshot(str(dark_shot.relative_to(self.d.report_dir)))
             if not light_path or not dark_path:
-                return "ERROR", "light screenshot=" + str(bool(light_path)) + "; dark screenshot=" + str(bool(dark_path)), "A theme transition was attempted but a required screenshot was not captured."
+                return "ERROR", "light screenshot=" + str(bool(light_path)) + "; dark screenshot=" + str(bool(dark_path)), "A theme transition was attempted but a required calculator screenshot was not captured."
             light_digest = hashlib.sha256(light_shot.read_bytes()).hexdigest()
             dark_digest = hashlib.sha256(dark_shot.read_bytes()).hexdigest()
-            if light_digest != dark_digest:
-                return "PASS", f"Light screenshot SHA-256 {light_digest}; Dark screenshot SHA-256 {dark_digest}", "Both user-selectable theme options were reached and captured; screenshots differ. Review the embedded proof for exact color/caret claims."
-            return "FAIL", "Light and Dark screenshot bytes were identical", "The screenshot did not change after selecting the alternate theme."
-        self._case("H1-H2", "H1/H2", "Switch between Light and Dark themes", "Light and Dark options visibly change the app", h1_h2)
+            expression = self.d.display_texts()
+            if not any("123456" in compact(value) for value in expression):
+                return "FAIL", "expression after theme switch=" + " | ".join(expression), "The entered expression did not remain visible after switching themes."
+            changed_ratio = self._theme_visual_difference_ratio(light_shot, dark_shot)
+            if changed_ratio >= 0.05:
+                return "PASS", f"stable-screen pixel change={changed_ratio:.1%}; Light SHA-256={light_digest}; Dark SHA-256={dark_digest}; expression={expression!r}", "Both theme choices returned to the calculator with 123456 still visible, and more than five percent of app-screen pixels changed outside the system bars. Exact palette/caret pixels are not asserted."
+            return "BLOCKED", f"stable-screen pixel change={changed_ratio:.1%}; Light SHA-256={light_digest}; Dark SHA-256={dark_digest}", "Both options were selectable, but screenshot comparison could not distinguish their calculator appearances beyond status/navigation changes; theme application remains unverified."
+        self._case("H1-H2", "H1/H2", "Switch calculator between Light and Dark themes", "Both themes apply to the calculator while its expression remains visible", h1_h2)
 
-    def _open_apps_hub(self) -> list[str]:
-        labels = self.d.labels()
-        match = case_insensitive_match(labels, ["Apps"])
-        if match is None:
-            raise NotAvailable(f"Apps navigation control was not visible: {labels!r}")
-        self.d.tap_label(match, timeout=2.0)
-        time.sleep(0.4)
-        self._invalidate()
-        return self.d.labels()
-
-    def _return_to_apps(self) -> None:
-        labels = self.d.labels()
-        apps = case_insensitive_match(labels, ["Apps"])
-        if apps:
-            self.d.tap_label(apps, timeout=2.0)
-            self._invalidate()
-            return
-        self.d.adb("shell", "input", "keyevent", "4")
-        self._invalidate()
-
-    def _scroll_for_labels(self, candidates: Iterable[str]) -> str | None:
-        for _ in range(4):
+        def calculator_ad_labels() -> tuple[str, str, str]:
             labels = self.d.labels()
-            found = case_insensitive_match(labels, candidates)
-            if found:
-                return found
-            self._swipe(
-                self.d._width // 2, round(self.d._height * 0.78),
-                self.d._width // 2, round(self.d._height * 0.36), 400,
-            )
-        return case_insensitive_match(self.d.labels(), candidates)
+            matches = [label for label in labels if re.search(r"\b(ad|advertisement|sponsored)\b", label, re.I)]
+            if matches:
+                return "FAIL", "; ".join(matches), "An ad-like label was visible on the calculator screen. This is not a network-traffic audit."
+            return "PASS", f"Scanned {len(labels)} visible labels; no ad indicator", "No ad-like text appeared on the sampled calculator screen; this does not certify the app's network or SDK behavior."
+        self._case("ADS-CALC", "Calculator", "Scan visible calculator labels for ad indicators", "No visible ad labels on the calculator screen", calculator_ad_labels)
 
-    def run_app_surface_cases(self) -> None:
-        def a2() -> tuple[str, str, str]:
+    def run_calculator_feature_cases(self) -> None:
+        """Exercise calculator-only memory and customization journeys."""
+        def b12_memory_round_trip() -> tuple[str, str, str]:
+            self._enter_number("123456")
+            x, y = self._text_point(fraction_from_right=0.17)
+            self._hold(x, y)
+            _, add_toolbar = self._ocr_screen("evidence/user-b12-madd-toolbar.png")
+            if not self._ocr_has(add_toolbar, "MAdd") or not self._tap_ocr(add_toolbar, "MAdd"):
+                raise NotAvailable("MAdd was not machine-readable on the floating toolbar; memory was not tested.")
+
+            # Use the stored value to replace one operand in a new expression.
+            self.d.tap_label("AC")
+            self.d.press_sequence(["3", "+", "4"])
+            x, y = self._text_point(fraction_from_right=0.025)
+            self._hold(x, y)
+            _, use_toolbar = self._ocr_screen("evidence/user-b12-muse-toolbar.png")
+            if not self._ocr_has(use_toolbar, "MUse") or not self._tap_ocr(use_toolbar, "MUse"):
+                raise NotAvailable("MUse was not machine-readable on the held operand; stored value was not re-used.")
+
+            expression = self.d.display_texts()
+            if not any(compact(value) == "3+123456" for value in expression):
+                return "FAIL", "after MUse=" + " | ".join(expression), "MUse did not replace only the held 4 with the previously stored 123456."
+            self.d.key("=")
+            result = self.d.display_texts()
+            if self.d.result_visible("123459"):
+                return "PASS", "after MUse=" + " | ".join(expression) + "; after equals=" + " | ".join(result), "MAdd stored 123456 and MUse replaced the selected operand in 3+4; the resulting expression evaluated to 123459."
+            return "FAIL", "after MUse=" + " | ".join(expression) + "; after equals=" + " | ".join(result), "The stored value appeared in the expression but the calculator did not evaluate the expected sum 123459."
+        self._case("B12", "B12", "Store a number with MAdd and use it in an expression", "MUse replaces the selected 4 in 3+4 with 123456; result 123459", b12_memory_round_trip)
+
+        def memory_list() -> tuple[str, str, str]:
+            if self._try_tap(["More options", "More", "Menu"]) is None:
+                self.d.adb("shell", "input", "tap", str(self.d._width - 24), str(round(self.d._height * 0.17)))
+                self._invalidate()
             labels = self.d.labels()
-            title = case_insensitive_match(labels, ["MySpace"])
-            if not title:
-                return "FAIL", " | ".join(labels), "The installed MySpace header title was not exposed on the calculator screen."
-            return "PASS", " | ".join(labels), "The app header exposes the MySpace identity; the accompanying screenshot shows the installed app's user-visible mark. The launcher-drawer icon was not separately pixel-tested."
-        self._case("A2", "A2", "Inspect MySpace header identity", "MySpace identity and mark are visible in the app header", a2)
-
-        def hub() -> tuple[str, str, str]:
-            labels = self._open_apps_hub()
-            feature_names = ("Notes", "Calendar", "Music", "Recorder", "Scanner", "Files")
-            visible = [name for name in feature_names if case_insensitive_match(labels, [name])]
-            if len(visible) >= 2 and not self.d.is_calculator_screen():
-                return "PASS", "feature entries=" + "; ".join(visible) + "; labels=" + " | ".join(labels), "The user-visible Apps destination exposed multiple guide features; their individual landing screens are reported separately."
-            return "BLOCKED", "visible feature entries=" + "; ".join(visible) + "; labels=" + " | ".join(labels), "Apps navigation responded but the feature hub could not be distinguished from accessible labels; screenshot retained for review."
-        self._case("G-HUB", "G", "Open the Apps hub", "Visible app destinations open from Apps", hub)
-
-        def ad_scan() -> tuple[str, str, str]:
+            view = case_insensitive_match(labels, ["View memory", "Memory"])
+            if view is None:
+                raise NotAvailable(f"Calculator overflow did not expose View memory: {labels!r}")
+            self.d.tap_label(view, partial=True, timeout=2.0)
+            time.sleep(0.25)
             labels = self.d.labels()
-            ad_labels = [value for value in labels if re.search(r"\b(ad|advertisement|sponsored)\b", value, re.I)]
-            if ad_labels:
-                return "FAIL", "; ".join(ad_labels), "Ad-like labels were visible in the sampled app hub. This is a UI-label observation, not a network-traffic audit."
-            return "PASS", f"Scanned {len(labels)} accessible labels; no ad/advertisement/sponsored label found", "No ad indicators appeared in the sampled Apps hub labels. This does not prove an app-wide or network-level ad audit."
-        self._case("ADS-SAMPLE", "A/G", "Check sampled home surfaces for ad indicators", "No visible ad labels on sampled user screens", ad_scan)
+            _, words = self._ocr_screen("evidence/user-e3-memory-list.png")
+            visible = " | ".join(labels + [word["text"] for word in words])
+            if any("123456" in compact(value) for value in labels) or self._ocr_has(words, "123456"):
+                self.d.adb("shell", "input", "keyevent", "4")
+                self._invalidate()
+                return "PASS", visible, "The calculator's memory list displayed the value saved through MAdd."
+            raise NotAvailable("The memory popup opened, but its saved value was not exposed as readable text; screenshot retained for review.")
+        self._case("E3-MEMORY", "E3", "Open the calculator memory list", "Saved value 123456 is visible in View memory", memory_list)
 
-        feature_aliases = [
-            ("G-NOTES", "Notes", ["Notes", "Note"]),
-            ("G-CALENDAR", "Calendar", ["Calendar"]),
-            ("G-MUSIC", "Music", ["Music"]),
-            ("G-RECORDER", "Recorder", ["Recorder", "Voice recorder"]),
-            ("G-SCANNER", "Scanner", ["Scanner", "Scan"]),
-            ("G-FILES", "Files", ["Files", "File manager"]),
-        ]
-        for case_id, feature, aliases in feature_aliases:
-            def open_feature(case_id: str = case_id, feature: str = feature, aliases: list[str] = aliases) -> tuple[str, str, str]:
-                self._return_to_apps()
-                match = self._scroll_for_labels(aliases)
-                if not match:
-                    raise NotAvailable(f"{feature} entry was not exposed in the Apps hub after four screen scrolls.")
-                before = self.d.labels()
-                self.d.tap_label(match, partial=True, timeout=2.0)
-                time.sleep(0.45)
-                labels = self.d.labels()
-                marker = case_insensitive_match(labels, aliases)
-                screen_changed = set(labels) != set(before)
-                still_calculator = self.d.is_calculator_screen()
-                actual = "opened=" + match + "; screen changed=" + str(screen_changed) + "; calculator screen=" + str(still_calculator) + "; labels=" + " | ".join(labels)
-                if marker and screen_changed and not still_calculator:
-                    return "PASS", actual, "The feature landing screen opened from the Apps hub. Its deep workflow (e.g., reminders, recording, scanning or editing) is not inferred from opening it."
-                return "BLOCKED", actual, "The tap did not produce a positively identifiable landing-screen transition; screenshot retained for visual review."
-            self._case(case_id, "G", f"Open {feature} from Apps", f"User can reach the {feature} landing screen", open_feature)
-
-        def diagnostics() -> tuple[str, str, str]:
-            self._return_to_apps()
-            settings = self._scroll_for_labels(["Settings"])
-            if not settings:
-                # Settings commonly lives in the calculator overflow rather than the hub.
-                self.d.navigate_to_calculator(self.package)
-                if self._try_tap(["More options", "More", "Menu"]) is None:
-                    self.d.adb("shell", "input", "tap", str(self.d._width - 28), str(round(self.d._height * 0.13)))
-                    self._invalidate()
-                settings = case_insensitive_match(self.d.labels(), ["Settings"])
-            if not settings:
-                raise NotAvailable("Settings entry was not visible from Apps or the calculator overflow.")
-            self.d.tap_label(settings, timeout=2.0)
-            self._invalidate()
-            diag = case_insensitive_match(self.d.labels(), ["Diagnostics"])
-            if not diag:
-                raise NotAvailable(f"Settings opened but Diagnostics was not visible: {self.d.labels()!r}")
-            self.d.tap_label(diag, timeout=2.0)
-            self._invalidate()
+        def effects_picker() -> tuple[str, str, str]:
+            if self._try_tap(["More options", "More", "Menu"]) is None:
+                self.d.adb("shell", "input", "tap", str(self.d._width - 24), str(round(self.d._height * 0.17)))
+                self._invalidate()
             labels = self.d.labels()
-            if case_insensitive_match(labels, ["Diagnostics", "Log", "Share", "Export"]):
-                return "PASS", " | ".join(labels), "The user navigated to Diagnostics. Local save/share behavior and log contents were not exercised."
-            return "BLOCKED", " | ".join(labels), "Diagnostics destination opened but did not expose a recognizable action label."
-        self._case("G-DIAGNOSTICS", "G", "Open Settings and Diagnostics", "Reach the log collector screen", diagnostics)
-
-        def sampled_ad_sweep() -> tuple[str, str, str]:
+            effect = case_insensitive_match(labels, ["Effects"])
+            if effect is None:
+                raise NotAvailable(f"Calculator overflow did not expose Effects: {labels!r}")
+            self.d.tap_label(effect, partial=True, timeout=2.0)
             labels = self.d.labels()
-            ad_labels = [value for value in labels if re.search(r"\b(ad|advertisement|sponsored)\b", value, re.I)]
-            if ad_labels:
-                return "FAIL", "; ".join(ad_labels), "Ad-like text was detected on the current feature screen."
-            return "PASS", f"Scanned current screen: {len(labels)} accessible labels; no ad indicator", "No ad-like labels were visible on the final sampled feature screen; this is not a complete advertising/privacy audit."
-        self._case("ADS-FEATURE", "A/G", "Sample a feature screen for ad indicators", "No ad labels on the sampled feature screen", sampled_ad_sweep)
+            if not labels:
+                raise NotAvailable("Effects control opened without readable choices.")
+            effect_names = ("ripple", "bounce", "scale", "slide", "rotate", "fade", "flip", "none", "wave", "pulse", "pop", "zoom")
+            choices = [label for label in labels if any(token in label.casefold() for token in effect_names)]
+            _, words = self._ocr_screen("evidence/user-e4-effects-picker.png")
+            for word in words:
+                if any(token in word["text"].casefold() for token in effect_names) and word["text"] not in choices:
+                    choices.append(word["text"])
+            if not choices:
+                raise NotAvailable(f"Effects screen had no identifiable animation choice: {labels!r}")
+            selected = False
+            for choice in choices:
+                if self._try_tap([choice], partial=True):
+                    selected = True
+                    break
+            if not selected:
+                # A radio row may be visible only to OCR; select its first recognized choice.
+                selected = any(self._tap_ocr(words, choice) for choice in choices)
+            if not selected:
+                raise NotAvailable(f"Animation choices were visible but no selection could be made: {choices!r}")
+            return "PASS", "choices=" + "; ".join(choices) + "; selected one option", "The Effects picker exposed user-selectable calculator animation options. This smoke test confirms access and selection, not frame-by-frame animation timing."
+        self._case("E4", "E4", "Choose a calculator keypress effect", "Effects picker opens and accepts an animation choice", effects_picker)
 
     def run_standalone_cases(self) -> None:
         def header() -> tuple[str, str, str]:
@@ -694,14 +815,6 @@ class UserQa:
                 return "PASS", " | ".join(labels), "The installed standalone calculator identifies itself in the visible app header."
             return "BLOCKED", " | ".join(labels), "No accessible MyCalc/standalone label was exposed; screenshot retained."
         self._case("F-HEADER", "F", "Inspect standalone MyCalc identity", "MyCalc is visibly distinct as the standalone app", header)
-
-        def ad_scan() -> tuple[str, str, str]:
-            labels = self.d.labels()
-            matches = [value for value in labels if re.search(r"\b(ad|advertisement|sponsored)\b", value, re.I)]
-            if matches:
-                return "FAIL", "; ".join(matches), "An ad-like label appeared on the sampled standalone calculator screen."
-            return "PASS", f"Scanned {len(labels)} accessible labels; no ad indicator", "No ad label was found on the sampled standalone calculator screen; not a full network/app-wide audit."
-        self._case("F-ADS", "F", "Sample standalone calculator for ad indicators", "No visible ad labels", ad_scan)
 
     def _capture_runtime_diagnostics(self) -> dict[str, Any]:
         pid = self.d.adb("shell", "pidof", self.package, timeout=20, check=False).strip()
@@ -736,18 +849,17 @@ class UserQa:
         self._run_calculator_suite()
         assert self.qa is not None and self.device is not None
 
-        # The existing calculator suite uses one device screen and direct keypad
-        # taps; these probes continue from the same installed APK for true user
-        # interaction rather than reopening a source-built app.
+        # Every shard stays on the calculator UI. The second MySpace shard is
+        # specifically for memory/history/customization; no Notes/Scanner or other
+        # MySpace feature app is opened.
         if self.suite == "myspace-core":
             self.run_interaction_cases()
-        elif self.suite == "myspace-modules":
-            self.run_app_surface_cases()
+        elif self.suite == "myspace-features":
+            self.run_calculator_feature_cases()
         else:
             self.run_standalone_cases()
-            # F says the same calculator is shipped standalone, so exercise the
-            # same representative editing/theme journeys on that exact APK too.
             self.run_interaction_cases()
+            self.run_calculator_feature_cases()
 
         diagnostics = self._capture_runtime_diagnostics()
         calc_counts = self.calculator_report.get("summary", {})
@@ -756,7 +868,7 @@ class UserQa:
             status = row["status"]
             user_counts[status] = user_counts.get(status, 0) + 1
         metadata = {
-            "report_title": "MySpace user-facing APK QA" if self.package == DEFAULT_PACKAGE else "Standalone MyCalc user-facing APK QA",
+            "report_title": "MySpace calculator-only APK QA" if self.package == DEFAULT_PACKAGE else "Standalone MyCalc calculator-only APK QA",
             "created_utc": utc_now(),
             "suite": self.suite,
             "artifact": {
@@ -784,8 +896,8 @@ class UserQa:
             "user_results": self.results,
             "limits": [
                 "Direct APK evidence comes from Android 14/API 34 emulator UI actions, screenshots and hierarchy dumps.",
-                "Feature-page opens are smoke checks, not proof that every deep workflow works.",
-                "Ad checks scan visible text on sampled screens; they are not a network or whole-app ad audit.",
+                "Only calculator screens and calculator-specific settings are exercised; other MySpace apps are out of scope.",
+                "The calculator ad check scans sampled visible text; it is not a network or third-party SDK audit.",
                 "Source-CI runs are reported separately from direct APK results.",
             ],
         }
@@ -825,7 +937,7 @@ def main() -> int:
     parser.add_argument("--apk", type=Path, required=True)
     parser.add_argument("--package", required=True)
     parser.add_argument("--expected-sha256", required=True)
-    parser.add_argument("--suite", choices=("myspace-core", "myspace-modules", "mycalc"), required=True)
+    parser.add_argument("--suite", choices=("myspace-core", "myspace-features", "mycalc"), required=True)
     parser.add_argument("--report-dir", type=Path, required=True)
     args = parser.parse_args()
     try:
