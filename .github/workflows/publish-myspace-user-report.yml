@@ -1,6 +1,12 @@
 name: Publish MySpace v3.12.35 user QA PDF and proof bundle
 
 on:
+  # Register this manual publisher from the session branch without publishing on
+  # the code push that adds/updates this workflow. The actual job is dispatch-only.
+  push:
+    branches: [arena/e4dfeee3-aia]
+    paths:
+      - .github/workflows/publish-myspace-user-report.yml
   workflow_dispatch:
     inputs:
       source_run_id:
@@ -14,6 +20,7 @@ permissions:
 
 jobs:
   publish-report:
+    if: github.event_name == 'workflow_dispatch'
     name: Build and publish the user-facing PDF
     runs-on: ubuntu-24.04
     timeout-minutes: 25
