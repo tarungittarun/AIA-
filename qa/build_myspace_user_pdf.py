@@ -472,7 +472,7 @@ def build(args: argparse.Namespace) -> None:
         ["D · Calculator", "Selected D1–D9 behavior, history replay, arithmetic and scientific cases are exercised on the installed binaries; observed values are in the result tables.", "D10 timing/race and an official Google Calculator comparison are not claimed as passes; no AOSP substitute is used."],
         ["E · History/effects", "History persistence/replay, calculator memory list, overflow actions, and opening/selecting an Effects option are probed.", "Memory reordering and frame-by-frame animation behavior are not claimed unless explicitly observed in the run."],
         ["F · Standalone", "The standalone MyCalc binary is directly launched and its calculator flows are tested; its requested permissions come from the installed PackageManager dump.", "The guide's literal zero-requested-permissions wording is checked separately from dangerous/runtime permission prompts."],
-        ["H · Theme/caret", "Light and Dark selections are attempted from the calculator's MySpace settings route; screenshots are retained when reachable.", "Exact theme palette, caret color, and instant ink re-resolution are not pixel-certified by screenshot hashes alone."],
+        ["H · Theme/caret", "Light and Dark selections are applied through calculator-related settings; stable app-screen pixels are compared and both screenshots retained. The expression may reset while navigating settings.", "Exact theme palette, caret color, and instant ink re-resolution are not pixel-certified by this broad visual comparison."],
     ]
     story.append(table(coverage, [31 * mm, 72 * mm, available_width - 103 * mm], styles))
     story.append(Spacer(1, 7))
