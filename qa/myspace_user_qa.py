@@ -396,12 +396,23 @@ class UserQa:
     def _ensure_calculator_screen(self) -> None:
         if self.d.is_calculator_screen():
             return
+
+        def use_calculator_route() -> bool:
+            if self._try_tap(["Calculator"]) is not None and self.d.is_calculator_screen():
+                return True
+            if self._try_tap(["Apps"]) is not None:
+                if self.d.is_calculator_screen():
+                    return True
+                return self._try_tap(["Calculator"]) is not None and self.d.is_calculator_screen()
+            return False
+
+        # A home screen can expose Apps directly; do not press Back and exit it.
+        if use_calculator_route():
+            return
         self.d.adb("shell", "input", "keyevent", "4")
         self._invalidate()
-        if not self.d.is_calculator_screen() and self._try_tap(["Calculator"]) is None:
-            raise NotAvailable(f"Could not return to the calculator screen: {self.d.labels()!r}")
-        if not self.d.is_calculator_screen():
-            raise NotAvailable(f"Calculator controls were not visible after navigation: {self.d.labels()!r}")
+        if not use_calculator_route():
+            raise NotAvailable(f"Could not return to calculator controls through MySpace's Apps route: {self.d.labels()!r}")
 
     def _enter_number(self, number: str = "123456") -> None:
         self._ensure_calculator_screen()
@@ -700,14 +711,7 @@ class UserQa:
                     raise NotAvailable(f"Theme setting was not exposed: {self.d.labels()!r}")
 
             def return_to_calculator() -> None:
-                if self.d.is_calculator_screen():
-                    return
-                self.d.adb("shell", "input", "keyevent", "4")
-                self._invalidate()
-                if not self.d.is_calculator_screen() and self._try_tap(["Calculator"]) is None:
-                    raise NotAvailable(f"Could not return to the calculator after changing theme: {self.d.labels()!r}")
-                if not self.d.is_calculator_screen():
-                    raise NotAvailable(f"Calculator controls were not visible after theme change: {self.d.labels()!r}")
+                self._ensure_calculator_screen()
 
             open_theme_settings()
             if self._try_tap(["Light"]) is None:
@@ -777,8 +781,8 @@ class UserQa:
                 return "FAIL", "after MUse=" + " | ".join(expression), "MUse did not replace only the held 4 with the previously stored 123456."
             self.d.key("=")
             result = self.d.display_texts()
-            if self.d.result_visible("123459"):
-                return "PASS", "after MUse=" + " | ".join(expression) + "; after equals=" + " | ".join(result), "MAdd stored 123456 and MUse replaced the selected operand in 3+4; the resulting expression evaluated to 123459."
+            if any(compact(value).endswith("123459") for value in result):
+                return "PASS", "after MUse=" + " | ".join(expression) + "; after equals=" + " | ".join(result), "MAdd stored 123456 and MUse replaced the selected operand in 3+4; the grouped result equals 123459."
             return "FAIL", "after MUse=" + " | ".join(expression) + "; after equals=" + " | ".join(result), "The stored value appeared in the expression but the calculator did not evaluate the expected sum 123459."
         self._case("B12", "B12", "Store a number with MAdd and use it in an expression", "MUse replaces the selected 4 in 3+4 with 123456; result 123459", b12_memory_round_trip)
 
