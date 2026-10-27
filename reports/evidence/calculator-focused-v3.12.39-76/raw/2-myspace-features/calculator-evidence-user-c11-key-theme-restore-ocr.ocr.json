@@ -1,0 +1,409 @@
+{
+  "screenshot": "calculator/evidence/user-c11-key-theme-restore-ocr.png",
+  "engine": "tesseract TSV",
+  "words": [
+    {
+      "text": "136",
+      "left": 9,
+      "top": 6,
+      "width": 48,
+      "height": 12,
+      "conf": 90.159798,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u00a9",
+      "left": 47,
+      "top": 0,
+      "width": 15,
+      "height": 27,
+      "conf": 90.159798,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "746",
+      "left": 248,
+      "top": 4,
+      "width": 44,
+      "height": 14,
+      "conf": 53.773651,
+      "line": [
+        "2",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "CALCULATOR",
+      "left": 228,
+      "top": 52,
+      "width": 74,
+      "height": 7,
+      "conf": 83.179398,
+      "line": [
+        "3",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "B",
+      "left": 20,
+      "top": 35,
+      "width": 40,
+      "height": 40,
+      "conf": 88.787643,
+      "line": [
+        "4",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MySpace",
+      "left": 71,
+      "top": 47,
+      "width": 94,
+      "height": 22,
+      "conf": 96.074463,
+      "line": [
+        "4",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Key",
+      "left": 54,
+      "top": 154,
+      "width": 23,
+      "height": 30,
+      "conf": 93.269478,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "theme",
+      "left": 81,
+      "top": 164,
+      "width": 35,
+      "height": 10,
+      "conf": 96.592743,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MySpace",
+      "left": 117,
+      "top": 187,
+      "width": 53,
+      "height": 29,
+      "conf": 96.364548,
+      "line": [
+        "6",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "settings",
+      "left": 179,
+      "top": 187,
+      "width": 50,
+      "height": 29,
+      "conf": 84.579506,
+      "line": [
+        "6",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Graphite",
+      "left": 121,
+      "top": 233,
+      "width": 53,
+      "height": 14,
+      "conf": 94.753395,
+      "line": [
+        "7",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Ocean",
+      "left": 121,
+      "top": 272,
+      "width": 38,
+      "height": 10,
+      "conf": 79.685989,
+      "line": [
+        "8",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Sunset",
+      "left": 121,
+      "top": 310,
+      "width": 41,
+      "height": 10,
+      "conf": 94.250542,
+      "line": [
+        "9",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Mint",
+      "left": 121,
+      "top": 348,
+      "width": 26,
+      "height": 10,
+      "conf": 95.941162,
+      "line": [
+        "10",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "v",
+      "left": 106,
+      "top": 386,
+      "width": 10,
+      "height": 11,
+      "conf": 78.769455,
+      "line": [
+        "11",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Rose",
+      "left": 124,
+      "top": 386,
+      "width": 30,
+      "height": 10,
+      "conf": 95.183334,
+      "line": [
+        "11",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "t]",
+      "left": 69,
+      "top": 419,
+      "width": 12,
+      "height": 20,
+      "conf": 0.0,
+      "line": [
+        "12",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Lemon",
+      "left": 121,
+      "top": 424,
+      "width": 41,
+      "height": 10,
+      "conf": 84.345764,
+      "line": [
+        "13",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Iris",
+      "left": 121,
+      "top": 462,
+      "width": 17,
+      "height": 10,
+      "conf": 82.013771,
+      "line": [
+        "14",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "=",
+      "left": 116,
+      "top": 494,
+      "width": 15,
+      "height": 8,
+      "conf": 92.795769,
+      "line": [
+        "15",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "v",
+      "left": 190,
+      "top": 494,
+      "width": 14,
+      "height": 9,
+      "conf": 0.0,
+      "line": [
+        "16",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "@0o",
+      "left": 176,
+      "top": 520,
+      "width": 116,
+      "height": 42,
+      "conf": 0.0,
+      "line": [
+        "17",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "a0",
+      "left": 44,
+      "top": 591,
+      "width": 16,
+      "height": 7,
+      "conf": 48.767338,
+      "line": [
+        "18",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "a",
+      "left": 152,
+      "top": 591,
+      "width": 16,
+      "height": 6,
+      "conf": 82.079292,
+      "line": [
+        "19",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "80",
+      "left": 44,
+      "top": 600,
+      "width": 16,
+      "height": 7,
+      "conf": 52.321114,
+      "line": [
+        "20",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u00ae",
+      "left": 151,
+      "top": 598,
+      "width": 18,
+      "height": 5,
+      "conf": 62.774364,
+      "line": [
+        "21",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u00a9",
+      "left": 152,
+      "top": 603,
+      "width": 16,
+      "height": 5,
+      "conf": 87.46022,
+      "line": [
+        "22",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "g",
+      "left": 158,
+      "top": 608,
+      "width": 4,
+      "height": 1,
+      "conf": 85.851456,
+      "line": [
+        "23",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Calculator",
+      "left": 253,
+      "top": 602,
+      "width": 57,
+      "height": 10,
+      "conf": 96.348305,
+      "line": [
+        "24",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Apps",
+      "left": 40,
+      "top": 618,
+      "width": 24,
+      "height": 9,
+      "conf": 62.656509,
+      "line": [
+        "25",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Clock",
+      "left": 149,
+      "top": 618,
+      "width": 24,
+      "height": 7,
+      "conf": 92.208275,
+      "line": [
+        "26",
+        "1",
+        "1"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "report_title": "Standalone MyCalc calculator-only APK QA",
-  "created_utc": "2026-10-27T13:26:14+00:00",
+  "created_utc": "2026-10-27T13:47:18+00:00",
   "suite": "mycalc",
   "artifact": {
     "file": "MyCalc-v1.0.37-38.apk",
@@ -93,8 +93,8 @@
       "title": "History persists after activity restart and can restore an expression",
       "status": "FAIL",
       "expected": "History shows 1+1 = 2 after restart",
-      "actual": "History · 7 | Clear | Close history | = 3 | 200+10% | 27th Oct, 13:14 | = 220 | 0.1+0.2 | = 0.3 | (2+3)×4 | = 20 | 2+3×4 | 27th Oct, 13:13 | = 14",
-      "comment": "The expected entry was not found after restart. Before restart the display was ['MyCalc', 'STANDALONE', '2']; visible history labels were ['History · 7', 'Clear', 'Close history', '= 3', '200+10%', '27th Oct, 13:14', '= 220', '0.1+0.2', '= 0.3', '(2+3)×4', '= 20', '2+3×4', '27th Oct, 13:13', '= 14'].",
+      "actual": "History · 7 | Clear | Close history | = 3 | 200+10% | 27th Oct, 13:35 | = 220 | 0.1+0.2 | = 0.3 | (2+3)×4 | 27th Oct, 13:34 | = 20 | 2+3×4 | = 14",
+      "comment": "The expected entry was not found after restart. Before restart the display was ['MyCalc', 'STANDALONE', '2']; visible history labels were ['History · 7', 'Clear', 'Close history', '= 3', '200+10%', '27th Oct, 13:35', '= 220', '0.1+0.2', '= 0.3', '(2+3)×4', '27th Oct, 13:34', '= 20', '2+3×4', '= 14'].",
       "evidence": "reports/e2e/user-v3.12.39-shard-3/calculator/evidence/tc-calc-007-history.png"
     },
     {
@@ -102,7 +102,7 @@
       "title": "Grouped history card restores and re-evaluates without Error",
       "status": "FAIL",
       "expected": "History contains the 123456+1 calculation card",
-      "actual": "History · 8 | Clear | Close history | = 3 | 200+10% | 27th Oct, 13:14 | = 220 | 0.1+0.2 | = 0.3 | (2+3)×4 | = 20 | 2+3×4 | 27th Oct, 13:13 | = 14",
+      "actual": "History · 8 | Clear | Close history | = 3 | 200+10% | 27th Oct, 13:35 | = 220 | 0.1+0.2 | = 0.3 | (2+3)×4 | 27th Oct, 13:34 | = 20 | 2+3×4 | = 14",
       "comment": "The calculation card was not found in the visible history labels.",
       "evidence": "reports/e2e/user-v3.12.39-shard-3/calculator/evidence/tc-calc-011-history-card.png"
     },
@@ -126,14 +126,14 @@
     }
   ],
   "runtime_diagnostics": {
-    "package_pid_at_end": "7595",
-    "matching_log_lines": 360,
+    "package_pid_at_end": "7615",
+    "matching_log_lines": 342,
     "path": "diagnostics/target-crash-scan.txt"
   },
   "user_summary": {
-    "PASS": 19,
+    "PASS": 21,
     "FAIL": 1,
-    "BLOCKED": 5
+    "BLOCKED": 3
   },
   "user_results": [
     {
@@ -274,7 +274,7 @@
       "title": "Clear a held selection with AC",
       "status": "PASS",
       "expected": "Held text and selection toolbar both clear",
-      "actual": "display=MyCalc | STANDALONE | 0; OCR after AC=122 © 746 3 FA MyCalc STANDALONE > p v AC 0 %",
+      "actual": "display=MyCalc | STANDALONE | 0; OCR after AC=143 © 746 3 FA MyCalc STANDALONE > p v AC 0 %",
       "comment": "AC removed the held text and dismissed the floating selection toolbar.",
       "evidence": "calculator/evidence/user-b7.png",
       "hierarchy": "calculator/evidence/user-b7.xml"
@@ -318,7 +318,7 @@
       "title": "Open the three-dot menu",
       "status": "PASS",
       "expected": "Overflow exposes Effects and the calculator actions",
-      "actual": "Haptics: On | Memory | Show as fraction | Key theme | Key shape | Effects | 123 | © | eat | ‘STANDALONE, | MyCalc | Haptics: | On | Memory | Show | as | fraction | Key | theme | Key | shape | Effects",
+      "actual": "Haptics: On | Memory | Show as fraction | Key theme | Key shape | Effects | 144 | © | eat | ‘STANDALONE, | MyCalc | Haptics: | On | Memory | Show | as | fraction | Key | theme | Key | shape | Effects | . | 8",
       "comment": "The overflow menu exposed Effects plus calculator menu actions. This smoke check does not verify the exact item count or reorder behavior.",
       "evidence": "calculator/evidence/user-e3.png",
       "hierarchy": "calculator/evidence/user-e3.xml"
@@ -382,10 +382,10 @@
       "id": "E3-MEMORY",
       "guide_section": "E3",
       "title": "Open the calculator memory list",
-      "status": "BLOCKED",
+      "status": "PASS",
       "expected": "Saved value 123456 is visible in View memory",
-      "actual": "Calculator overflow did not expose View memory: ['World time', 'MyCalc', 'STANDALONE', 'History', 'More options', '3+1,23,456', '= 1,23,459', 'Toggle the scientific keys', 'Open the extra keys', 'AC', '( )', '%', '÷', '7', '8', '9', '×', '4', '5', '6', '−', '1', '2', '3', '+', '0', '.', '⌫', '=']",
-      "comment": "The user-facing control was not available to this emulator run.",
+      "actual": "Memory | Close memory | 1,23,456 | Move up from place 1 | Move down from place 1 | Move up from place 2 | Move down from place 2 | Clear memory | 146 | © | v.46 | MyCalc | ‘STANDALONE | Memory | 1,23,456 | 1,23,456 | 7 | 8 | 4 | ) | « | ©",
+      "comment": "The calculator's memory list displayed the value saved through MAdd.",
       "evidence": "calculator/evidence/user-e3-memory.png",
       "hierarchy": "calculator/evidence/user-e3-memory.xml"
     },
@@ -404,10 +404,10 @@
       "id": "C11",
       "guide_section": "C11",
       "title": "Select a calculator key theme",
-      "status": "BLOCKED",
+      "status": "PASS",
       "expected": "Key-theme picker exposes Rose and applies a visible keypad palette",
-      "actual": "Could not return to calculator controls through MySpace's Apps route: ['Tue, Oct 27', 'Home', 'Phone', 'Messages', 'MyCalc', 'Predicted app: MyCalc', 'Chrome', 'Camera', 'Search', 'Google app', 'Voice search', 'Google Lens']",
-      "comment": "The user-facing control was not available to this emulator run.",
+      "actual": "OCR-visible themes=MySpace settings, Graphite, Ocean, Sunset, Mint, Rose, Lemon, Iris; Rose-to-default-keypad screen change=18.8%; restored MySpace settings=True",
+      "comment": "The key-theme picker exposed Rose, accepted its selection, and visibly changed the calculator screen; the MySpace settings theme was restored where accessible. The eight-theme catalogue was not exhaustively audited.",
       "evidence": "calculator/evidence/user-c11.png",
       "hierarchy": "calculator/evidence/user-c11.xml"
     }

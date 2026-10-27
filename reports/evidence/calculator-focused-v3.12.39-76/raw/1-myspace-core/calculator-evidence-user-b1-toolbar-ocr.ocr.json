@@ -3,12 +3,12 @@
   "engine": "tesseract TSV",
   "words": [
     {
-      "text": "200",
-      "left": 20,
-      "top": 6,
-      "width": 37,
-      "height": 12,
-      "conf": 62.439739,
+      "text": "1:41",
+      "left": 10,
+      "top": 7,
+      "width": 22,
+      "height": 10,
+      "conf": 88.551208,
       "line": [
         "1",
         "1",
@@ -29,12 +29,12 @@
       ]
     },
     {
-      "text": "B",
-      "left": 20,
-      "top": 35,
-      "width": 40,
-      "height": 40,
-      "conf": 88.787643,
+      "text": "oO",
+      "left": 16,
+      "top": 11,
+      "width": 44,
+      "height": 68,
+      "conf": 53.442081,
       "line": [
         "3",
         "1",

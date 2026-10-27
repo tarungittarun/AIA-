@@ -3,12 +3,12 @@
   "engine": "tesseract TSV",
   "words": [
     {
-      "text": "1:20",
+      "text": "1:40",
       "left": 10,
       "top": 6,
       "width": 47,
       "height": 12,
-      "conf": 95.38269,
+      "conf": 88.723953,
       "line": [
         "1",
         "1",
@@ -21,7 +21,7 @@
       "top": 0,
       "width": 14,
       "height": 27,
-      "conf": 95.413422,
+      "conf": 95.589157,
       "line": [
         "1",
         "1",

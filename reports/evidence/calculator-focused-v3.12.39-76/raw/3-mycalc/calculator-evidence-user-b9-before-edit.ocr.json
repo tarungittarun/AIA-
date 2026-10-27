@@ -3,12 +3,12 @@
   "engine": "tesseract TSV",
   "words": [
     {
-      "text": "1:22",
+      "text": "1:43",
       "left": 10,
       "top": 6,
       "width": 47,
       "height": 12,
-      "conf": 81.358307,
+      "conf": 87.023544,
       "line": [
         "1",
         "1",
@@ -21,7 +21,7 @@
       "top": 0,
       "width": 14,
       "height": 27,
-      "conf": 94.127136,
+      "conf": 96.100433,
       "line": [
         "1",
         "1",
@@ -146,12 +146,12 @@
       ]
     },
     {
-      "text": "0",
-      "left": 114,
+      "text": "%",
+      "left": 189,
       "top": 356,
-      "width": 18,
-      "height": 23,
-      "conf": 27.314995,
+      "width": 17,
+      "height": 19,
+      "conf": 92.097099,
       "line": [
         "8",
         "1",
@@ -159,12 +159,12 @@
       ]
     },
     {
-      "text": "%",
-      "left": 189,
+      "text": "0",
+      "left": 114,
       "top": 356,
-      "width": 14,
-      "height": 18,
-      "conf": 92.327225,
+      "width": 18,
+      "height": 23,
+      "conf": 27.314995,
       "line": [
         "9",
         "1",

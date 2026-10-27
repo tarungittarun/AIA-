@@ -1,6 +1,6 @@
 {
   "report_title": "Standalone MyCalc Calculator APK E2E QA Run",
-  "created_utc": "2026-10-27T13:17:27+00:00",
+  "created_utc": "2026-10-27T13:38:18+00:00",
   "artifact": {
     "file": "MyCalc-v1.0.37-38.apk",
     "package": "app.space.calc",
@@ -105,8 +105,8 @@
       "title": "History persists after activity restart and can restore an expression",
       "status": "FAIL",
       "expected": "History shows 1+1 = 2 after restart",
-      "actual": "History · 7 | Clear | Close history | = 3 | 200+10% | 27th Oct, 13:14 | = 220 | 0.1+0.2 | = 0.3 | (2+3)×4 | = 20 | 2+3×4 | 27th Oct, 13:13 | = 14",
-      "comment": "The expected entry was not found after restart. Before restart the display was ['MyCalc', 'STANDALONE', '2']; visible history labels were ['History · 7', 'Clear', 'Close history', '= 3', '200+10%', '27th Oct, 13:14', '= 220', '0.1+0.2', '= 0.3', '(2+3)×4', '= 20', '2+3×4', '27th Oct, 13:13', '= 14'].",
+      "actual": "History · 7 | Clear | Close history | = 3 | 200+10% | 27th Oct, 13:35 | = 220 | 0.1+0.2 | = 0.3 | (2+3)×4 | 27th Oct, 13:34 | = 20 | 2+3×4 | = 14",
+      "comment": "The expected entry was not found after restart. Before restart the display was ['MyCalc', 'STANDALONE', '2']; visible history labels were ['History · 7', 'Clear', 'Close history', '= 3', '200+10%', '27th Oct, 13:35', '= 220', '0.1+0.2', '= 0.3', '(2+3)×4', '27th Oct, 13:34', '= 20', '2+3×4', '= 14'].",
       "evidence": "reports/e2e/user-v3.12.39-shard-3/calculator/evidence/tc-calc-007-history.png"
     },
     {
@@ -114,7 +114,7 @@
       "title": "Grouped history card restores and re-evaluates without Error",
       "status": "FAIL",
       "expected": "History contains the 123456+1 calculation card",
-      "actual": "History · 8 | Clear | Close history | = 3 | 200+10% | 27th Oct, 13:14 | = 220 | 0.1+0.2 | = 0.3 | (2+3)×4 | = 20 | 2+3×4 | 27th Oct, 13:13 | = 14",
+      "actual": "History · 8 | Clear | Close history | = 3 | 200+10% | 27th Oct, 13:35 | = 220 | 0.1+0.2 | = 0.3 | (2+3)×4 | 27th Oct, 13:34 | = 20 | 2+3×4 | = 14",
       "comment": "The calculation card was not found in the visible history labels.",
       "evidence": "reports/e2e/user-v3.12.39-shard-3/calculator/evidence/tc-calc-011-history-card.png"
     },

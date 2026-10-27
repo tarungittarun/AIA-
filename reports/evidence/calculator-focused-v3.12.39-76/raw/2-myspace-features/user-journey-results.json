@@ -1,6 +1,6 @@
 {
   "report_title": "MySpace calculator-only APK QA",
-  "created_utc": "2026-10-27T13:16:09+00:00",
+  "created_utc": "2026-10-27T13:36:59+00:00",
   "suite": "myspace-features",
   "artifact": {
     "file": "MySpace-v3.12.39-76-lite-dist.apk",
@@ -35,13 +35,13 @@
     }
   ],
   "runtime_diagnostics": {
-    "package_pid_at_end": "4723",
-    "matching_log_lines": 342,
+    "package_pid_at_end": "4693",
+    "matching_log_lines": 332,
     "path": "diagnostics/target-crash-scan.txt"
   },
   "user_summary": {
-    "PASS": 2,
-    "BLOCKED": 3
+    "PASS": 4,
+    "BLOCKED": 1
   },
   "user_results": [
     {
@@ -70,10 +70,10 @@
       "id": "E3-MEMORY",
       "guide_section": "E3",
       "title": "Open the calculator memory list",
-      "status": "BLOCKED",
+      "status": "PASS",
       "expected": "Saved value 123456 is visible in View memory",
-      "actual": "Calculator overflow did not expose View memory: ['MySpace home', 'MySpace', 'CALCULATOR', 'History', 'World time', 'More options', '3+4', '= 7', 'Toggle the scientific keys', 'Open the extra keys', 'AC', '( )', '%', '÷', '7', '8', '9', '×', '4', '5', '6', '−', '1', '2', '3', '+', '0', '.', '⌫', '=', 'Apps', 'Clock', 'Calculator']",
-      "comment": "The user-facing control was not available to this emulator run.",
+      "actual": "Memory | Close memory | 1,23,456 | Move up from place 1 | Move down from place 1 | Move up from place 2 | Move down from place 2 | Clear memory | 136 | © | v.46 | CALCULATOR | B | MySpace | Memory | 1,23,456 | 1,23,456 | Clear | memory | - | 5) | e | 80 | a0 | ® | A | © | > | Clock | Calculator | Apps",
+      "comment": "The calculator's memory list displayed the value saved through MAdd.",
       "evidence": "calculator/evidence/user-e3-memory.png",
       "hierarchy": "calculator/evidence/user-e3-memory.xml"
     },
@@ -92,10 +92,10 @@
       "id": "C11",
       "guide_section": "C11",
       "title": "Select a calculator key theme",
-      "status": "BLOCKED",
+      "status": "PASS",
       "expected": "Key-theme picker exposes Rose and applies a visible keypad palette",
-      "actual": "Could not return to calculator controls through MySpace's Apps route: ['Tue, Oct 27', 'Home', 'Phone', 'Messages', 'MySpace', 'Predicted app: MySpace', 'Chrome', 'Camera', 'Search', 'Google app', 'Voice search', 'Google Lens']",
-      "comment": "The user-facing control was not available to this emulator run.",
+      "actual": "OCR-visible themes=MySpace settings, Graphite, Ocean, Sunset, Mint, Rose, Lemon, Iris; Rose-to-default-keypad screen change=14.2%; restored MySpace settings=True",
+      "comment": "The key-theme picker exposed Rose, accepted its selection, and visibly changed the calculator screen; the MySpace settings theme was restored where accessible. The eight-theme catalogue was not exhaustively audited.",
       "evidence": "calculator/evidence/user-c11.png",
       "hierarchy": "calculator/evidence/user-c11.xml"
     }

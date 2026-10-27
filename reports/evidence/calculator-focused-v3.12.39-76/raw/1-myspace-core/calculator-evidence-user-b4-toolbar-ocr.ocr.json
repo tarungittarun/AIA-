@@ -3,12 +3,25 @@
   "engine": "tesseract TSV",
   "words": [
     {
-      "text": "218",
-      "left": 20,
+      "text": "42",
+      "left": 21,
       "top": 6,
-      "width": 37,
-      "height": 11,
-      "conf": 25.011353,
+      "width": 36,
+      "height": 12,
+      "conf": 83.84565,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u00a9",
+      "left": 46,
+      "top": 0,
+      "width": 14,
+      "height": 27,
+      "conf": 83.84565,
       "line": [
         "1",
         "1",
@@ -29,12 +42,12 @@
       ]
     },
     {
-      "text": "o",
-      "left": 10,
-      "top": 7,
-      "width": 50,
-      "height": 68,
-      "conf": 54.345608,
+      "text": "B",
+      "left": 20,
+      "top": 35,
+      "width": 40,
+      "height": 40,
+      "conf": 88.787643,
       "line": [
         "3",
         "1",
@@ -73,7 +86,7 @@
       "top": 98,
       "width": 20,
       "height": 10,
-      "conf": 70.588791,
+      "conf": 67.378815,
       "line": [
         "5",
         "1",
@@ -86,7 +99,7 @@
       "top": 98,
       "width": 30,
       "height": 13,
-      "conf": 65.946297,
+      "conf": 67.378815,
       "line": [
         "5",
         "1",
@@ -99,7 +112,7 @@
       "top": 98,
       "width": 35,
       "height": 10,
-      "conf": 62.611359,
+      "conf": 70.23143,
       "line": [
         "5",
         "1",
@@ -107,12 +120,25 @@
       ]
     },
     {
-      "text": "MU:",
+      "text": "\u2014",
+      "left": 184,
+      "top": 89,
+      "width": 8,
+      "height": 29,
+      "conf": 57.973396,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MUse",
       "left": 195,
       "top": 98,
-      "width": 19,
+      "width": 33,
       "height": 10,
-      "conf": 33.802658,
+      "conf": 76.598793,
       "line": [
         "5",
         "1",
@@ -120,12 +146,12 @@
       ]
     },
     {
-      "text": "Pasti",
+      "text": "Paste",
       "left": 252,
       "top": 98,
-      "width": 27,
+      "width": 34,
       "height": 10,
-      "conf": 86.88311,
+      "conf": 95.705765,
       "line": [
         "6",
         "1",
@@ -137,7 +163,7 @@
       "left": 64,
       "top": 154,
       "width": 202,
-      "height": 42,
+      "height": 49,
       "conf": 91.076767,
       "line": [
         "7",
@@ -148,9 +174,9 @@
     {
       "text": "=",
       "left": 219,
-      "top": 267,
+      "top": 263,
       "width": 9,
-      "height": 2,
+      "height": 6,
       "conf": 87.574806,
       "line": [
         "8",
@@ -163,7 +189,7 @@
       "left": 236,
       "top": 259,
       "width": 71,
-      "height": 14,
+      "height": 17,
       "conf": 87.555435,
       "line": [
         "8",
@@ -224,12 +250,12 @@
       ]
     },
     {
-      "text": "Calculati",
+      "text": "Calculator",
       "left": 253,
       "top": 602,
-      "width": 46,
+      "width": 53,
       "height": 10,
-      "conf": 0.0,
+      "conf": 94.747574,
       "line": [
         "13",
         "1",

@@ -1,0 +1,409 @@
+{
+  "screenshot": "calculator/evidence/user-c11-key-theme-restore-ocr.png",
+  "engine": "tesseract TSV",
+  "words": [
+    {
+      "text": "147",
+      "left": 9,
+      "top": 6,
+      "width": 48,
+      "height": 12,
+      "conf": 92.250618,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u00a9",
+      "left": 47,
+      "top": 0,
+      "width": 15,
+      "height": 27,
+      "conf": 92.250618,
+      "line": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "v.40",
+      "left": 248,
+      "top": 4,
+      "width": 44,
+      "height": 14,
+      "conf": 20.868149,
+      "line": [
+        "2",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "S|",
+      "left": 26,
+      "top": 49,
+      "width": 14,
+      "height": 4,
+      "conf": 28.891823,
+      "line": [
+        "3",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u2018STANDALONE,",
+      "left": 228,
+      "top": 48,
+      "width": 74,
+      "height": 7,
+      "conf": 48.380013,
+      "line": [
+        "4",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Ey",
+      "left": 26,
+      "top": 55,
+      "width": 14,
+      "height": 4,
+      "conf": 37.531769,
+      "line": [
+        "5",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MyCalc",
+      "left": 61,
+      "top": 44,
+      "width": 66,
+      "height": 19,
+      "conf": 62.844231,
+      "line": [
+        "6",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": ">",
+      "left": 25,
+      "top": 95,
+      "width": 12,
+      "height": 12,
+      "conf": 10.471466,
+      "line": [
+        "7",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "faa",
+      "left": 109,
+      "top": 141,
+      "width": 70,
+      "height": 5,
+      "conf": 0.0,
+      "line": [
+        "8",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Key",
+      "left": 58,
+      "top": 165,
+      "width": 20,
+      "height": 12,
+      "conf": 93.269478,
+      "line": [
+        "9",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "theme",
+      "left": 81,
+      "top": 164,
+      "width": 35,
+      "height": 10,
+      "conf": 96.592743,
+      "line": [
+        "9",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "6",
+      "left": 69,
+      "top": 191,
+      "width": 12,
+      "height": 20,
+      "conf": 59.520588,
+      "line": [
+        "10",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "MySpace",
+      "left": 121,
+      "top": 196,
+      "width": 56,
+      "height": 13,
+      "conf": 95.915939,
+      "line": [
+        "11",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "settings",
+      "left": 181,
+      "top": 197,
+      "width": 49,
+      "height": 12,
+      "conf": 91.247849,
+      "line": [
+        "11",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Graphite",
+      "left": 121,
+      "top": 233,
+      "width": 53,
+      "height": 14,
+      "conf": 94.753395,
+      "line": [
+        "12",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Ocean",
+      "left": 121,
+      "top": 272,
+      "width": 38,
+      "height": 10,
+      "conf": 79.685989,
+      "line": [
+        "13",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Sunset",
+      "left": 121,
+      "top": 310,
+      "width": 41,
+      "height": 10,
+      "conf": 94.250542,
+      "line": [
+        "14",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Mint",
+      "left": 121,
+      "top": 348,
+      "width": 26,
+      "height": 10,
+      "conf": 95.941162,
+      "line": [
+        "15",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "'",
+      "left": 285,
+      "top": 377,
+      "width": 8,
+      "height": 9,
+      "conf": 46.433105,
+      "line": [
+        "16",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "v",
+      "left": 106,
+      "top": 385,
+      "width": 10,
+      "height": 12,
+      "conf": 78.769455,
+      "line": [
+        "17",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Rose",
+      "left": 124,
+      "top": 386,
+      "width": 30,
+      "height": 10,
+      "conf": 95.183334,
+      "line": [
+        "17",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "t]",
+      "left": 69,
+      "top": 419,
+      "width": 12,
+      "height": 20,
+      "conf": 0.0,
+      "line": [
+        "18",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Lemon",
+      "left": 121,
+      "top": 424,
+      "width": 41,
+      "height": 10,
+      "conf": 84.345764,
+      "line": [
+        "19",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "Iris",
+      "left": 121,
+      "top": 462,
+      "width": 18,
+      "height": 10,
+      "conf": 59.85807,
+      "line": [
+        "20",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "\u2014",
+      "left": 175,
+      "top": 461,
+      "width": 116,
+      "height": 46,
+      "conf": 50.595722,
+      "line": [
+        "21",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "1",
+      "left": 43,
+      "top": 531,
+      "width": 9,
+      "height": 22,
+      "conf": 92.526321,
+      "line": [
+        "22",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "2",
+      "left": 116,
+      "top": 531,
+      "width": 15,
+      "height": 22,
+      "conf": 96.99762,
+      "line": [
+        "23",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "3",
+      "left": 190,
+      "top": 531,
+      "width": 14,
+      "height": 23,
+      "conf": 96.657509,
+      "line": [
+        "24",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "+",
+      "left": 265,
+      "top": 535,
+      "width": 13,
+      "height": 15,
+      "conf": 96.809975,
+      "line": [
+        "25",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": ".",
+      "left": 121,
+      "top": 609,
+      "width": 4,
+      "height": 3,
+      "conf": 33.865799,
+      "line": [
+        "26",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "text": "@",
+      "left": 172,
+      "top": 575,
+      "width": 50,
+      "height": 50,
+      "conf": 62.661041,
+      "line": [
+        "26",
+        "1",
+        "1"
+      ]
+    }
+  ]
+}
