@@ -51,7 +51,7 @@ The minimum demonstration a release build must pass (L4/L5): the full calculator
 | TC-ONE-C-010 | live answer appears/stays consistent; no stale answer on incomplete input | F-010 |
 | TC-ONE-C-011 | caret: tap mid-number inserts digit; `⌫` deletes one char | F-011 |
 | TC-ONE-C-012 | selection pill: long-press `123456` → highlight + `Cut Copy MAdd MUse Paste` | F-012 |
-| TC-ONE-C-013 | history: 5 entries, force-stop, relaunch → 5 entries exact | F-024 |
+| TC-ONE-C-013 | history: 5 entries, force-stop, relaunch → 5 entries exact | F-021/F-024 |
 | TC-ONE-C-014 | replay: tap card paints expression before close; race guard | F-022/23 |
 | TC-ONE-C-015 | MAdd/MUse: select `4` in `3+4`, MUse stored `123456` → `3+123456` → `= 1,23,459` | F-019/20 |
 | TC-ONE-C-016 | AC clears selection then expression | F-017 |

@@ -36,7 +36,9 @@ Machine-readable source of truth: `qa/testcases.csv` (generated from this table 
 | TC-SYS-reduced-motion-01 | X8 | effects/motion removed under setting | L4 |
 | TC-A11Y-calc-01 | §6.6 | TalkBack key announcements + caret context | L4 |
 | TC-A11Y-contrast-01 | §6.6 | all 8 key themes × light/dark contrast programmatic | L1 |
+| TC-ONE-C-B2 | F-013 | hold-then-slide selection resize (device-class input; emulator = BLOCKED per §21.2) | L5/physical |
 | TC-ONE-haptics | F-029 | on/off honored | L4 |
+| TC-ONE-C-027 | F-025 | clear (confirm) removes unpinned, keeps pinned; pins visually marked | L4 |
 | TC-ONE-clipclear | F-014/SEC-07 | clipboard 60 s auto-clear | L4 |
 
 ## A.3 Hub / search
@@ -49,6 +51,7 @@ Machine-readable source of truth: `qa/testcases.csv` (generated from this table 
 | TC-HUB-004 | F-044 | status lines freshness ≤ 1 s | L2 |
 | TC-HUB-005 | F-046 | first-run cards exactly once | L4 |
 | TC-HUB-006 | §5.5 | budgets: 25 ms/source, 120 ms paint @10k | L1 perf |
+| TC-HUB-008 | F-045 | long-press module shortcut opens primary action, works offline | L4 |
 | TC-HUB-007 | §5.5 | FTS sanitization (operators as literals) | L2 |
 
 ## A.4 Notes
@@ -59,6 +62,8 @@ Machine-readable source of truth: `qa/testcases.csv` (generated from this table 
 | TC-NOTE-save-01 | F-047 | autosave 500 ms + death restore | L4 |
 | TC-NOTE-fts-01 | F-048 | ranking + snippet + budget | L2 |
 | TC-NOTE-trash-01 | F-050 | undo snackbar + 30-day sweep | L4 |
+| TC-NOTE-pin-01 | F-049 | pin/unpin; pinned section order persists | L2/L4 |
+| TC-NOTE-att-01 | F-053 | attach from Files; stored app-private; visible in Files | L4 |
 | TC-NOTE-check-01 | F-051 | toggles + progress card | L2 |
 | TC-NOTE-edge-01…09 | §7.14 | register rows | L1/L2/L4 |
 | TC-AI-note-01 | F-054 | summarize preview/undo/provenance | L4 |
@@ -86,6 +91,8 @@ Machine-readable source of truth: `qa/testcases.csv` (generated from this table 
 | TC-CAL-alarm-02 | F-062 | inexact fallback + one-time notice | L4 |
 | TC-CAL-ics-01 | F-063 | import subset + unsupported→one-off+note | L2 |
 | TC-CAL-ics-02 | F-063 | export range re-import identity | L2 |
+| TC-CAL-edit-01 | F-060 | editor fields validate; save/edit round-trip | L4 |
+| TC-CAL-ui-01 | F-064 | today circle, event dots, swipe months, Today chip | L4 |
 | TC-CAL-edge-01…06 | §7.14 | register rows | L1/L4 |
 
 ## A.7 Files / backup
@@ -115,7 +122,7 @@ Machine-readable source of truth: `qa/testcases.csv` (generated from this table 
 | TC-REC-mark-01 | F-074 | markers insert/seek; pause rejects flags | L4 |
 | TC-REC-fmt-01 | F-075 | AAC default + WAV option; files in Files | L2 |
 | TC-AI-asr-01 | F-076 | fixture WER ≤ 12%; segments monotonic | L4 |
-| TC-REC-note-01 | F-077 | → Notes linked note content | L4 |
+| TC-REC-note-01 | F-077/F-078 | → Notes creates linked note with transcript + markers | L4 |
 | TC-REC-edge-01…06 | §7.14 | register rows | L1/L4 |
 
 ## A.9 Diagnostics / Settings / Security / System
@@ -131,6 +138,8 @@ Machine-readable source of truth: `qa/testcases.csv` (generated from this table 
 | TC-SET-about-01 | F-083 | provenance matches release bundle | L2 |
 | TC-SET-lic-01 | F-084 | licenses regenerated, complete | L1 |
 | TC-SEC-perm-full | F-034/SC-01 | full-app manifest allow-list exact | L1 |
+| TC-NCALC-parity | F-036/F-037/F-040 | flavor identity: calc-as-home, engine parity, zero module remnants (dex + strings scan) | L2/L4 |
+| TC-PERF-size-flavor | F-039 | mycalc release APK ≤ 6 MB | build gate |
 | TC-SEC-perm-flavor | F-038 | flavor manifest zero permissions | L1 |
 | TC-SEC-dex | SC-03 | no network-class symbols | L1 |
 | TC-SEC-clip-01 | SC-07 | clipboard clear | L4 |

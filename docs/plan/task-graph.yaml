@@ -1,0 +1,363 @@
+# MySpace One — task graph (single source of scheduling truth, §15.3)
+# Schema per task:
+#   id, phase, title, binding-spec [§ refs], acceptance [F/UX/TC ids or checks],
+#   depends-on [task ids], estimate (agent-iterations proxy), artifacts [paths], status
+# Statuses: open | in-progress | blocked(reason) | done(evidence-ref)
+# Rules: update statuses in the same commit as the work; populate the next phase's
+# slice at gate entry (§15.4), never from memory; placeholders below for G3–G8.
+
+- id: T-G0-001
+  phase: G0
+  title: Blueprint accepted by owner (close G0)
+  binding-spec: ["§front S1-S8", "§15.5"]
+  acceptance: ["owner acceptance recorded in reports/gates/G0.md"]
+  depends-on: []
+  estimate: 1
+  artifacts: ["reports/gates/G0.md"]
+  status: open
+
+# ---------------------------------------------------------------- G1 (8 tasks)
+- id: T-BOOT-001
+  phase: G1
+  title: Gradle workspace + version catalog + wrappers
+  binding-spec: ["§11.2", "§23.1", "Appendix HH"]
+  acceptance: ["gradle help green", "libs.versions.toml resolves", "wrappers pinned"]
+  depends-on: [T-G0-001]
+  estimate: 2
+  artifacts: ["settings.gradle.kts", "build.gradle.kts", "gradle/libs.versions.toml"]
+  status: open
+
+- id: T-BOOT-002
+  phase: G1
+  title: Both flavors assemble (full + mycalc, debug)
+  binding-spec: ["§23.2", "§23.7", "§9.3 F-036"]
+  acceptance: ["assembleFullDebug", "assembleMycalcDebug", "namespaces app.space.one/app.space.calc"]
+  depends-on: [T-BOOT-001]
+  estimate: 2
+  artifacts: ["app/build.gradle.kts", "app/src/mycalc/"]
+  status: open
+
+- id: T-BOOT-003
+  phase: G1
+  title: CI fast lane green (build + lint + unit)
+  binding-spec: ["§24.1", "§24.6"]
+  acceptance: ["PR lane green <= 12 min", "artifact upload on failure"]
+  depends-on: [T-BOOT-002]
+  estimate: 2
+  artifacts: [".github/workflows/ (new app lane)"]
+  status: open
+
+- id: T-BOOT-004
+  phase: G1
+  title: Empty hub renders on emulator + first golden
+  binding-spec: ["§5.3", "§7.1", "§20.4"]
+  acceptance: ["hub cold-renders on e33b", "screenshot golden recorded", "UX-002 baseline measured"]
+  depends-on: [T-BOOT-002]
+  estimate: 2
+  artifacts: ["feature/hub/", "app/src/test/screenshots/hub-golden.png"]
+  status: open
+
+- id: T-BOOT-005
+  phase: G1
+  title: Build provenance in BuildConfig
+  binding-spec: ["§23.2", "F-084"]
+  acceptance: ["PROVENANCE_SHA + BUILD_TIME visible in debug About row"]
+  depends-on: [T-BOOT-002]
+  estimate: 1
+  artifacts: ["app/build.gradle.kts", "debug About composable"]
+  status: open
+
+- id: T-BOOT-006
+  phase: G1
+  title: Keystore ceremony + owner backup rehearsal
+  binding-spec: ["§25.2", "§25.8", "R-010"]
+  acceptance: ["release key in CI secret store", "owner backup receipt requested",
+               "rehearsal: clean runner signs a test APK, apksigner verify passes"]
+  depends-on: [T-BOOT-002]
+  estimate: 1
+  artifacts: ["docs/ops/keystore-rehearsal.md"]
+  status: open
+
+- id: T-BOOT-007
+  phase: G1
+  title: Screenshot harness runs in CI
+  binding-spec: ["§20.4"]
+  acceptance: ["Roborazzi verify lane green", "diff artifacts upload on failure"]
+  depends-on: [T-BOOT-003, T-BOOT-004]
+  estimate: 2
+  artifacts: ["core/testing/", "CI lane step"]
+  status: open
+
+- id: T-BOOT-008
+  phase: G1
+  title: G1 gate report committed
+  binding-spec: ["§15.5", "§15.9", "§19.7"]
+  acceptance: ["every criterion row has an artifact path", "defects/ledger current"]
+  depends-on: [T-BOOT-001, T-BOOT-002, T-BOOT-003, T-BOOT-004, T-BOOT-005, T-BOOT-006, T-BOOT-007]
+  estimate: 1
+  artifacts: ["reports/gates/G1.md"]
+  status: open
+
+# --------------------------------------------------------------- G2 (22 tasks)
+- id: T-FOUND-001
+  phase: G2
+  title: tokens.csv + generator + Kotlin constants + token unit test
+  binding-spec: ["§6.2", "§6.7", "TC-SYS-tokens"]
+  acceptance: ["Kotlin table == tokens.csv (unit test)", "detekt NoHardcodedColor active"]
+  depends-on: [T-BOOT-008]
+  estimate: 2
+  artifacts: ["core/designsystem/tokens.csv", "tools/tokens-export.py"]
+  status: open
+- id: T-FOUND-002
+  phase: G2
+  title: Theme light/dark + dynamic color hooks
+  binding-spec: ["§6.2", "UX-010", "§17.7 app.theme"]
+  acceptance: ["both themes resolve tokens", "goldens light+dark"]
+  depends-on: [T-FOUND-001]
+  estimate: 2
+  artifacts: ["core/designsystem/theme/"]
+  status: open
+- id: T-FOUND-003
+  phase: G2
+  title: Typography scale + bundled fonts
+  binding-spec: ["§6.3", "§6.7"]
+  acceptance: ["type tokens compiled", "fontScale 2.0 sample golden"]
+  depends-on: [T-FOUND-001]
+  estimate: 1
+  artifacts: ["core/designsystem/type/"]
+  status: open
+- id: T-FOUND-004
+  phase: G2
+  title: Icon subset + adaptive launcher icons (both flavors)
+  binding-spec: ["§6.3", "Appendix O"]
+  acceptance: ["icon lint (unused=removed)", "flavor icons differ correctly"]
+  depends-on: [T-FOUND-001]
+  estimate: 2
+  artifacts: ["core/designsystem/icons/", "app/src/*/res/mipmap-*"]
+  status: open
+- id: T-FOUND-005
+  phase: G2
+  title: Motion tokens + reduced-motion handling
+  binding-spec: ["§6.5", "§6.11", "X8"]
+  acceptance: ["motion respects animator scale", "unit test for durations table"]
+  depends-on: [T-FOUND-001]
+  estimate: 1
+  artifacts: ["core/designsystem/motion/"]
+  status: open
+- id: T-FOUND-006
+  phase: G2
+  title: Component AppTopBar (+ large-title variant)
+  binding-spec: ["§6.8", "§6.15"]
+  acceptance: ["screenshot goldens", "a11y labels"]
+  depends-on: [T-FOUND-002, T-FOUND-003]
+  estimate: 1
+  artifacts: ["core/designsystem/components/AppTopBar.kt"]
+  status: open
+- id: T-FOUND-007
+  phase: G2
+  title: Component BottomSheet (snap, back-aware)
+  binding-spec: ["§6.8", "§6.16"]
+  acceptance: ["goldens", "back dismiss test", "focus restore"]
+  depends-on: [T-FOUND-002]
+  estimate: 2
+  artifacts: ["core/designsystem/components/BottomSheet.kt"]
+  status: open
+- id: T-FOUND-008
+  phase: G2
+  title: Components Fab / EmptyState / ErrorState
+  binding-spec: ["§6.8", "§6.11"]
+  acceptance: ["goldens incl. 8 module empty illustrations"]
+  depends-on: [T-FOUND-002, T-FOUND-004]
+  estimate: 2
+  artifacts: ["core/designsystem/components/"]
+  status: open
+- id: T-FOUND-009
+  phase: G2
+  title: Components SearchField + ResultRow
+  binding-spec: ["§6.8", "§5.5"]
+  acceptance: ["goldens", "clear affordance", "a11y list semantics"]
+  depends-on: [T-FOUND-002]
+  estimate: 1
+  artifacts: ["core/designsystem/components/"]
+  status: open
+- id: T-FOUND-010
+  phase: G2
+  title: ConfirmSheet + snackbar/undo infrastructure
+  binding-spec: ["§6.8", "UX-014", "UX-036"]
+  acceptance: ["danger confirm not default focus", "undo window >= 5 s test"]
+  depends-on: [T-FOUND-007]
+  estimate: 2
+  artifacts: ["core/designsystem/components/ConfirmSheet.kt"]
+  status: open
+- id: T-FOUND-011
+  phase: G2
+  title: Screenshot suite for all components (light/dark x font 1.0/2.0)
+  binding-spec: ["§20.4", "DQ-4"]
+  acceptance: ["matrix goldens recorded", "diff lane green"]
+  depends-on: [T-FOUND-006, T-FOUND-007, T-FOUND-008, T-FOUND-009, T-FOUND-010]
+  estimate: 2
+  artifacts: ["core/designsystem/test/"]
+  status: open
+- id: T-FOUND-012
+  phase: G2
+  title: Room v1 schema + exported schemas + migration test infra
+  binding-spec: ["§12.2", "§12.3", "§29.2"]
+  acceptance: ["schema v1 exported", "fixture migration test harness ready"]
+  depends-on: [T-BOOT-001]
+  estimate: 3
+  artifacts: ["core/data/schemas/", "core/data/AppDatabase.kt"]
+  status: open
+- id: T-FOUND-013
+  phase: G2
+  title: DAOs + repository tests (all v1 tables)
+  binding-spec: ["Appendix N", "§12.9"]
+  acceptance: ["every DAO method has L1/L2 test", "keyset pagination tests"]
+  depends-on: [T-FOUND-012]
+  estimate: 4
+  artifacts: ["core/data/dao/"]
+  status: open
+- id: T-FOUND-014
+  phase: G2
+  title: LocalRepo + SafRepo + fakes
+  binding-spec: ["§13.6", "§17.6"]
+  acceptance: ["SAF can't-do map honored", "trash/shred tests", "fakes in core/testing"]
+  depends-on: [T-FOUND-012]
+  estimate: 3
+  artifacts: ["core/data/fs/"]
+  status: open
+- id: T-FOUND-015
+  phase: G2
+  title: DataStore SettingsRegistry + typed accessors + tests
+  binding-spec: ["§17.7", "§17.12", "§12.12"]
+  acceptance: ["registry reflection test", "no raw key reads (arch test)"]
+  depends-on: [T-BOOT-001]
+  estimate: 2
+  artifacts: ["core/data/settings/"]
+  status: open
+- id: T-FOUND-016
+  phase: G2
+  title: SessionStore + RestoreKeys registry
+  binding-spec: ["§12.6"]
+  acceptance: ["continue-row data contract", "death-restore unit tests"]
+  depends-on: [T-FOUND-015]
+  estimate: 2
+  artifacts: ["core/data/session/"]
+  status: open
+- id: T-FOUND-017
+  phase: G2
+  title: Koin DI graph skeleton
+  binding-spec: ["§11.6", "ADR-04"]
+  acceptance: ["modules load in test", "no service-locator from composables (arch test)"]
+  depends-on: [T-FOUND-012, T-FOUND-015]
+  estimate: 2
+  artifacts: ["app/di.kt", "core/*/di.kt"]
+  status: open
+- id: T-FOUND-018
+  phase: G2
+  title: diag_ring schema + scrubber skeleton
+  binding-spec: ["§28.5", "§28.3"]
+  acceptance: ["ring caps + sweep tests", "scrubber PII battery green"]
+  depends-on: [T-FOUND-012]
+  estimate: 2
+  artifacts: ["core/data/diag/"]
+  status: open
+- id: T-FOUND-019
+  phase: G2
+  title: Architecture tests active in fast lane
+  binding-spec: ["§11.8", "§20.3"]
+  acceptance: ["layer arrows enforced", "no-network-symbols rule green"]
+  depends-on: [T-BOOT-003]
+  estimate: 2
+  artifacts: ["core/testing/arch/"]
+  status: open
+- id: T-FOUND-020
+  phase: G2
+  title: Hub shell + continue-row plumbing + first-run flags
+  binding-spec: ["§5.3", "§5.6", "F-043", "F-046"]
+  acceptance: ["regions R1-R10 skeleton", "privacy card once (test)"]
+  depends-on: [T-FOUND-016, T-FOUND-017]
+  estimate: 3
+  artifacts: ["feature/hub/"]
+  status: open
+- id: T-FOUND-021
+  phase: G2
+  title: StringKey infrastructure + strings.csv + lint test
+  binding-spec: ["Appendix E", "TC-SYS-strings", "UX-015"]
+  acceptance: ["feature code references keys only (test)", "banned-vocabulary grep in lane"]
+  depends-on: [T-FOUND-001]
+  estimate: 2
+  artifacts: ["core/designsystem/strings.csv"]
+  status: open
+- id: T-FOUND-022
+  phase: G2
+  title: G2 gate report committed
+  binding-spec: ["§15.5", "§15.9"]
+  acceptance: ["all criteria rows have artifact paths"]
+  depends-on: [T-FOUND-001, T-FOUND-011, T-FOUND-013, T-FOUND-017, T-FOUND-019, T-FOUND-020, T-FOUND-021]
+  estimate: 1
+  artifacts: ["reports/gates/G2.md"]
+  status: open
+
+# --------------------------------------------------- G3–G8 (slices at gates)
+# Per §15.4/§19.1: populate each slice at the previous gate's closure.
+# Counts and task families per §19.6; acceptance anchors noted for the seeder.
+- id: SLICE-G3
+  phase: G3
+  title: Calculator phase slice (34 tasks — engine laws, pads, caret/selection,
+    history/memory, themes/shapes/effects, overflow exactness, flavor parity, L5 campaign,
+    perf, a11y)
+  binding-spec: ["§17.1", "§7.2", "§20.6", "Appendix Q"]
+  acceptance: ["TC-ONE-C-001..026", "TC-LAW-001..010", "J-09", "perf budgets §23.6"]
+  depends-on: [T-FOUND-022]
+  estimate: 34
+  artifacts: ["(seeded at G2 closure)"]
+  status: open
+- id: SLICE-G4
+  phase: G4
+  title: Modules phase slice (58 tasks — notes 12, scanner 9, calendar 9, files 9,
+    music 7, recorder 7, hub 5; journeys with AI mocked)
+  binding-spec: ["§7.3-7.9", "§9.2-9.11", "§7.14", "Appendix R"]
+  acceptance: ["module P0 sets", "J-01..J-10 (AI mocked)"]
+  depends-on: [SLICE-G3]
+  estimate: 58
+  artifacts: ["(seeded at G3 closure)"]
+  status: open
+- id: SLICE-G5
+  phase: G5
+  title: On-device AI phase slice (26 tasks — pack manager, orchestrator, OCR/ASR/
+    embeddings/LLM integrations, fallback ladder, eval kit, tier profiles)
+  binding-spec: ["§16", "Appendix G"]
+  acceptance: ["TC-PACK-*", "TC-AI-*", "eval thresholds §16.8"]
+  depends-on: [SLICE-G4]
+  estimate: 26
+  artifacts: ["(seeded at G4 closure)"]
+  status: open
+- id: SLICE-G6
+  phase: G6
+  title: Hardening phase slice (18 tasks — a11y battery, perf/feel budgets, security
+    checklist SC-01..12, copy audits, battery/Doze, tablet layouts, locales, flake sweep)
+  binding-spec: ["§6.18", "§7.18", "§14.6", "§3.5"]
+  acceptance: ["TC-A11Y-*", "TC-ENV-01..16", "SC checks green"]
+  depends-on: [SLICE-G5]
+  estimate: 18
+  artifacts: ["(seeded at G5 closure)"]
+  status: open
+- id: SLICE-G7
+  phase: G7
+  title: Release phase slice (10 tasks — versioning, R8, reproducible double-build,
+    release L5, docs regen, evidence bundle, notes, staging, sign-off pack, publish)
+  binding-spec: ["§25", "§32", "Appendix I"]
+  acceptance: ["S1-S8 all true", "owner sign-off record filled"]
+  depends-on: [SLICE-G6]
+  estimate: 10
+  artifacts: ["(seeded at G6 closure)"]
+  status: open
+- id: SLICE-G8
+  phase: G8
+  title: Operate phase slice (4 tasks — triage, v1.1 backlog, runbook, G8 report)
+  binding-spec: ["§26", "§29"]
+  acceptance: ["backlog filed", "runbook committed", "ledger triaged"]
+  depends-on: [SLICE-G7]
+  estimate: 4
+  artifacts: ["(seeded at G7 closure)"]
+  status: open
