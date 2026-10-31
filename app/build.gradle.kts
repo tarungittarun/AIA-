@@ -1,3 +1,5 @@
+import java.time.Instant
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -16,7 +18,7 @@ android {
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "PROVENANCE_SHA", "\"${providers.environmentVariable("GITHUB_SHA").orElse("local").get()}\"")
-        buildConfigField("String", "BUILD_TIME", "\"${java.time.Instant.now()}\"")
+        buildConfigField("String", "BUILD_TIME", "\"${Instant.now()}\"")
     }
 
     flavorDimensions += "dist"
