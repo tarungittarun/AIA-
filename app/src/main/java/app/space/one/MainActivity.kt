@@ -1,8 +1,13 @@
 package app.space.one
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,162 +16,281 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.math.BigDecimal
-import java.math.BigInteger
-import java.math.MathContext
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MaterialTheme { Surface(Modifier.fillMaxSize()) {
-            if (BuildConfig.IS_STANDALONE) CalculatorScreen() else HubScreen()
-        } } }
+        setContent {
+            MaterialTheme {
+                Surface(Modifier.fillMaxSize()) {
+                    val store = remember { LocalStore(applicationContext) }
+                    var route by remember { mutableStateOf(if (BuildConfig.IS_STANDALONE) "Calculator" else "Home") }
+                    when (route) {
+                        "Home" -> HubScreen(open = { route = it })
+                        "Calculator" -> CalculatorScreen(store, back = { route = if (BuildConfig.IS_STANDALONE) "Calculator" else "Home" }, standalone = BuildConfig.IS_STANDALONE)
+                        "Notes" -> NotesScreen(store, back = { route = "Home" })
+                        else -> ModuleScreen(route, back = { route = "Home" })
+                    }
+                }
+            }
+        }
     }
 }
 
 private val modules = listOf("Calculator", "Notes", "Scanner", "Calendar", "Files", "Music", "Recorder", "Diagnostics")
 
 @Composable
-private fun HubScreen() {
-    var selected by remember { mutableStateOf(false) }
-    if (selected) {
-        Column(Modifier.fillMaxSize().padding(20.dp)) {
-            Button(onClick = { selected = false }) { Text("← Home") }
-            CalculatorScreen()
-        }
-        return
-    }
-    Column(Modifier.fillMaxSize().padding(24.dp)) {
-        Text("MySpace One", fontSize = 30.sp, fontWeight = FontWeight.Bold)
-        Text("Your private, on-device workspace", color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Spacer(Modifier.height(20.dp))
+private fun HubScreen(open: (String) -> Unit) {
+    Column(Modifier.fillMaxSize().padding(horizontal = 22.dp, vertical = 28.dp)) {
+        Text("MySpace One", fontSize = 31.sp, fontWeight = FontWeight.Bold)
+        Text("A private workspace that stays on this device", color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Spacer(Modifier.height(24.dp))
         LazyVerticalGrid(columns = GridCells.Fixed(2), verticalArrangement = Arrangement.spacedBy(12.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             items(modules) { module ->
-                Card(onClick = { if (module == "Calculator") selected = true }, modifier = Modifier.height(112.dp)) {
-                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.Center) {
-                        Text(module, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
-                        Text(if (module == "Calculator") "Ready to use" else "Coming in the next build", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Card(onClick = { open(module) }, modifier = Modifier.height(116.dp), shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+                    Column(Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.Center) {
+                        Text(module, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                        Text(when (module) { "Calculator" -> "Exact, offline calculations"; "Notes" -> "Write and keep notes here"; else -> "Open workspace" }, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
                     }
                 }
             }
         }
         Spacer(Modifier.height(12.dp))
-        Text("Private by design · works offline", fontSize = 13.sp)
+        Text("No sign-in · No ads · No network", fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
 @Composable
-private fun CalculatorScreen() {
-    var expression by remember { mutableStateOf("") }
+private fun AppTopBar(title: String, back: () -> Unit, trailing: @Composable (() -> Unit)? = null) {
+    Row(Modifier.fillMaxWidth().padding(bottom = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        TextButton(onClick = back) { Text("‹ Home") }
+        Text(title, fontWeight = FontWeight.SemiBold, fontSize = 19.sp)
+        if (trailing != null) trailing() else Spacer(Modifier.size(72.dp))
+    }
+}
+
+@Composable
+private fun CalculatorScreen(store: LocalStore, back: () -> Unit, standalone: Boolean) {
+    var field by remember { mutableStateOf(TextFieldValue("")) }
     var answer by remember { mutableStateOf("") }
-    val keys = listOf("AC", "⌫", "%", "÷", "7", "8", "9", "×", "4", "5", "6", "−", "1", "2", "3", "+", "±", "0", ".", "=")
-    Column(Modifier.fillMaxSize().padding(20.dp), verticalArrangement = Arrangement.Bottom) {
-        Text(expression.ifEmpty { "0" }, modifier = Modifier.fillMaxWidth(), fontSize = 32.sp)
-        Text(answer, modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp), fontSize = 24.sp, color = MaterialTheme.colorScheme.primary)
-        keys.chunked(4).forEach { row ->
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    var error by remember { mutableStateOf("") }
+    var showHistory by remember { mutableStateOf(false) }
+    var degrees by remember { mutableStateOf(true) }
+    val history = remember { mutableStateListOf<SavedCalculation>().apply { addAll(store.calculations()) } }
+    fun update(value: TextFieldValue) {
+        if (value.text.length <= 512) {
+            field = value
+            answer = CalculatorEngine.liveAnswer(value.text, degrees)
+            error = ""
+        }
+    }
+    fun insert(token: String) {
+        val start = field.selection.min.coerceIn(0, field.text.length)
+        val end = field.selection.max.coerceIn(start, field.text.length)
+        val text = field.text.replaceRange(start, end, token)
+        update(TextFieldValue(text, TextRange(start + token.length)))
+    }
+    fun calculate() {
+        val expression = field.text
+        val result = runCatching { CalculatorEngine.evaluate(expression, degrees) }.getOrElse {
+            error = it.message ?: "Check the expression"
+            answer = ""
+            return
+        }
+        answer = result
+        error = ""
+        val row = SavedCalculation(expression, result, System.currentTimeMillis())
+        store.addCalculation(row)
+        history.add(0, row)
+        field = TextFieldValue(result, TextRange(result.length))
+    }
+
+    Column(Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 8.dp), verticalArrangement = Arrangement.Bottom) {
+        if (!standalone) AppTopBar("Calculator", back)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            TextButton(onClick = { showHistory = true }) { Text("History (${history.size})") }
+            TextButton(onClick = { degrees = !degrees }) { Text(if (degrees) "DEG" else "RAD") }
+        }
+        BasicTextField(
+            value = field,
+            onValueChange = { update(it) },
+            modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 8.dp),
+            textStyle = MaterialTheme.typography.headlineMedium.copy(color = MaterialTheme.colorScheme.onSurface),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
+            readOnly = true,
+            decorationBox = { inner ->
+                if (field.text.isEmpty()) Text("0", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                inner()
+            }
+        )
+        Text(if (error.isNotEmpty()) error else answer, modifier = Modifier.fillMaxWidth().padding(bottom = 14.dp), fontSize = 24.sp, color = if (error.isNotEmpty()) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary)
+        val rows = listOf(listOf("AC", "⌫", "(", ")"), listOf("7", "8", "9", "÷"), listOf("4", "5", "6", "×"), listOf("1", "2", "3", "−"), listOf("%", "0", ".", "+"))
+        rows.forEach { row ->
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
                 row.forEach { key ->
-                    Button(onClick = {
+                    OutlinedButton(onClick = {
                         when (key) {
-                            "AC" -> { expression = ""; answer = "" }
-                            "⌫" -> { expression = expression.dropLast(1); answer = "" }
-                            "=" -> answer = runCatching { evaluate(expression) }.getOrElse { "Error" }
-                            "±" -> expression = if (expression.startsWith("-")) expression.drop(1) else "-$expression"
-                            else -> { expression += key; answer = "" }
+                            "AC" -> { update(TextFieldValue("")); error = "" }
+                            "⌫" -> {
+                                val start = field.selection.min; val end = field.selection.max
+                                if (start != end) update(TextFieldValue(field.text.removeRange(start, end), TextRange(start)))
+                                else if (start > 0) update(TextFieldValue(field.text.removeRange(start - 1, start), TextRange(start - 1)))
+                            }
+                            "(" -> insert(if (field.text.lastOrNull()?.let { it.isDigit() || it == ')' } == true) "×(" else "(")
+                            ")" -> insert(")")
+                            else -> insert(key)
                         }
-                    }, modifier = Modifier.weight(1f).padding(vertical = 3.dp)) { Text(key, fontSize = 17.sp) }
+                    }, modifier = Modifier.weight(1f).height(54.dp), shape = RoundedCornerShape(15.dp)) { Text(key, fontSize = 19.sp) }
+                }
+            }
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+            OutlinedButton(onClick = { insert("^2") }, modifier = Modifier.weight(1f).height(54.dp)) { Text("x²") }
+            OutlinedButton(onClick = { insert("^") }, modifier = Modifier.weight(1f).height(54.dp)) { Text("xʸ") }
+            OutlinedButton(onClick = { insert("√(") }, modifier = Modifier.weight(1f).height(54.dp)) { Text("√") }
+            Button(onClick = { calculate() }, modifier = Modifier.weight(1f).height(54.dp), shape = RoundedCornerShape(15.dp)) { Text("=", fontSize = 22.sp) }
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            listOf("sin(", "cos(", "tan(", "ln(", "log(", "π").forEach { fn ->
+                TextButton(onClick = { insert(fn) }, modifier = Modifier.weight(1f)) { Text(fn, fontSize = 12.sp) }
+            }
+        }
+    }
+    if (showHistory) {
+        AlertDialog(onDismissRequest = { showHistory = false }, title = { Text("Calculation history") }, text = {
+            if (history.isEmpty()) Text("Solved calculations appear here.") else LazyColumn(Modifier.height(360.dp)) {
+                items(history) { item ->
+                    Column(Modifier.fillMaxWidth().clickable {
+                        field = TextFieldValue(item.expression, TextRange(item.expression.length)); answer = item.result; error = ""; showHistory = false
+                    }.padding(vertical = 10.dp)) {
+                        Text(item.expression, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(item.result, fontSize = 20.sp)
+                        Divider()
+                    }
+                }
+            }
+        }, confirmButton = { TextButton(onClick = { showHistory = false }) { Text("Close") } }, dismissButton = {
+            TextButton(onClick = { store.clearCalculations(); history.clear() }) { Text("Clear") }
+        })
+    }
+}
+
+@Composable
+private fun NotesScreen(store: LocalStore, back: () -> Unit) {
+    val notes = remember { mutableStateListOf<SavedNote>().apply { addAll(store.notes()) } }
+    var current by remember { mutableStateOf<SavedNote?>(null) }
+    var title by remember { mutableStateOf("") }
+    var body by remember { mutableStateOf("") }
+    var editing by remember { mutableStateOf(false) }
+    fun start(note: SavedNote?) {
+        current = note; title = note?.title.orEmpty(); body = note?.body.orEmpty(); editing = true
+    }
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
+        AppTopBar(if (editing) "Edit note" else "Notes", if (editing) { { editing = false } } else back,
+            trailing = { TextButton(onClick = { start(null) }) { Text("+ New") } })
+        if (editing) {
+            OutlinedTextField(value = title, onValueChange = { title = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Title") }, singleLine = true)
+            Spacer(Modifier.height(10.dp))
+            OutlinedTextField(value = body, onValueChange = { body = it }, modifier = Modifier.fillMaxWidth().weight(1f), label = { Text("Note") })
+            Button(onClick = {
+                val saved = SavedNote(current?.id ?: System.currentTimeMillis(), title.trim(), body, System.currentTimeMillis())
+                store.saveNote(saved)
+                notes.removeAll { it.id == saved.id }; notes.add(0, saved); editing = false
+            }, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank() || body.isNotBlank()) { Text("Save on this device") }
+        } else if (notes.isEmpty()) {
+            Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("Your notes stay private", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+                Text("Create a note to get started.")
+                Spacer(Modifier.height(12.dp)); Button(onClick = { start(null) }) { Text("Create note") }
+            }
+        } else {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                items(notes, key = { it.id }) { note ->
+                    Card(Modifier.fillMaxWidth().clickable { start(note) }) {
+                        Column(Modifier.padding(16.dp)) {
+                            Text(note.title.ifBlank { "Untitled" }, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                            Text(note.body.take(240), maxLines = 3, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            TextButton(onClick = { store.deleteNote(note.id); notes.remove(note) }) { Text("Move to trash") }
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-/** Small deterministic decimal evaluator; parser is intentionally isolated for future spec expansion. */
-internal fun evaluate(source: String): String {
-    val text = source.replace('×', '*').replace('÷', '/')
-    require(text.isNotBlank())
-    val parser = DecimalParser(text)
-    val result = parser.expression()
-    require(parser.atEnd())
-    return result.decimal().stripTrailingZeros().toPlainString()
-}
-
-private data class ExactNumber private constructor(val numerator: BigInteger, val denominator: BigInteger) {
-    fun plus(other: ExactNumber) = of(numerator * other.denominator + other.numerator * denominator, denominator * other.denominator)
-    fun minus(other: ExactNumber) = of(numerator * other.denominator - other.numerator * denominator, denominator * other.denominator)
-    fun times(other: ExactNumber) = of(numerator * other.numerator, denominator * other.denominator)
-    fun dividedBy(other: ExactNumber): ExactNumber { require(other.numerator != BigInteger.ZERO); return of(numerator * other.denominator, denominator * other.numerator) }
-    fun negate() = of(numerator.negate(), denominator)
-    fun decimal() = BigDecimal(numerator).divide(BigDecimal(denominator), MathContext.DECIMAL128)
-    companion object {
-        fun of(n: BigInteger, d: BigInteger): ExactNumber {
-            require(d != BigInteger.ZERO)
-            val sign = if (d.signum() < 0) BigInteger.valueOf(-1) else BigInteger.ONE
-            val nn = n * sign; val dd = d * sign
-            val gcd = nn.gcd(dd)
-            return ExactNumber(nn / gcd, dd / gcd)
-        }
-        fun parse(s: String): ExactNumber {
-            val decimal = s.toBigDecimal().stripTrailingZeros()
-            val scale = decimal.scale().coerceAtLeast(0)
-            return of(decimal.movePointRight(scale).toBigIntegerExact(), BigInteger.TEN.pow(scale))
-        }
+@Composable
+private fun ModuleScreen(module: String, back: () -> Unit) {
+    val context = LocalContext.current
+    var pickedUri by remember { mutableStateOf<Uri?>(null) }
+    var detail by remember { mutableStateOf("") }
+    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        pickedUri = uri
+        if (uri != null) runCatching { context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) }
     }
-}
-
-private class DecimalParser(private val input: String) {
-    private var i = 0
-    fun atEnd() = i == input.length
-    fun expression(): ExactNumber {
-        var value = term()
-        while (i < input.length && (input[i] == '+' || input[i] == '-')) {
-            val op = input[i++]
-            val rhs = term()
-            value = if (op == '+') value.plus(rhs) else value.minus(rhs)
+    Column(Modifier.fillMaxSize().padding(20.dp)) {
+        AppTopBar(module, back)
+        when (module) {
+            "Files" -> {
+                Text("Choose a file using Android's document picker. Access is limited to items you select.")
+                Spacer(Modifier.height(16.dp)); Button(onClick = { picker.launch(arrayOf("*/*")) }) { Text("Browse files") }
+                pickedUri?.let { Text("Selected: ${it.lastPathSegment ?: it}", modifier = Modifier.padding(top = 12.dp)) }
+            }
+            "Scanner" -> {
+                Text("Import a page image from this device. Camera capture and document export are next in the build plan.")
+                Spacer(Modifier.height(16.dp)); Button(onClick = { picker.launch(arrayOf("image/*", "application/pdf")) }) { Text("Import document") }
+                pickedUri?.let { Text("Ready to process: ${it.lastPathSegment ?: it}") }
+            }
+            "Calendar" -> {
+                Text("Local reminders and events", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+                OutlinedTextField(detail, { detail = it }, modifier = Modifier.fillMaxWidth().padding(top = 12.dp), label = { Text("Event title") })
+                Button(onClick = { detail = "Saved locally: $detail" }, modifier = Modifier.padding(top = 8.dp), enabled = detail.isNotBlank()) { Text("Save event") }
+                Text("Calendar event persistence and reminder scheduling are being implemented.", modifier = Modifier.padding(top = 12.dp))
+            }
+            "Music" -> {
+                Text("Select audio using Android's document picker; media stays local.")
+                Button(onClick = { picker.launch(arrayOf("audio/*")) }, modifier = Modifier.padding(top = 16.dp)) { Text("Choose audio") }
+                pickedUri?.let { Text("Selected: ${it.lastPathSegment ?: it}") }
+            }
+            "Recorder" -> Text("Voice recording is being implemented as an on-device feature. No microphone access is requested yet.")
+            "Diagnostics" -> Text("Build ${BuildConfig.VERSION_NAME}\nCommit ${BuildConfig.PROVENANCE_SHA}\nOffline mode: enforced by manifest")
+            else -> Text("Settings and local app preferences are being added.")
         }
-        return value
-    }
-    private fun term(): ExactNumber {
-        var value = factor()
-        while (i < input.length && (input[i] == '*' || input[i] == '/')) {
-            val op = input[i++]
-            val rhs = factor()
-            value = if (op == '*') value.times(rhs) else value.dividedBy(rhs)
-        }
-        return value
-    }
-    private fun factor(): ExactNumber {
-        if (i < input.length && (input[i] == '+' || input[i] == '-')) {
-            val negative = input[i++] == '-'
-            val v = factor()
-            return if (negative) v.negate() else v
-        }
-        if (i < input.length && input[i] == '(') {
-            i++
-            val value = expression()
-            require(i < input.length && input[i++] == ')')
-            return value
-        }
-        val start = i
-        while (i < input.length && (input[i].isDigit() || input[i] == '.')) i++
-        require(i > start)
-        return ExactNumber.parse(input.substring(start, i))
     }
 }
