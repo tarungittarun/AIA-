@@ -30,20 +30,11 @@ jobs:
         with:
           gradle-version: '8.10.2'
       - name: Validate Gradle workspace
-        shell: bash
-        run: |
-          set +e
-          gradle help --stacktrace --console=plain > gradle-help.log 2>&1
-          result=$?
-          if [ "$result" -ne 0 ]; then
-            grep -A12 -B2 -E 'What went wrong|FAILURE:|Could not resolve|Script compilation error' gradle-help.log | head -n 18 | tr '\n' ' ' | cut -c1-8000 | while IFS= read -r line; do echo "::error title=Gradle help failed::$line"; done
-            exit "$result"
-          fi
-          cat gradle-help.log
+        run: bash .github/scripts/gradle-ci.sh help help
       - name: Run JVM tests
-        run: gradle testFullDebugUnitTest
+        run: bash .github/scripts/gradle-ci.sh tests testFullDebugUnitTest
       - name: Assemble both debug variants
-        run: gradle assembleFullDebug assembleMycalcDebug
+        run: bash .github/scripts/gradle-ci.sh assemble assembleFullDebug assembleMycalcDebug
       - name: Verify no network permission is declared
         run: '! grep -R "android.permission.INTERNET" app/src --include="AndroidManifest.xml"'
       - name: Upload APKs
