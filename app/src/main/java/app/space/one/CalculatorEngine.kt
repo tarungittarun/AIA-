@@ -40,7 +40,7 @@ internal object CalculatorEngine {
 
     private data class Value(val number: NumberValue, val percent: Boolean = false)
 
-    private data class NumberValue(val exact: Rational?, val approximate: BigDecimal? = null) {
+    private data class NumberValue(val exact: Rational?, val approximate: BigDecimal? = null, val isPi: Boolean = false) {
         fun decimal(): BigDecimal = exact?.decimal() ?: approximate!!
         fun render(): String {
             val d = decimal().stripTrailingZeros()
@@ -162,14 +162,17 @@ internal object CalculatorEngine {
             if (take('(')) { val v = expression(); require(take(')')) { "Missing closing parenthesis" }; return v }
             if (p < s.length && s[p].isLetter()) {
                 val name = readName().lowercase()
-                if (name == "pi") return Value(NumberValue.transcend(Math.PI))
+                if (name == "pi") return Value(NumberValue(null, BigDecimal.valueOf(Math.PI), isPi = true))
                 if (name == "e") return Value(NumberValue.transcend(Math.E))
                 require(take('(')) { "Function needs parentheses" }
-                val x = expression().number.decimal().toDouble()
+                val argument = expression().number
+                val x = argument.decimal().toDouble()
                 require(take(')')) { "Missing closing parenthesis" }
                 val angle = if (degrees) Math.toRadians(x) else x
                 val v = when (name) {
-                    "sin" -> sin(angle); "cos" -> cos(angle); "tan" -> tan(angle)
+                    "sin" -> if (argument.isPi) 0.0 else sin(angle)
+                    "cos" -> if (argument.isPi) -1.0 else cos(angle)
+                    "tan" -> { require(!degrees || abs(x % 180.0 - 90.0) > 1e-12) { "Tangent is undefined at this angle" }; tan(angle) }
                     "asin" -> asin(x).let { if (degrees) Math.toDegrees(it) else it }
                     "acos" -> acos(x).let { if (degrees) Math.toDegrees(it) else it }
                     "atan" -> atan(x).let { if (degrees) Math.toDegrees(it) else it }

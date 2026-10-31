@@ -18,6 +18,10 @@ class CalculatorTest {
     @Test fun standalonePercentDividesByOneHundred() = assertEquals("0.5", evaluate("50%"))
     @Test fun equalsBalancesOpenParentheses() = assertEquals("25", evaluate("(2+3"))
     @Test fun factorialSupportsZero() = assertEquals("1", evaluate("0!"))
-    @Test fun invalidDivisionIsRejected() = assertThrows(IllegalArgumentException::class.java) { evaluate("1/0") }
-    @Test fun expressionLengthIsBounded() = assertThrows(IllegalArgumentException::class.java) { evaluate("1".repeat(513)) }
+    @Test fun invalidDivisionIsRejected() {
+        assertThrows(IllegalArgumentException::class.java) { evaluate("1/0") }
+    }
+    @Test fun expressionLengthIsBounded() {
+        assertThrows(IllegalArgumentException::class.java) { evaluate("1".repeat(513)) }
+    }
 }
