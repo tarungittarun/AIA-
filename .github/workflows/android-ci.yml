@@ -40,16 +40,23 @@ jobs:
           AAPT="$ANDROID_HOME/build-tools/36.0.0/aapt"
           MYCALC="app/build/outputs/apk/mycalc/debug/app-mycalc-debug.apk"
           FULL="app/build/outputs/apk/full/debug/app-full-debug.apk"
-          "$AAPT" dump permissions "$MYCALC" | tee mycalc-permissions.txt
-          if grep -q 'uses-permission' mycalc-permissions.txt; then echo 'MyCalc must have zero permissions'; exit 1; fi
-          "$AAPT" dump permissions "$FULL" | tee full-permissions.txt
-          if grep -q 'android.permission.INTERNET' full-permissions.txt; then echo 'Internet permission is forbidden'; exit 1; fi
-          grep -q 'android.permission.RECORD_AUDIO' full-permissions.txt
-      - name: Upload APKs
+          for apk in "$MYCALC" "$FULL"; do
+            if [[ ! -f "$apk" ]]; then echo "::error::Expected APK missing: $apk"; exit 1; fi
+          done
+          "$AAPT" dump permissions "$MYCALC" > mycalc-permissions.txt
+          echo "::notice::MyCalc permission audit: $(tr '\n' ' ' < mycalc-permissions.txt)"
+          if grep -q 'uses-permission' mycalc-permissions.txt; then echo "::error::MyCalc must have zero permissions: $(tr '\n' ' ' < mycalc-permissions.txt)"; exit 1; fi
+          "$AAPT" dump permissions "$FULL" > full-permissions.txt
+          echo "::notice::Full permission audit: $(tr '\n' ' ' < full-permissions.txt)"
+          if grep -q 'android.permission.INTERNET' full-permissions.txt; then echo '::error::Internet permission is forbidden'; exit 1; fi
+          if ! grep -q 'android.permission.RECORD_AUDIO' full-permissions.txt; then echo '::error::The full app must declare microphone access for the recorder'; exit 1; fi
+      - name: Upload APKs and permission reports
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: myspace-one-debug-apks-${{ github.sha }}
-          path: app/build/outputs/apk/**/*.apk
+          path: |
+            app/build/outputs/apk/**/*.apk
+            *-permissions.txt
           if-no-files-found: warn
           retention-days: 14
