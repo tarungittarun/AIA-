@@ -1,0 +1,205 @@
+case_id,area,binding,verifies,layer,status
+TC-A11Y-calc-01,A11Y,§6.6,TalkBack key announcements + caret context,L4,planned
+TC-A11Y-contrast-01,A11Y,§6.6,all 8 key themes × light/dark contrast programmatic,L1,planned
+TC-AI-asr-01,AI,F-076,fixture WER ≤ 12%; segments monotonic,L4,planned
+TC-AI-note-01,AI,F-054,summarize preview/undo/provenance,L4,planned
+TC-AI-note-02,AI,F-054,rewrite tones + schema retry/fallback,L2,planned
+TC-CAL-alarm-01,CAL,F-062,exact fire in policy window (E33/E35),L4,planned
+TC-CAL-alarm-02,CAL,F-062,inexact fallback + one-time notice,L4,planned
+TC-CAL-dst-01,CAL,F-061,DST-crossing series (ADR-08),L1,planned
+TC-CAL-edge-01,CAL,§7.14,register rows,L1/L4,planned
+TC-CAL-edge-02,CAL,§7.14,register rows,L1/L4,planned
+TC-CAL-edge-03,CAL,§7.14,register rows,L1/L4,planned
+TC-CAL-edge-04,CAL,§7.14,register rows,L1/L4,planned
+TC-CAL-edge-05,CAL,§7.14,register rows,L1/L4,planned
+TC-CAL-edge-06,CAL,§7.14,register rows,L1/L4,planned
+TC-CAL-edit-01,CAL,F-060,editor fields validate; save/edit round-trip,L4,planned
+TC-CAL-ics-01,CAL,F-063,import subset + unsupported→one-off+note,L2,planned
+TC-CAL-ics-02,CAL,F-063,export range re-import identity,L2,planned
+TC-CAL-rr-01,CAL,F-061,golden corpus 200 rules exact occurrences,L1,planned
+TC-CAL-ui-01,CAL,F-064,"today circle, event dots, swipe months, Today chip",L4,planned
+TC-CALC-deg-01,CALC,F-009,DEG/RAD toggle + persistence + INV arc,L4,planned
+TC-CALC-edge-001,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-002,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-003,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-004,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-005,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-006,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-007,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-008,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-009,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-010,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-011,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-012,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-013,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-014,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-015,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-016,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-017,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-018,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-019,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-edge-020,CALC,§7.2.8 register,edge inputs (20 rows),L1/L2,planned
+TC-CALC-frac-01,CALC,F-030,fraction rendering + fallback >999 denom,L1,planned
+TC-CALC-perf-01,CALC,§23.6,keystroke→frame ≤ 16 ms p50 ≤ 64 chars,L1 bench,planned
+TC-DIAG-log-01,DIAG,F-080,ring caps + scrub + share preview,L2,planned
+TC-DIAG-self-01,DIAG,F-079,six-step script all green on clean build,L4,planned
+TC-ENV-01,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-02,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-03,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-04,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-05,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-06,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-07,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-08,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-09,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-10,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-11,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-12,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-13,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-14,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-15,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-ENV-16,ENV,§3.5,environment matrix rows,L4/L5,planned
+TC-FILE-anlz-01,FILE,F-066,donut correctness on fixture tree + yields,L2,planned
+TC-FILE-browse-01,FILE,F-065,private+SAF ops incl. rename/move/search,L4,planned
+TC-FILE-edge-01,FILE,§7.14,register rows,L2/L4,planned
+TC-FILE-edge-02,FILE,§7.14,register rows,L2/L4,planned
+TC-FILE-edge-03,FILE,§7.14,register rows,L2/L4,planned
+TC-FILE-edge-04,FILE,§7.14,register rows,L2/L4,planned
+TC-FILE-edge-05,FILE,§7.14,register rows,L2/L4,planned
+TC-FILE-saf-01,FILE,F-065,revoked grant card + re-grant,L4,planned
+TC-FILE-trash-01,FILE,F-068,trash lifecycle + shred,L2,planned
+TC-HUB-001,HUB,F-041,"grouped results across 4+ sources, deep links",L4,planned
+TC-HUB-002,HUB,F-042,"semantic merge + ""related"" tag (pack)",L4,planned
+TC-HUB-003,HUB,F-043,continue-row exact restoration,L4,planned
+TC-HUB-004,HUB,F-044,status lines freshness ≤ 1 s,L2,planned
+TC-HUB-005,HUB,F-046,first-run cards exactly once,L4,planned
+TC-HUB-006,HUB,§5.5,"budgets: 25 ms/source, 120 ms paint @10k",L1 perf,planned
+TC-HUB-007,HUB,§5.5,FTS sanitization (operators as literals),L2,planned
+TC-HUB-008,HUB,F-045,"long-press module shortcut opens primary action, works offline",L4,planned
+J-01,JOURNEY,§9.12,Scan to note,L4/L5,planned
+J-02,JOURNEY,§9.12,Record to minutes,L4/L5,planned
+J-03,JOURNEY,§9.12,Backup and wipe,L4/L5,planned
+J-04,JOURNEY,§9.12,Calculator day,L4/L5,planned
+J-05,JOURNEY,§9.12,Airplane full pass,L4/L5,planned
+J-06,JOURNEY,§9.12,Process death storm,L4/L5,planned
+J-07,JOURNEY,§9.12,Fresh low-end,L4/L5,planned
+J-08,JOURNEY,§9.12,TalkBack day,L4/L5,planned
+J-09,JOURNEY,§9.12,MyCalc parity,L4/L5,planned
+J-10,JOURNEY,§9.12,Storage-full drill,L4/L5,planned
+TC-LAW-001,LAW,F-008,"L1 round-trip, 10k seeded cases",L1,planned
+TC-LAW-002,LAW,F-001/8,L2 exact identity,L1,planned
+TC-LAW-003,LAW,F-008,L3 rendering never invents 0.999…,L1,planned
+TC-LAW-004,LAW,F-003,L4 percent consistency,L1,planned
+TC-LAW-005,LAW,F-002,L5 implicit-mul AST equivalence,L1,planned
+TC-LAW-006,LAW,F-006,L6 balance completeness,L1,planned
+TC-LAW-007,LAW,F-005,L7 replacement determinism,L1,planned
+TC-LAW-008,LAW,F-008,L8 continuation fidelity (1e15+1 class),L1,planned
+TC-LAW-009,LAW,F-007,L9 locale independence,L1,planned
+TC-LAW-010,LAW,F-024,L10 history fidelity,L1,planned
+TC-MUSIC-edge-01,MUSIC,§7.14,register rows,L2/L4,planned
+TC-MUSIC-edge-02,MUSIC,§7.14,register rows,L2/L4,planned
+TC-MUSIC-edge-03,MUSIC,§7.14,register rows,L2/L4,planned
+TC-MUSIC-edge-04,MUSIC,§7.14,register rows,L2/L4,planned
+TC-MUSIC-edge-05,MUSIC,§7.14,register rows,L2/L4,planned
+TC-MUSIC-edge-06,MUSIC,§7.14,register rows,L2/L4,planned
+TC-MUSIC-foc-01,MUSIC,F-070,audio focus + headset route loss,L4,planned
+TC-MUSIC-imp-01,MUSIC,F-069,"SAF/MediaStore import diff, no dupes",L4,planned
+TC-MUSIC-mini-01,MUSIC,F-072,miniplayer persists across modules,L4,planned
+TC-MUSIC-pl-01,MUSIC,F-071,playlist CRUD + M3U export/import,L2,planned
+TC-MUSIC-play-01,MUSIC,F-070,queue/shuffle/repeat/speed/gapless,L4,planned
+TC-NAV-001,NAV,UX-001,two-tap traversal audit,L2,planned
+TC-NCALC-parity,NCALC,F-036/F-037/F-040,"flavor identity: calc-as-home, engine parity, zero module remnants (dex + strings scan)",L2/L4,planned
+TC-NOTE-att-01,NOTE,F-053,attach from Files; stored app-private; visible in Files,L4,planned
+TC-NOTE-check-01,NOTE,F-051,toggles + progress card,L2,planned
+TC-NOTE-edge-01,NOTE,§7.14,register rows,L1/L2/L4,planned
+TC-NOTE-edge-02,NOTE,§7.14,register rows,L1/L2/L4,planned
+TC-NOTE-edge-03,NOTE,§7.14,register rows,L1/L2/L4,planned
+TC-NOTE-edge-04,NOTE,§7.14,register rows,L1/L2/L4,planned
+TC-NOTE-edge-05,NOTE,§7.14,register rows,L1/L2/L4,planned
+TC-NOTE-edge-06,NOTE,§7.14,register rows,L1/L2/L4,planned
+TC-NOTE-edge-07,NOTE,§7.14,register rows,L1/L2/L4,planned
+TC-NOTE-edge-08,NOTE,§7.14,register rows,L1/L2/L4,planned
+TC-NOTE-edge-09,NOTE,§7.14,register rows,L1/L2/L4,planned
+TC-NOTE-fts-01,NOTE,F-048,ranking + snippet + budget,L2,planned
+TC-NOTE-pin-01,NOTE,F-049,pin/unpin; pinned section order persists,L2/L4,planned
+TC-NOTE-rt,NOTE,F-047/52,NoteDoc↔Markdown lossless round-trip (200 corpus),L1,planned
+TC-NOTE-save-01,NOTE,F-047,autosave 500 ms + death restore,L4,planned
+TC-NOTE-trash-01,NOTE,F-050,undo snackbar + 30-day sweep,L4,planned
+TC-ONE-C-001,ONE,§20.6 table; F-001,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-002,ONE,§20.6 table; F-002,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-003,ONE,§20.6 table; F-003,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-004,ONE,§20.6 table; F-004,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-005,ONE,§20.6 table; F-005,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-006,ONE,§20.6 table; F-006,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-007,ONE,§20.6 table; F-007,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-008,ONE,§20.6 table; F-008,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-009,ONE,§20.6 table; F-009,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-010,ONE,§20.6 table; F-010,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-011,ONE,§20.6 table; F-011,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-012,ONE,§20.6 table; F-012,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-013,ONE,§20.6 table; F-021/F-024,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-014,ONE,§20.6 table; F-022/23,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-015,ONE,§20.6 table; F-019/20,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-016,ONE,§20.6 table; F-017,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-017,ONE,§20.6 table; F-016,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-018,ONE,§20.6 table; F-014/15,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-019,ONE,§20.6 table; F-018,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-020,ONE,§20.6 table; F-026,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-021,ONE,§20.6 table; F-028,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-022,ONE,§20.6 table; F-032,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-023,ONE,§20.6 table; F-027,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-024,ONE,§20.6 table; F-031,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-025,ONE,§20.6 table; F-033,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-026,ONE,§20.6 table; F-035,guide-parity set (26 cases),L4/L5,planned
+TC-ONE-C-027,ONE,F-025,"clear (confirm) removes unpinned, keeps pinned; pins visually marked",L4,planned
+TC-ONE-C-B2,ONE,F-013,hold-then-slide selection resize (device-class input; emulator = BLOCKED per §21.2),L5/physical,planned
+TC-ONE-clipclear,ONE,F-014/SEC-07,clipboard 60 s auto-clear,L4,planned
+TC-ONE-haptics,ONE,F-029,on/off honored,L4,planned
+TC-PACK-eval-01,PACK,§16.8,eval-kit thresholds met for pinned packs,L4,planned
+TC-PACK-mgr-01,PACK,F-081,import/enable/disable/delete lifecycle,L4,planned
+TC-PACK-sec-01,PACK,F-081/SC-06,hash mismatch disables + card,L2,planned
+TC-PERF-key,PERF,§23.6,"30 keys/s stress, no drops, no >24 ms frames",L4,planned
+TC-PERF-size-flavor,PERF,F-039,mycalc release APK ≤ 6 MB,build gate,planned
+TC-REC-edge-01,REC,§7.14,register rows,L1/L4,planned
+TC-REC-edge-02,REC,§7.14,register rows,L1/L4,planned
+TC-REC-edge-03,REC,§7.14,register rows,L1/L4,planned
+TC-REC-edge-04,REC,§7.14,register rows,L1/L4,planned
+TC-REC-edge-05,REC,§7.14,register rows,L1/L4,planned
+TC-REC-edge-06,REC,§7.14,register rows,L1/L4,planned
+TC-REC-fmt-01,REC,F-075,AAC default + WAV option; files in Files,L2,planned
+TC-REC-mark-01,REC,F-074,markers insert/seek; pause rejects flags,L4,planned
+TC-REC-note-01,REC,F-077/F-078,→ Notes creates linked note with transcript + markers,L4,planned
+TC-REC-svc-01,REC,F-073,FGS ≤ 200 ms + notification actions,L4,planned
+TC-SCAN-abs-01,SCAN,F-059,graceful absence UX,L4,planned
+TC-SCAN-cap-01,SCAN,F-055,batch capture + torch + focus,L4,planned
+TC-SCAN-crop-01,SCAN,F-056,corner detect on fixtures ≥ 95% IoU,L1,planned
+TC-SCAN-edge-01,SCAN,§7.14,register rows,L1/L4,planned
+TC-SCAN-edge-02,SCAN,§7.14,register rows,L1/L4,planned
+TC-SCAN-edge-03,SCAN,§7.14,register rows,L1/L4,planned
+TC-SCAN-edge-04,SCAN,§7.14,register rows,L1/L4,planned
+TC-SCAN-edge-05,SCAN,§7.14,register rows,L1/L4,planned
+TC-SCAN-edge-06,SCAN,§7.14,register rows,L1/L4,planned
+TC-SCAN-edge-07,SCAN,§7.14,register rows,L1/L4,planned
+TC-SCAN-exp-01,SCAN,F-058,PDF export + page order editor,L4,planned
+TC-SCAN-imp-01,SCAN,F-055,import path with camera denied,L4,planned
+TC-SCAN-ocr-01,SCAN,F-057,OCR char accuracy ≥ 92% fixture set,L4,planned
+TC-SEC-backup-01,SEC,F-067,round-trip restore identity,L4,planned
+TC-SEC-backup-02,SEC,F-067,"wrong passphrase: clean fail, no partial state",L4,planned
+TC-SEC-backup-03,SEC,§14.1,traversal/bomb fixtures rejected,L2,planned
+TC-SEC-clip-01,SEC,SC-07,clipboard clear,L4,planned
+TC-SEC-dex,SEC,SC-03,no network-class symbols,L1,planned
+TC-SEC-lock-01,SEC,SC-09,app-lock round trip,L4,planned
+TC-SEC-perm-flavor,SEC,F-038,flavor manifest zero permissions,L1,planned
+TC-SEC-perm-full,SEC,F-034/SC-01,full-app manifest allow-list exact,L1,planned
+TC-SEC-scrub-01,SEC,SC-08,PII scrubber battery,L1,planned
+TC-SET-about-01,SET,F-083,provenance matches release bundle,L2,planned
+TC-SET-lic-01,SET,F-084,"licenses regenerated, complete",L1,planned
+TC-SET-lock-01,SET,F-082,app lock threshold + credential fallback,L4,planned
+TC-STATE-bakdrift,STATE,§29.2,newer backup rejected cleanly,L2,planned
+TC-STATE-calc-01,STATE,F-043,expression+caret+selection survive death,L4,planned
+TC-STATE-calc-02,STATE,UX-017,rotation mid-selection,L4,planned
+TC-STATE-mig-01,STATE,§29.2,migration fixture round trip,L2,planned
+TC-STATE-storm,STATE,J-06,process death restoration,L4,planned
+TC-SYS-reduced-motion-01,SYS,X8,effects/motion removed under setting,L4,planned
+TC-SYS-theme-01,SYS,F-035,light/dark token resolution live,L3/L4,planned
+TC-SYS-tokens,SYS,§6.7,Kotlin tokens == tokens.csv,L1,planned
