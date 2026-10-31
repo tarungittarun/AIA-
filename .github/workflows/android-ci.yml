@@ -27,16 +27,24 @@ jobs:
       - name: Install Android SDK packages
         run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
       - uses: gradle/actions/setup-gradle@v6
-        with:
-          gradle-version: '8.10.2'
       - name: Validate Gradle workspace
         run: bash .github/scripts/gradle-ci.sh help help
       - name: Run JVM tests
         run: bash .github/scripts/gradle-ci.sh tests testFullDebugUnitTest
       - name: Assemble both debug variants
         run: bash .github/scripts/gradle-ci.sh assemble assembleFullDebug assembleMycalcDebug
-      - name: Verify no network permission is declared
-        run: '! grep -R "android.permission.INTERNET" app/src --include="AndroidManifest.xml"'
+      - name: Audit privacy-sensitive APK permissions
+        shell: bash
+        run: |
+          set -euo pipefail
+          AAPT="$ANDROID_HOME/build-tools/36.0.0/aapt"
+          MYCALC="app/build/outputs/apk/mycalc/debug/app-mycalc-debug.apk"
+          FULL="app/build/outputs/apk/full/debug/app-full-debug.apk"
+          "$AAPT" dump permissions "$MYCALC" | tee mycalc-permissions.txt
+          if grep -q 'uses-permission' mycalc-permissions.txt; then echo 'MyCalc must have zero permissions'; exit 1; fi
+          "$AAPT" dump permissions "$FULL" | tee full-permissions.txt
+          if grep -q 'android.permission.INTERNET' full-permissions.txt; then echo 'Internet permission is forbidden'; exit 1; fi
+          grep -q 'android.permission.RECORD_AUDIO' full-permissions.txt
       - name: Upload APKs
         if: always()
         uses: actions/upload-artifact@v7

@@ -43,7 +43,7 @@ internal object CalculatorEngine {
     private data class NumberValue(val exact: Rational?, val approximate: BigDecimal? = null, val isPi: Boolean = false) {
         fun decimal(): BigDecimal = exact?.decimal() ?: approximate!!
         fun render(): String {
-            val d = (if (exact == null) decimal().round(MathContext(10, RoundingMode.HALF_EVEN)) else decimal()).stripTrailingZeros()
+            val d = (if (exact == null) decimal().round(MathContext(10, RoundingMode.HALF_EVEN)) else exact.renderDecimal()).stripTrailingZeros()
             if (d.signum() == 0) return "0"
             val abs = d.abs()
             return if (abs >= BigDecimal("1e15") || abs < BigDecimal("1e-9")) d.round(MathContext(10, RoundingMode.HALF_EVEN)).toString()
@@ -87,6 +87,15 @@ internal object CalculatorEngine {
         operator fun unaryMinus() = of(-numerator, denominator)
         fun pow(n: Int): Rational = if (n == 0) ONE else if (n > 0) of(numerator.pow(n), denominator.pow(n)) else of(denominator.pow(-n), numerator.pow(-n))
         fun decimal() = BigDecimal(numerator).divide(BigDecimal(denominator), mc)
+        fun renderDecimal(): BigDecimal {
+            var residue = denominator
+            val two = BigInteger.valueOf(2)
+            while (residue.mod(two) == BigInteger.ZERO) residue /= two
+            val five = BigInteger.valueOf(5)
+            while (residue.mod(five) == BigInteger.ZERO) residue /= five
+            return if (residue == BigInteger.ONE) BigDecimal(numerator).divide(BigDecimal(denominator))
+            else BigDecimal(numerator).divide(BigDecimal(denominator), 10, RoundingMode.HALF_EVEN)
+        }
         companion object {
             val ZERO = Rational(BigInteger.ZERO, BigInteger.ONE)
             val ONE = Rational(BigInteger.ONE, BigInteger.ONE)

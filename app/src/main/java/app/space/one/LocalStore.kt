@@ -19,10 +19,14 @@ internal class LocalStore(context: Context) {
     }
 
     fun clearCalculations() { prefs.edit().putString("calc-history", "[]").apply() }
+    fun memoryValue(): String = prefs.getString("calc-memory", "") ?: ""
+    fun setMemoryValue(value: String) { prefs.edit().putString("calc-memory", value).apply() }
+    fun angleInDegrees(): Boolean = prefs.getBoolean("calc-degrees", true)
+    fun setAngleInDegrees(value: Boolean) { prefs.edit().putBoolean("calc-degrees", value).apply() }
 
     fun addCalculation(row: SavedCalculation) {
         val old = calculations().toMutableList()
-        old.add(0, row)
+        old.add(0, row.copy(expression = row.expression.replace('×', '*').replace('÷', '/').replace('−', '-')))
         val json = JSONArray()
         old.take(100).forEach { json.put(JSONObject().put("expression", it.expression).put("result", it.result).put("at", it.at)) }
         prefs.edit().putString("calc-history", json.toString()).apply()

@@ -4,7 +4,7 @@ label="$1"
 shift
 log="gradle-${label}.log"
 set +e
-gradle "$@" --stacktrace --console=plain >"$log" 2>&1
+./gradlew "$@" --stacktrace --console=plain >"$log" 2>&1
 result=$?
 set -e
 if [[ $result -ne 0 ]]; then

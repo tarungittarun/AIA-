@@ -58,6 +58,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.util.Locale
+import java.text.NumberFormat
+import java.math.BigDecimal
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +82,14 @@ class MainActivity : ComponentActivity() {
 }
 
 private val modules = listOf("Calculator", "Notes", "Scanner", "Calendar", "Files", "Music", "Recorder", "Diagnostics")
+
+private fun formatDisplay(value: String): String {
+    if (value.isBlank()) return value
+    if (value.contains('E', ignoreCase = true)) return value
+    return runCatching {
+        NumberFormat.getNumberInstance(Locale.getDefault()).apply { isGroupingUsed = true; maximumFractionDigits = 10; minimumFractionDigits = 0 }.format(BigDecimal(value))
+    }.getOrDefault(value)
+}
 
 @Composable
 private fun HubScreen(open: (String) -> Unit) {
@@ -117,11 +127,19 @@ private fun CalculatorScreen(store: LocalStore, back: () -> Unit, standalone: Bo
     var answer by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
     var showHistory by remember { mutableStateOf(false) }
-    var degrees by remember { mutableStateOf(true) }
+    var degrees by remember { mutableStateOf(store.angleInDegrees()) }
+    var memory by remember { mutableStateOf(store.memoryValue()) }
+    var inverse by remember { mutableStateOf(false) }
+    var lastResult by remember { mutableStateOf("") }
+    var repeatOperator by remember { mutableStateOf("") }
+    var repeatOperand by remember { mutableStateOf("") }
     val history = remember { mutableStateListOf<SavedCalculation>().apply { addAll(store.calculations()) } }
     fun update(value: TextFieldValue) {
         if (value.text.length <= 512) {
             field = value
+            lastResult = ""
+            repeatOperator = ""
+            repeatOperand = ""
             answer = CalculatorEngine.liveAnswer(value.text, degrees)
             error = ""
         }
@@ -129,18 +147,49 @@ private fun CalculatorScreen(store: LocalStore, back: () -> Unit, standalone: Bo
     fun insert(token: String) {
         val start = field.selection.min.coerceIn(0, field.text.length)
         val end = field.selection.max.coerceIn(start, field.text.length)
+        val operators = setOf("+", "−", "×", "÷", "^")
+        if (start == end && start > 0 && token in operators && field.text.substring(start - 1, start) in operators) {
+            val previous = field.text[start - 1]
+            if (!(token == "−" && previous in charArrayOf('×', '÷', '^'))) {
+                val text = field.text.replaceRange(start - 1, start, token)
+                update(TextFieldValue(text, TextRange(start)))
+                return
+            }
+        }
         val text = field.text.replaceRange(start, end, token)
         update(TextFieldValue(text, TextRange(start + token.length)))
     }
     fun calculate() {
         val expression = field.text
-        val result = runCatching { CalculatorEngine.evaluate(expression, degrees) }.getOrElse {
+        val pending = Regex("([+−×÷])$").find(expression)?.groupValues?.get(1).orEmpty()
+        val unaryMinusPending = pending == "−" && expression.dropLast(1).lastOrNull() in listOf('×', '÷', '^', '(')
+        val repeated = expression == lastResult && repeatOperator.isNotEmpty()
+        val evaluationInput = when {
+            repeated -> "$expression$repeatOperator$repeatOperand"
+            pending.isNotEmpty() && !unaryMinusPending -> {
+                repeatOperator = pending
+                repeatOperand = Regex("(?:\\d+(?:\\.\\d*)?|\\.\\d+|\\))+$").find(expression.dropLast(1))?.value ?: "1"
+                expression
+            }
+            else -> expression
+        }
+        val result = runCatching { CalculatorEngine.evaluate(evaluationInput, degrees) }.getOrElse {
             error = it.message ?: "Check the expression"
             answer = ""
+            val failed = SavedCalculation(expression, "Error: $error", System.currentTimeMillis())
+            store.addCalculation(failed); history.add(0, failed)
             return
         }
         answer = result
         error = ""
+        lastResult = result
+        if (!repeated && pending.isEmpty()) {
+            val op = Regex("[+−×÷](?!.*[+−×÷])").find(expression)?.value.orEmpty()
+            if (op.isNotEmpty()) {
+                repeatOperator = op
+                repeatOperand = expression.substringAfterLast(op).ifBlank { "1" }
+            }
+        }
         val row = SavedCalculation(expression, result, System.currentTimeMillis())
         store.addCalculation(row)
         history.add(0, row)
@@ -151,7 +200,7 @@ private fun CalculatorScreen(store: LocalStore, back: () -> Unit, standalone: Bo
         if (!standalone) AppTopBar("Calculator", back)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             TextButton(onClick = { showHistory = true }) { Text("History (${history.size})") }
-            TextButton(onClick = { degrees = !degrees }) { Text(if (degrees) "DEG" else "RAD") }
+            TextButton(onClick = { degrees = !degrees; store.setAngleInDegrees(degrees); answer = CalculatorEngine.liveAnswer(field.text, degrees) }) { Text(if (degrees) "DEG" else "RAD") }
         }
         BasicTextField(
             value = field,
@@ -165,7 +214,16 @@ private fun CalculatorScreen(store: LocalStore, back: () -> Unit, standalone: Bo
                 inner()
             }
         )
-        Text(if (error.isNotEmpty()) error else answer, modifier = Modifier.fillMaxWidth().padding(bottom = 14.dp), fontSize = 24.sp, color = if (error.isNotEmpty()) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary)
+        Text(if (error.isNotEmpty()) error else formatDisplay(answer), modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp), fontSize = 24.sp, color = if (error.isNotEmpty()) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary)
+        Row(Modifier.fillMaxWidth().padding(bottom = 8.dp), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(if (memory.isBlank()) "M —" else "M ${memory.take(14)}", modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
+            TextButton(onClick = { if (answer.isNotBlank()) {
+                memory = runCatching { CalculatorEngine.evaluate("${if (memory.isBlank()) "0" else memory}+$answer", degrees) }.getOrDefault(answer)
+                store.setMemoryValue(memory)
+            } }) { Text("M+") }
+            TextButton(onClick = { if (memory.isNotBlank()) insert(memory) }) { Text("MR") }
+            TextButton(onClick = { memory = ""; store.setMemoryValue("") }) { Text("MC") }
+        }
         val rows = listOf(listOf("AC", "⌫", "(", ")"), listOf("7", "8", "9", "÷"), listOf("4", "5", "6", "×"), listOf("1", "2", "3", "−"), listOf("%", "0", ".", "+"))
         rows.forEach { row ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
@@ -192,9 +250,16 @@ private fun CalculatorScreen(store: LocalStore, back: () -> Unit, standalone: Bo
             OutlinedButton(onClick = { insert("√(") }, modifier = Modifier.weight(1f).height(54.dp)) { Text("√") }
             Button(onClick = { calculate() }, modifier = Modifier.weight(1f).height(54.dp), shape = RoundedCornerShape(15.dp)) { Text("=", fontSize = 22.sp) }
         }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            listOf("sin(", "cos(", "tan(", "ln(", "log(", "π").forEach { fn ->
-                TextButton(onClick = { insert(fn) }, modifier = Modifier.weight(1f)) { Text(fn, fontSize = 12.sp) }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+            listOf("INV", "sin", "cos", "tan", "ln", "log", "π", "!").forEach { key ->
+                TextButton(onClick = {
+                    when (key) {
+                        "INV" -> inverse = !inverse
+                        "!" -> insert("!")
+                        "π" -> insert("π")
+                        else -> { insert((if (inverse) "a$key" else key) + "("); inverse = false }
+                    }
+                }, modifier = Modifier.weight(1f)) { Text(if (key == "INV" && inverse) "INV✓" else key, fontSize = 11.sp) }
             }
         }
     }
@@ -206,7 +271,7 @@ private fun CalculatorScreen(store: LocalStore, back: () -> Unit, standalone: Bo
                         field = TextFieldValue(item.expression, TextRange(item.expression.length)); answer = item.result; error = ""; showHistory = false
                     }.padding(vertical = 10.dp)) {
                         Text(item.expression, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text(item.result, fontSize = 20.sp)
+                        Text(formatDisplay(item.result), fontSize = 20.sp)
                         Divider()
                     }
                 }
@@ -223,6 +288,7 @@ private fun NotesScreen(store: LocalStore, back: () -> Unit) {
     var current by remember { mutableStateOf<SavedNote?>(null) }
     var title by remember { mutableStateOf("") }
     var body by remember { mutableStateOf("") }
+    var query by remember { mutableStateOf("") }
     var editing by remember { mutableStateOf(false) }
     fun start(note: SavedNote?) {
         current = note; title = note?.title.orEmpty(); body = note?.body.orEmpty(); editing = true
@@ -246,13 +312,15 @@ private fun NotesScreen(store: LocalStore, back: () -> Unit) {
                 Spacer(Modifier.height(12.dp)); Button(onClick = { start(null) }) { Text("Create note") }
             }
         } else {
+            OutlinedTextField(query, { query = it }, modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp), label = { Text("Search notes") }, singleLine = true)
+            val filtered = notes.filter { it.title.contains(query, true) || it.body.contains(query, true) }
             LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                items(notes, key = { it.id }) { note ->
+                items(filtered, key = { it.id }) { note ->
                     Card(Modifier.fillMaxWidth().clickable { start(note) }) {
                         Column(Modifier.padding(16.dp)) {
                             Text(note.title.ifBlank { "Untitled" }, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
                             Text(note.body.take(240), maxLines = 3, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            TextButton(onClick = { store.deleteNote(note.id); notes.remove(note) }) { Text("Move to trash") }
+                            TextButton(onClick = { store.deleteNote(note.id); notes.remove(note) }) { Text("Delete") }
                         }
                     }
                 }
@@ -265,7 +333,6 @@ private fun NotesScreen(store: LocalStore, back: () -> Unit) {
 private fun ModuleScreen(module: String, store: LocalStore, back: () -> Unit) {
     val context = LocalContext.current
     var pickedUri by remember { mutableStateOf<Uri?>(null) }
-    var message by remember { mutableStateOf("") }
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         pickedUri = uri
         if (uri != null) runCatching { context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) }
