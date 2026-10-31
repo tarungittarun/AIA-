@@ -35,7 +35,7 @@
   depends-on: [T-BOOT-001]
   estimate: 2
   artifacts: ["app/build.gradle.kts", "app/src/mycalc/"]
-  status: in-progress (flavor DSL and app entry point created; CI assembly pending)
+  status: done (Actions run 41171294911: assembleFullDebug + assembleMycalcDebug passed; namespaces configured app.space.one/app.space.calc)
 
 - id: T-BOOT-003
   phase: G1
@@ -44,8 +44,8 @@
   acceptance: ["PR lane green <= 12 min", "artifact upload on failure"]
   depends-on: [T-BOOT-002]
   estimate: 2
-  artifacts: [".github/workflows/ (new app lane)"]
-  status: open
+  artifacts: [".github/workflows/android-ci.yml"]
+  status: in-progress (Actions run 41171294911 passes both flavors and JVM tests; lint and failure-artifact evidence still to add)
 
 - id: T-BOOT-004
   phase: G1
