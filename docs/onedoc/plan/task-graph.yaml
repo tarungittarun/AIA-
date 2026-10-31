@@ -1,0 +1,285 @@
+# OneDoc v1.0 task graph — seeded from blueprint Appendix Y
+# statuses: todo | doing | blocked(reason) | done(evidence)
+tasks:
+  - id: T-G0-001
+    gate: G0
+    depends: []
+    status: todo
+    dod: >-
+      owner acceptance recorded; ledgers seeded; traceability green
+  - id: T-G1-001
+    gate: G1
+    depends: [T-G0-001]
+    status: todo
+    dod: >-
+      JDK/SDK/AVDs installed and boot-verified
+  - id: T-G1-002
+    gate: G1
+    depends: [T-G1-001]
+    status: todo
+    dod: >-
+      Gradle skeleton: all modules assemble (full+writer)
+  - id: T-G1-003
+    gate: G1
+    depends: [T-G1-002]
+    status: todo
+    dod: >-
+      CI pr.yml green <=8 jobs; budgets enforced
+  - id: T-G1-004
+    gate: G1
+    depends: [T-G1-002]
+    status: todo
+    dod: >-
+      shell app: home empty-state + settings stub + About
+  - id: T-G1-005
+    gate: G1
+    depends: [T-G1-001]
+    status: todo
+    dod: >-
+      qa-driver skeleton; AVD snapshots; N.3 ritual scripted
+  - id: T-G2-001
+    gate: G2
+    depends: [T-G1-002]
+    status: todo
+    dod: >-
+      core-model: blocks/marks/ops/normalize + invariants
+  - id: T-G2-002
+    gate: G2
+    depends: [T-G2-001]
+    status: todo
+    dod: >-
+      property harness P1-P10 green
+  - id: T-G2-003
+    gate: G2
+    depends: [T-G2-001]
+    status: todo
+    dod: >-
+      core-storage: Room schema v3 exported
+  - id: T-G2-004
+    gate: G2
+    depends: [T-G2-003]
+    status: todo
+    dod: >-
+      journal write/replay/compact; kill-trial harness pass
+  - id: T-G2-005
+    gate: G2
+    depends: [T-G2-003]
+    status: todo
+    dod: >-
+      odoc container + goldens; LAW-001/004 green
+  - id: T-G3-001
+    gate: G3
+    depends: [T-G2-005]
+    status: todo
+    dod: >-
+      editor screen: block list + caret + IME bridge
+  - id: T-G3-002
+    gate: G3
+    depends: [T-G3-001]
+    status: todo
+    dod: >-
+      IME contract + fuzzer green on 4 AVDs
+  - id: T-G3-003
+    gate: G3
+    depends: [T-G3-001]
+    status: todo
+    dod: >-
+      selection engine + toolbar state machine
+  - id: T-G3-004
+    gate: G3
+    depends: [T-G3-003]
+    status: todo
+    dod: >-
+      marks engine + 14.5 semantics
+  - id: T-G3-005
+    gate: G3
+    depends: [T-G3-001]
+    status: todo
+    dod: >-
+      undo/redo + coalescing; typing budget met
+  - id: T-G3-006
+    gate: G3
+    depends: [T-G3-005]
+    status: todo
+    dod: >-
+      editor DQ pass; a11y node contract
+  - id: T-G4-001
+    gate: G4
+    depends: [T-G3-004]
+    status: todo
+    dod: >-
+      tables + TBL cases
+  - id: T-G4-002
+    gate: G4
+    depends: [T-G3-004]
+    status: todo
+    dod: >-
+      images/assets/alt + IMG cases
+  - id: T-G4-003
+    gate: G4
+    depends: [T-G3-004]
+    status: todo
+    dod: >-
+      lists + quote/code
+  - id: T-G4-004
+    gate: G4
+    depends: [T-G3-003]
+    status: todo
+    dod: >-
+      find/replace + versions-first
+  - id: T-G4-005
+    gate: G4
+    depends: [T-G2-004]
+    status: todo
+    dod: >-
+      versions UI + restore
+  - id: T-G4-006
+    gate: G4
+    depends: [T-G2-003]
+    status: todo
+    dod: >-
+      templates: 12 built-ins + save-as
+  - id: T-G4-007
+    gate: G4
+    depends: [T-G4-001]
+    status: todo
+    dod: >-
+      TOC/map + page setup/guides
+  - id: T-G4-008
+    gate: G4
+    depends: [T-G4-007]
+    status: todo
+    dod: >-
+      reader mode
+  - id: T-G4-009
+    gate: G4
+    depends: [T-G1-004]
+    status: todo
+    dod: >-
+      library complete: filters, trash, multi-select, info
+  - id: T-G4-010
+    gate: G4
+    depends: []
+    status: todo
+    dod: >-
+      DQ-1..8 pass on every G4 screen
+  - id: T-G5-001
+    gate: G5
+    depends: [T-G2-005]
+    status: todo
+    dod: >-
+      md/txt writers + goldens
+  - id: T-G5-002
+    gate: G5
+    depends: [T-G5-001]
+    status: todo
+    dod: >-
+      html writer/reader + SEC-IO-01
+  - id: T-G5-003
+    gate: G5
+    depends: [T-G5-001]
+    status: todo
+    dod: >-
+      docx writer/reader round-trip
+  - id: T-G5-004
+    gate: G5
+    depends: [T-G5-002]
+    status: todo
+    dod: >-
+      PDF export + STRUCT-004 parity
+  - id: T-G5-005
+    gate: G5
+    depends: [T-G5-003]
+    status: todo
+    dod: >-
+      share/open-in/SAF
+  - id: T-G5-006
+    gate: G5
+    depends: [T-G5-001]
+    status: todo
+    dod: >-
+      conversion notes + refusal paths
+  - id: T-G5-007
+    gate: G5
+    depends: [T-G4-005]
+    status: todo
+    dod: >-
+      backup/restore encrypted
+  - id: T-G6-001
+    gate: G6
+    depends: [T-G5-003]
+    status: todo
+    dod: >-
+      pack manager + odpack verify
+  - id: T-G6-002
+    gate: G6
+    depends: [T-G6-001]
+    status: todo
+    dod: >-
+      OCR pipeline + scan flows
+  - id: T-G6-003
+    gate: G6
+    depends: [T-G6-001]
+    status: todo
+    dod: >-
+      ASR streaming + dictation UX
+  - id: T-G6-004
+    gate: G6
+    depends: [T-G6-001]
+    status: todo
+    dod: >-
+      LLM Tier A + 4 verbs + preview cards
+  - id: T-G6-005
+    gate: G6
+    depends: [T-G6-001]
+    status: todo
+    dod: >-
+      embeddings + semantic search
+  - id: T-G6-006
+    gate: G6
+    depends: [T-G4-008]
+    status: todo
+    dod: >-
+      read aloud
+  - id: T-G6-007
+    gate: G6
+    depends: [T-G6-004]
+    status: todo
+    dod: >-
+      ladder + hidden-with-reason
+  - id: T-G6-008
+    gate: G6
+    depends: [T-G6-002]
+    status: todo
+    dod: >-
+      network-silence probe across AI
+  - id: T-G7-001
+    gate: G7
+    depends: []
+    status: todo
+    dod: >-
+      full catalogue on matrix; journeys J1-J5
+  - id: T-G7-002
+    gate: G7
+    depends: [T-G7-001]
+    status: todo
+    dod: >-
+      perf budgets + size gate evidence
+  - id: T-G7-003
+    gate: G7
+    depends: [T-G7-001]
+    status: todo
+    dod: >-
+      security suite + compliance map
+  - id: T-G7-004
+    gate: G7
+    depends: [T-G7-001]
+    status: todo
+    dod: >-
+      evidence PDF; BLOCKED register review
+  - id: T-G8-001
+    gate: G8
+    depends: [T-G7-004]
+    status: todo
+    dod: >-
+      release checklist; provenance; GitHub Release

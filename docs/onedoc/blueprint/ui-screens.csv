@@ -1,0 +1,23 @@
+screen_id,name,figma_frame,area,entry,exit,states,redline,test_ids
+OD-HOME-001,Documents library,OD-HOME-001 Library,home,app launch; bottom nav Docs,multi-select; editor,content;empty;loading,list 72dp rows; FAB 56dp bottom-right; chips 32dp,"TC-LIB-001..010, TC-PERF-001"
+OD-HOME-002,Multi-select,OD-HOME-002 Multi-select,home,long-press card,home; actions,selecting;actions-bar,action bar 56dp; count chip,"TC-LIB-010, TC-UX-009"
+OD-HOME-003,Trash,OD-HOME-003 Trash,home,library menu,home,content;empty,rows show days-left; restore 48dp,TC-LIB-005/006
+OD-EDIT-001,Editor compose,OD-EDIT-001 Editor,editor,new doc; open doc; search hit,home (N1/N2),content;loading;empty-doc,app bar 56dp; margins 16dp; guides dashed 1dp,"TC-EDIT-001..017, TC-PERF-002, TC-J1"
+OD-EDIT-002,Editor selection,OD-EDIT-002 Selection,editor,long-press/double-tap,compose,selection;toolbar-visible;flipped,toolbar 44dp; handles >=48dp; never covers selection,"TC-EDIT-004/005, TC-UX-006"
+OD-EDIT-003,Insert sheet,OD-EDIT-003 Insert sheet,editor,tab row Insert,editor,closed;open,sheet max 60%; radius 28dp,TC-TBL/IMG/STRUCT cases
+OD-EDIT-004,Find bar,OD-EDIT-004 Find,editor,menu Find; Ctrl+F,editor,closed;open;replacing,bar 48dp overlay; count chip,"TC-EDIT-013/014, TC-UX-004/005"
+OD-TPL-001,Template gallery,OD-TPL-001 Gallery,templates,bottom nav Templates,preview; editor,grid;user-section,cards 2-col; ghost previews,TC-TPL-001..003
+OD-TPL-002,Template preview,OD-TPL-002 Preview,templates,gallery tap,gallery; editor (use),preview;placeholders,reader render; Use primary,TC-TPL-002/004
+OD-SCAN-001,Camera,OD-SCAN-001 Camera,scan,Insert > Scan,review,idle;focusing;captured;no-permission,shutter 56dp; hint overlay,"TC-SCAN-001/002, TC-J2"
+OD-SCAN-002,Review & crop,OD-SCAN-002 Review,scan,camera capture,ocr-confirm; editor (save image),queue;crop;dragging,handles >=48dp; reorder a11y actions,"TC-SCAN-002, TC-J2"
+OD-SCAN-003,OCR confirm,OD-SCAN-003 OCR confirm,scan,review run,editor,processing;ready;no-pack;low-yield,confidence color+underline; fix field 44dp,"TC-SCAN-001, TC-AI-001/002, UX-46"
+OD-AI-001,Pack manager,OD-AI-001 Packs,assistant,bottom nav; long-press reason,assistant,no-packs;list;verifying;failed;deleting,rows 64dp; SHAs mono; confirm dialogs,"TC-AI-PACK-01/02, UX-48"
+OD-AI-002,Action sheet,OD-AI-002 Assistant sheet,assistant,tab AI; selection,preview; closed,ready;partial;all-hidden,verbs fixed order; hidden-with-reason,"TC-AI-004/009, UX-30/47"
+OD-AI-003,Generation preview,OD-AI-003 Preview card,assistant,verb tap,editor (insert/discard),generating;done;cancelled;error,card <=60% height; method label line,"TC-AI-005/006, UX-06/29"
+OD-FILE-001,Versions,OD-FILE-001 Versions,files,editor menu,editor,empty;list;previewing;restoring,kind chips color+label; restore primary,"TC-STATE-003/004, TC-J5, UX-07"
+OD-FILE-002,Import,OD-FILE-002 Import,files,share/open-in; home menu,editor; refused,picking;sniffing;preview;refused;warn,refusal names format; preview mandatory,"TC-IO-005/006, UX-45"
+OD-FILE-003,Export sheet,OD-FILE-003 Export,files,editor menu; share,done; failed,ready;writing;done;failed,fidelity badges; filename field,"TC-IO-001..011, UX-03/18/49"
+OD-SET-001,Settings root,OD-SET-001 Settings,settings,home overflow; bottom nav,groups,content,groups of 4; instant apply,TC-SET-001..004
+OD-SET-002,Editor settings,OD-SET-002 Editor settings,settings,settings > Editor,root,content,font/size/spell; instant apply,"TC-SET-002, F-088"
+OD-SET-003,Appearance,OD-SET-003 Appearance,settings,settings > Appearance,root,content,8 themes + accent; match system default,"TC-SET-001, DQ-4"
+OD-SET-004,About & diagnostics,OD-SET-004 About,settings,settings > About,root,content;selftest-running;selftest-done,version+commit; self-test <=20s,"TC-SET-003, TC-DIAG-001, UX-34"

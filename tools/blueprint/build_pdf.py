@@ -11,6 +11,7 @@ Usage:
   python3 build_pdf.py --content <content-dir> --out <pdf-path> [--title ...]
 """
 import argparse
+import json
 import hashlib
 import os
 import re
@@ -271,16 +272,15 @@ def footer(canv, doc):
     canv.line(M_L, 1.42 * cm, PAGE_W - M_R, 1.42 * cm)
     canv.setFont("DVS", 7.1)
     canv.setFillColor(MUTE)
-    canv.drawString(M_L, 1.02 * cm,
-                    "MySpace One · Application Development Blueprint · v1.1 · offline-first / on-device / no sign-in")
+    canv.drawString(M_L, 1.02 * cm, BRAND_FOOTER)
     canv.drawRightString(PAGE_W - M_R, 1.02 * cm, "Page %d" % doc.page)
     canv.restoreState()
 
 
 def cover_bg(canv, doc):
     canv.saveState()
-    art = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                       "docs", "blueprint", "figures", "cover.png")
+    art = COVER_ART if os.path.isabs(COVER_ART) else os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), COVER_ART)
     if os.path.exists(art):
         canv.drawImage(art, 0, 0, PAGE_W, PAGE_H)
     else:
@@ -290,6 +290,25 @@ def cover_bg(canv, doc):
 
 
 # ------------------------------------------------------------------ parser --
+BRAND_FOOTER = "MySpace One · Application Development Blueprint · v1.1 · offline-first / on-device / no sign-in"
+COVER_ART = os.path.join("docs", "blueprint", "figures", "cover.png")
+COVER_KICKER = "APPLICATION DEVELOPMENT BLUEPRINT · WRITTEN FOR AN AI BUILD AGENT"
+COVER_TITLE = "MySpace One"
+COVER_SUB = ("One offline-first Android app — Calculator · Notes · Scanner · Calendar · Files · "
+             "Music · Recorder · Diagnostics · On-device AI")
+COVER_BLURB = ("From an empty repository to a fully tested, signed, installable APK: requirements, "
+               "experience design, architecture, on-device AI integration, agent methodology, "
+               "testing, release engineering and maintenance — all stages and cycles, with "
+               "machine-checkable acceptance criteria.")
+COVER_META = [
+    ["Document", "MySpace One — combined-app development blueprint"],
+    ["Version / status", "1.1 · approved for build execution"],
+    ["Date", "31 October 2026"],
+    ["Primary reader", "Autonomous AI build agent (secondary: human reviewers)"],
+    ["Target platform", "Android 8.0+ · phones and tablets · no internet, no sign-in"],
+    ["Deliverable", "Signed release APK + full evidence bundle + test reports"],
+]
+
 PART_RE = re.compile(r"^@PART:\s*(.+)$")
 PARTDESC_RE = re.compile(r"^@PARTDESC:\s*(.+)$")
 FIG_RE = re.compile(r"^!\[(.*?)\]\((.+?)\)\s*$")
@@ -465,7 +484,25 @@ def main():
     ap.add_argument("--content", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--doc-title", default="MySpace One · Application Development Blueprint")
+    ap.add_argument("--brand-footer",
+                    default="MySpace One · Application Development Blueprint · v1.1 · offline-first / on-device / no sign-in")
+    ap.add_argument("--cover-art",
+                    default=os.path.join("docs", "blueprint", "figures", "cover.png"))
+    ap.add_argument("--cover-kicker", default=None)
+    ap.add_argument("--cover-title", default=None)
+    ap.add_argument("--cover-sub", default=None)
+    ap.add_argument("--cover-blurb", default=None)
+    ap.add_argument("--cover-meta-json", default=None)
     args = ap.parse_args()
+    global BRAND_FOOTER, COVER_ART, COVER_KICKER, COVER_TITLE, COVER_SUB, COVER_BLURB, COVER_META
+    BRAND_FOOTER = args.brand_footer
+    COVER_ART = args.cover_art
+    for name in ("cover_kicker", "cover_title", "cover_sub", "cover_blurb"):
+        val = getattr(args, name, None)
+        if val:
+            globals()[name.upper()] = val
+    if args.cover_meta_json:
+        COVER_META = json.loads(args.cover_meta_json)
 
     register_fonts()
     styles = build_styles()
@@ -484,30 +521,17 @@ def main():
     story = []
     # ---- cover page ----
     story.append(Spacer(1, 3.1 * cm))
-    story.append(Paragraph("APPLICATION DEVELOPMENT BLUEPRINT · WRITTEN FOR AN AI BUILD AGENT", styles["cover_kicker"]))
+    story.append(Paragraph(COVER_KICKER, styles["cover_kicker"]))
     story.append(Spacer(1, 0.5 * cm))
-    story.append(Paragraph("MySpace One", styles["cover_title"]))
+    story.append(Paragraph(COVER_TITLE, styles["cover_title"]))
     story.append(Spacer(1, 0.25 * cm))
-    story.append(Paragraph(
-        "One offline-first Android app — Calculator · Notes · Scanner · Calendar · Files · "
-        "Music · Recorder · Diagnostics · On-device AI", styles["cover_sub"]))
+    story.append(Paragraph(COVER_SUB, styles["cover_sub"]))
     story.append(Spacer(1, 0.45 * cm))
     story.append(HRFlowable(width="62%", thickness=1.1, color=colors.HexColor("#14B8A6"),
                             hAlign="LEFT", spaceBefore=2, spaceAfter=10))
-    story.append(Paragraph(
-        "From an empty repository to a fully tested, signed, installable APK: requirements, "
-        "experience design, architecture, on-device AI integration, agent methodology, "
-        "testing, release engineering and maintenance — all stages and cycles, with "
-        "machine-checkable acceptance criteria.", styles["cover_sub"]))
+    story.append(Paragraph(COVER_BLURB, styles["cover_sub"]))
     story.append(Spacer(1, 6.2 * cm))
-    meta = [
-        ["Document", "MySpace One — combined-app development blueprint"],
-        ["Version / status", "1.1 · approved for build execution"],
-        ["Date", "31 October 2026"],
-        ["Primary reader", "Autonomous AI build agent (secondary: human reviewers)"],
-        ["Target platform", "Android 8.0+ · phones and tablets · no internet, no sign-in"],
-        ["Deliverable", "Signed release APK + full evidence bundle + test reports"],
-    ]
+    meta = COVER_META
     t = Table([[Paragraph("<font color='#5EEAD4'><b>%s</b></font>" % esc(a), styles["cover_meta"]),
                 Paragraph("<font color='#CBD5E1'>%s</font>" % esc(b), styles["cover_meta"])]
                for a, b in meta], colWidths=[3.6 * cm, 12.6 * cm], hAlign="LEFT")
