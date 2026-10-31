@@ -30,5 +30,5 @@ Format:
 - Commits: pending
 - Tests: `python3 tools/traceability.py --check` PASS (84 features, 50 UX criteria, 204 cases). Android build not run locally: Java, Gradle and sdkmanager are not installed.
 - Work: recorded owner authorization; created Gradle version catalog, full/mycalc flavor DSL, Compose hub/calculator starter, exact-rational arithmetic tests, and GitHub Actions build/test workflow.
-- Blockers: First CI run 41170605669 failed during Android SDK setup before Gradle ran; updated workflow actions to current major releases and rerunning. Gradle configuration/APK assembly are not yet verified. The rest of the specified product is not yet implemented; this is G1 scaffolding, not a complete app.
+- Blockers: CI run 41170605669 failed in Android SDK setup (resolved by current action releases). Run 41170663455 passed setup but failed at `gradle help`; detailed hosted logs are inaccessible from this environment, so the workflow now emits a diagnostic annotation on failure. Build/configuration and APK assembly remain unverified. The rest of the specified product is not yet implemented; this is G1 scaffolding, not a complete app.
 - Next: run Android CI; fix any build failures, then complete remaining G1 tasks and proceed through G2–G8.

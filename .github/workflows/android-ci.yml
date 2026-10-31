@@ -30,7 +30,16 @@ jobs:
         with:
           gradle-version: '8.9'
       - name: Validate Gradle workspace
-        run: gradle help
+        shell: bash
+        run: |
+          set +e
+          gradle help --stacktrace --console=plain > gradle-help.log 2>&1
+          result=$?
+          if [ "$result" -ne 0 ]; then
+            tail -n 35 gradle-help.log | tr '\n' ' ' | cut -c1-8000 | while IFS= read -r line; do echo "::error title=Gradle help failed::$line"; done
+            exit "$result"
+          fi
+          cat gradle-help.log
       - name: Run JVM tests
         run: gradle testFullDebugUnitTest
       - name: Assemble both debug variants
