@@ -36,7 +36,7 @@ jobs:
           gradle help --stacktrace --console=plain > gradle-help.log 2>&1
           result=$?
           if [ "$result" -ne 0 ]; then
-            tail -n 35 gradle-help.log | tr '\n' ' ' | cut -c1-8000 | while IFS= read -r line; do echo "::error title=Gradle help failed::$line"; done
+            grep -A12 -B2 -E 'What went wrong|FAILURE:|Could not resolve|Script compilation error' gradle-help.log | head -n 18 | tr '\n' ' ' | cut -c1-8000 | while IFS= read -r line; do echo "::error title=Gradle help failed::$line"; done
             exit "$result"
           fi
           cat gradle-help.log
