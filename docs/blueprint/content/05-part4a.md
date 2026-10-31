@@ -26,7 +26,7 @@ myspace-one/
   feature/calculator/       # + mycalc flavor reuses this wholesale
   feature/notes/  feature/scanner/  feature/calendar/
   feature/files/  feature/music/    feature/recorder/
-  feature/diagnostics/      # incl. hub? no:
+  feature/diagnostics/      # health, logs, pack manager (hub is separate):
   feature/hub/              # home, search, continue row
   feature/settings/
   core/designsystem/        # tokens, theme, components, icons
@@ -280,7 +280,7 @@ Per-screen SavedState keys are registered in a single `RestoreKeys` object; the 
 
 `Playlist/PlaylistEntry` — name unique per user view (not enforced in DB); entries ordered by `position` (compacted on reorder); FK cascade on playlist delete.
 
-`Recording` — `id` PK · `filePath` private path · `durationMs` (timeline excludes paused spans) · `format` `aac|wav` · `sizeBytes` · `createdAt` · `trashedAt` · `transcript` full text with provenance header line · `transcriptSegmentsJson` `[{s,e,t}]`.
+`Recording` — `id` PK · `filePath` private path · `durationMs` (timeline excludes paused spans) · `format` `aac/wav` · `sizeBytes` · `createdAt` · `trashedAt` · `transcript` full text with provenance header line · `transcriptSegmentsJson` `[{s,e,t}]`.
 
 `RecordingMarker` — `id` PK · `recordingId` FK cascade · `offsetMs` timeline position · `label` ≤ 40 chars.
 

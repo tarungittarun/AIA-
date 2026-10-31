@@ -191,3 +191,33 @@ Daily agent log (per session):
 ```
 
 <!-- pagebreak -->
+
+# Appendix M — Screen inventory (pointer)
+
+The master screen inventory — now extended with Figma frame ids, states-to-build, and build-checklist duties — lives as **§6.14 (Screen inventory with Figma frame registry)** and is mirrored to `docs/blueprint/ui-screens.csv`. It supersedes the table that previously occupied this appendix (preservation note: the pre-1.1 table remains in Git history). Appendix M is retained as this pointer so cross-references from earlier revisions resolve.
+
+# Appendix N — Repository and DAO method inventory (executor contract)
+
+Room DAOs (names normative):
+
+| DAO | Methods |
+|---|---|
+| `CalcHistoryDao` | `insert(row): Long`, `page(cursor, limit)`, `pinnedFirst()`, `count()`, `clearUnpinned()`, `pin(id, on)`, `lruEvictTo(n)` |
+| `MemorySlotDao` | `all()`, `upsert(value, label)`, `delete(id)`, `move(id, up: Boolean)` |
+| `NoteDao` | `upsert(note): Long`, `get(id)`, `pageList(cursor, limit)`, `searchFts(q, limit)`, `setPinned`, `setTrashed(now?)`, `purgeExpired(before)`, `counts()` |
+| `ScanDocDao` | `insert`, `get`, `setOcr(id, text)`, `linkNote(id, noteId)`, `pageList`, `deleteWithFiles(repo)` |
+| `CalEventDao` | `upsert`, `delete`, `window(start, end)`, `nextReminders(from, to)`, `byIcsUid`, `counts()` |
+| `TrackDao` | `upsertAll`, `byFolder`, `search`, `markUnplayable`, `pageSongs/albums/artists` |
+| `PlaylistDao` | `create`, `rename`, `delete`, `entries(id)`, `insert(entry)`, `move(entry, to)`, `remove(entry)` |
+| `RecordingDao` | `insert`, `get`, `setTranscript`, `setTrashed`, `list`, `markers(recId)`, `addMarker`, `deleteMarker` |
+| `DiagRingDao` | `append`, `recent(filter, limit)`, `sweep(now)`, `sizeBytes()` |
+
+Repositories add: transactional wrappers, dispatcher routing, and file-side effects (never in DAOs). Every method above appears in L1/L2 tests — the inventory is checked by a unit test that reflects over DAO interfaces (missing test = fail).
+
+# Appendix O — Icon inventory (design system)
+
+60 icons max, Material Symbols subset (names normative): `home, calculate, description, scanner, calendar_month, folder, music_note, mic, monitor_heart, settings, search, close, add, more_vert, back_arrow, chevron_left_right, pin, delete, restore_from_trash, content_copy, content_cut, content_paste, memory_add, memory_use, backspace, function, percent, bracket, equal, swap_vert, drag_handle, filter, crop_rotate, torch, camera, image, picture_as_pdf, text_snippet, event, alarm, repeat, export, import, share, lock, key, palette, shapes, bubble_chart, waves, celebration, speed, bedtime, queue, skip_next_previous, play_pause, stop, flag, done, bug_report, verified`. Icons are lint-checked against usage (unused icon = removal PR).
+
+# Appendix P — Sample L5 "report of record" page order (normative)
+
+1. Cover (title, versions, run ids, SHAs) · 2. Provenance & pinning table · 3. Version-alignment notes · 4. Executive result summary (counts by suite, honesty classes) · 5. Per-suite detail: case tables (id, status, actual, comment) with inline screenshots per case · 6. Blocked register with preventions · 7. Defect ledger delta · 8. Source-CI context labeled non-proof · 9. Environment matrix · 10. Evidence manifest summary (file counts, verification status) · 11. Changelog of the report itself. This order descends from the owner's accepted report formats — continuity over novelty.

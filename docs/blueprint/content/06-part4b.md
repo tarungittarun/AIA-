@@ -39,7 +39,7 @@ Pure Kotlin `RecurrenceEngine` (§17.4): input `CalEvent` + window → occurrenc
 
 ## 13.5 Media: Music + Recorder
 
-Music: Media3 `ExoPlayer`, `DefaultMediaSourceFactory` with ` playlist; artwork via a BitmapFactory-based decoder with a 64 MB LRU disk cache; library scanner walks SAF tree or MediaStore cursor in a cancellable coroutine, diffing into Room (no duplicates by (path,size,mtime)).
+Music: Media3 `ExoPlayer` with `DefaultMediaSourceFactory` queueing playlists via ConcatenatingMediaSource2-style factory; artwork via a BitmapFactory-based decoder with a 64 MB LRU disk cache; library scanner walks SAF tree or MediaStore cursor in a cancellable coroutine, diffing into Room (no duplicates by (path,size,mtime)).
 Recorder: `AudioRecord` (48 kHz mono) → AAC via `MediaCodec` + `MediaMuxer` (WAV path writes PCM directly); pause = stop feeding muxer, resume with new sync sample; markers = DB rows at flag time; waveform = decimated RMS ring buffer drawn by Compose Canvas at 20 fps max.
 Media session: `MediaSessionService` for Music (headset/bluetooth controls, media notification); Recorder uses a plain FGS notification (pause/resume/stop actions) — it is not a media-session consumer.
 
@@ -188,7 +188,7 @@ Create → live tables/files; Delete → trash (30 d) → hard delete with file 
 | `READ_MEDIA_AUDIO` (API 33+) / `READ_EXTERNAL_STORAGE` (26–32, maxSdk 32) | Dangerous | Music import | First music open |
 | `POST_NOTIFICATIONS` (API 33+) | Dangerous | Reminders, recording, playback | First reminder creation |
 | `SCHEDULE_EXACT_ALARM` | Normal (26–32) / declared with user grant path 33+ | Reminder precision | First reminder (settings fallback per §13.8) |
-| `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_MICROPHONE|MEDIA_PLAYBACK` | Normal | Recorder/Music FGS types | — |
+| `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_MICROPHONE`, `FOREGROUND_SERVICE_MEDIA_PLAYBACK` | Normal | Recorder / Music FGS types | — |
 | `RECEIVE_BOOT_COMPLETED` | Normal | Re-arm reminder alarms | — |
 | `VIBRATE` | Normal | Haptics | — |
 

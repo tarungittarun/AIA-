@@ -17,7 +17,7 @@ Environment stamp for every case: fresh install of the pinned APK, airplane mode
 | TC-ONE-C-008 | `0.1 + 0.2 =` → `"0.3"` · `1 ÷ 3 × 3 =` → `"1"` (exact-path proof in law logs) |
 | TC-ONE-C-009 | `INV sin 0.5 ) =` (DEG) → `"30"` · `ln ( − 1 ) =` → error card text |
 | TC-ONE-C-010 | type `2+3` → live `"5"` ≤ 1 frame · type `+` → live disappears (no stale) |
-| TC-ONE-C-011 | `123456`, tap between 2|3 → type `9` → `"1293456"` grouped · `⌫` → `"123456"` |
+| TC-ONE-C-011 | `123456`, tap caret between 2 and 3 → type `9` → `"1293456"` grouped · `⌫` → `"123456"` |
 | TC-ONE-C-012 | longpress `234` (300 ms) → highlight + `ocr pill == "Cut Copy MAdd MUse Paste"` |
 | TC-ONE-C-013 | add 5 solves → `adb am force-stop` → relaunch → history count == 5, order exact |
 | TC-ONE-C-014 | open history, tap card → expr painted pre-close (frame log) · double-tap → single paint |
@@ -130,7 +130,7 @@ Live-answer pipeline: keystroke → store update → engine job (cancel previous
 | S3 | Feature degraded, workaround exists | theme not persisting on one OEM path | gate-report waiver | ≤ 5 |
 | S4 | Polish | spacing, copy tweak | never blocks | backlog |
 
-Priority (P0–P3 for defects) = severity × feature priority (§10) lookup table in `qa/severity.yaml`; disputes resolve toward the higher. Rejected defects require a reason class: `not-a-defect | as-designed (ledger ref) | cannot-reproduce (evidence attached) | duplicate (id)`.
+Priority (P0–P3 for defects) = severity × feature priority (§10) lookup table in `qa/severity.yaml`; disputes resolve toward the higher. Rejected defects require a reason class: `not-a-defect`, `as-designed` (ledger ref), `cannot-reproduce` (evidence attached), or `duplicate` (id).
 
 # Appendix V — Android/compose glossary for the owner
 
@@ -176,7 +176,7 @@ The build is designed so that *any* competent executor — human or AI — can r
 | Field | Value |
 |---|---|
 | Title | MySpace One — Application Development Blueprint |
-| Version | 1.0 |
+| Version | 1.1 |
 | Status | Approved for build execution (G0 artifact) |
 | Date | 31 October 2026 |
 | Author | Prepared by the AI build agent program for the owner of tarungittarun/AIA- |
@@ -190,7 +190,8 @@ Revision history:
 
 | Ver | Date | Change |
 |---|---|---|
-| 1.0 | 31 Oct 2026 | Initial complete blueprint: Parts I–XII, 19 figures, 32 chapters + appendices A–X |
+| 1.0 | 31 Oct 2026 | Initial complete blueprint: Parts I–XII, 32 chapters + appendices A–X |
+| 1.1 | 31 Oct 2026 | Line-by-line correction pass (all § refs resolved, draft-style notes removed, tables normalized); new UI design-language material §6.12–§6.19 incl. Figma workflow, screen/frame registry, redlines and design-QA gate; 20 figures; appendices regrouped (M–P joined E–P); screen inventory superseded by §6.14 |
 
 End of document.
 
@@ -256,25 +257,26 @@ Shipped with each pack (full cards in pack LICENSE/cards.md; summaries normative
 |---|---|---|
 | Cover | Honeycomb emblem (brand motif) | cover |
 | 1 | Combined-app product map | §5.1 |
-| 2 | Layered architecture | §11.1 |
-| 3 | Navigation graph | §5.2 |
-| 4 | Calculator basic pad + scientific panel | §7.2 |
-| 5 | History / memory / key-theme surfaces | §7.2.5 |
-| 6 | Notes list + editor | §7.3 |
-| 7 | Scanner viewfinder + OCR card | §7.4 |
-| 8 | Calendar month+agenda + editor | §7.5 |
-| 9 | Files browser + analyzer | §7.6 |
-| 10 | Music library + player | §7.7 |
-| 11 | Recorder capture + saved view | §7.8 |
-| 12 | Diagnostics + model packs | §7.9 |
-| 13 | Room schema ERD | §12.2 |
-| 14 | AI stack (orchestrator, runtimes, tiers) | §16.4 |
+| 2 | Navigation graph | §5.2 |
+| 3 | Figma workflow (design↔code loop, access policy) | §6.13 |
+| 4 | Layered architecture | §11.1 |
+| 5 | Calculator basic pad + scientific panel | §7.2 |
+| 6 | History / memory / key-theme surfaces | §7.2.5 |
+| 7 | Notes list + editor | §7.3 |
+| 8 | Scanner viewfinder + OCR card | §7.4 |
+| 9 | Calendar month+agenda + editor | §7.5 |
+| 10 | Files browser + analyzer | §7.6 |
+| 11 | Music library + player | §7.7 |
+| 12 | Recorder capture + saved view | §7.8 |
+| 13 | Diagnostics + model packs | §7.9 |
+| 14 | Room schema ERD | §12.2 |
 | 15 | Phase-gate lifecycle | §15.5 |
-| 16 | Test pyramid + CI pipeline | §20.1 |
-| 17 | Defect lifecycle | §20.9 |
-| 18 | Device capability ladder | §16.8 |
+| 16 | AI stack (orchestrator, runtimes, tiers) | §16.4 |
+| 17 | Device capability ladder | §16.8 |
+| 18 | Test pyramid + CI pipeline | §20.1 |
+| 19 | Defect lifecycle | §20.9 |
 
-Tables are numbered by their section (e.g., "the §17.1.5 table"); the executive anchor tables are: constraints §1.3, promises §1.2, Catalogue-0 §20.6, settings registry §17.7/§17.12, budgets §23.6, risks Ch 30, traceability §27.2.
+Tables are numbered by their section (e.g., "the §17.1.5 table"); the executive anchor tables are: constraints §1.3, promises §1.2, Catalogue-0 §20.6, settings registry §17.7/§17.12, budgets §23.6, risks Ch 30, screen registry §6.14, traceability §27.2.
 
 # Appendix CC — Constraint → architecture traceability (why the structure is what it is)
 

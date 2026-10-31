@@ -1,0 +1,39 @@
+num,screen,route,figma_frames,states_to_build,spec
+1,Hub Home,`myspace://hub`,HUB-001..004 (02),"first-run, content, search-zero, recovered","§5.3, §5.6"
+2,Hub search results,`hub/search`,HUB-010..012 (02),"streaming, grouped, semantic-tagged","§5.5, §5.7"
+3,Calculator main (basic),`calc`,CALC-001..006 (03),"empty, typing, live-answer, selection+pill, caret-menu, result","§7.2, §7.2.1–.3"
+4,Calculator scientific,`calc?pad=sci`,CALC-010..013 (03),"INV on/off, DEG/RAD",§7.2.3
+5,History sheet,sheet,CALC-020..023 (03),"empty, list, pinned, replay-paint","§7.2.4, §7.2.9"
+6,Memory sheet,sheet,CALC-030..032 (03),"empty, slots, reorder","§7.2.5, §7.2.9"
+7,Calculator settings sheet,sheet,CALC-040..042 (03),"defaults, theme/shape pickers",§7.2.6
+8,Effects picker,sheet,CALC-045..046 (03),4 styles + preview,§7.2.5
+9,MyCalc home,flavor root,MCALC-001..006 (03),"same as CALC subset, zero module UI",§7.2.7
+10,Notes list,`notes`,NOTE-001..005 (04),"empty, pinned, grid view, trash-entry",§7.3
+11,Notes editor,`notes/{id}`,NOTE-010..016 (04),"typing, checklist, AI row (ready/running/missing), autosave chip","§7.3, §16.3"
+12,Notes trash,`notes/trash`,NOTE-020..021 (04),"items, empty","§7.3, F-050"
+13,Scanner viewfinder,`scan`,SCAN-001..004 (05),"guides, batch chip, denied-import card",§7.4
+14,Scanner review,`scan/review`,SCAN-010..014 (05),"pages, crop, filters, dup warning","§7.4, §13.11"
+15,Scanner OCR card,in review,SCAN-020..023 (05),"running, editable, low-conf, pack-missing","§7.4, F-057/59"
+16,Scanner export sheet,sheet,SCAN-030..031 (05),targets + destinations,§7.4
+17,Calendar month+agenda,`cal`,CAL-001..004 (06),"today, dots, agenda, empty day",§7.5
+18,Event editor,`cal/new` `cal/{id}`,CAL-010..015 (06),"fields, validation, repeat sheet + preview, test-alarm",§7.5
+19,Files browser,`files`,FILE-001..005 (07),"roots, rows, select-mode, saf-revoked",§7.6
+20,Files analyzer,`files/analyzer`,FILE-010..012 (07),"donut, category list, clean flow",§7.6
+21,Files trash,`files/trash`,FILE-020..021 (07),"items, empty",F-068
+22,Music library,`music`,MUSIC-001..005 (08),"tabs, import sheet, empty",§7.7
+23,Music player,`music/player`,MUSIC-010..014 (08),"artwork, speed/sleep chips, queue sheet",§7.7
+24,MiniPlayer,overlay,MUSIC-020..021 (08),"collapsed, hidden",§6.8
+25,Recorder record,`rec`,REC-001..004 (09),"idle, recording, paused, call-interrupted","§7.8, §13.10"
+26,Recorder saved list,`rec/list`,REC-010..012 (09),"empty, cards, badges",§7.8
+27,Recorder recording view,`rec/{id}`,REC-020..025 (09),"waveform seek, markers, transcript, transcribe states",§7.8
+28,Diagnostics health,`diag`,DIAG-001..004 (10),"cards, self-test running/done/failed",§7.9
+29,Model packs,`diag/packs`,DIAG-010..013 (10),"installed, missing, importing, rejected","§7.9, §16.8"
+30,Logs + share preview,`diag/logs`,DIAG-020..022 (10),"ring list, preview verbatim","§7.9, §28.3"
+31,Settings root + sections,`settings/*`,SET-001..008 (10),"registry-driven rows, about provenance, licenses",§7.10
+32,App lock,overlay,SET-020..021 (10),"prompt, fallback",F-082
+33,Confirm sheets (global),overlay,GLOB-001..003 (01),destructive pattern,§6.8
+34,Snackbar/undo (global),overlay,GLOB-010..011 (01),undo pattern,UX-014
+35,Empty states (global),per module,GLOB-020..028 (01),8 module empties + illustration,§6.11
+36,Tablet two-pane set,—,TAB-001..010 (11),per §7.16 rows,§7.16
+37,Landscape set,—,TAB-020..026 (11),"calculator, recorder, calendar",§7.16
+38,Font-scale 2.0 set,—,A11Y-001..010 (11),core screens at 2.0,UX-011

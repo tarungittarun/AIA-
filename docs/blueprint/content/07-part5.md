@@ -195,7 +195,7 @@ No generation of note content unprompted; no auto-sending, auto-filing, or auto-
 | `register(packs: List<PackMeta>)` | called by pack manager after import/enable/disable |
 | `provenance(result): Provenance` | model id, pack id/version, timings, fallback rung |
 | Budget | wallMs, memCapMb, maxConcurrent, cancelToken |
-| AiResult | Ok(payload, prov) | Degraded(payload, rung, prov) | Unavailable(reason) | Cancelled |
+| `AiResult` (sealed) | `Ok(payload, prov)` · `Degraded(payload, rung, prov)` · `Unavailable(reason)` · `Cancelled` |
 
 Feature modules depend only on this interface + `Availability` for UI state — fake implementations in `core/testing` make features fully testable without packs (G4 runs this way by design).
 

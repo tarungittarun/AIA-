@@ -752,6 +752,69 @@ def fig_ai_ladder():
     plt.close(fig)
 
 
+# ------------------------------------------------- 19. figma workflow ------
+def fig_figma_workflow():
+    fig, ax = newfig(10.8, 6.8)
+    H = 100 * 6.8 / 10.8
+    legend_note(ax, 2, H - 1.5,
+                "Figma mirrors the repository; the repository is the law. The loop closes when exported frames and screenshot goldens agree.")
+    # ---- lane 1: design sources ----
+    y1 = H - 25
+    box(ax, 2, y1, 30, 18, "Figma file — “MySpace One DS”",
+        ("pages: 00 Foundations · 01 Components", "02–09 screens · 10 Prototype flows",
+         "Variables = styles named from tokens.csv", "components DS/<Name> = Composables",
+         "annotations: a11y, touch targets, redlines"),
+        fc=VIOLET_L, ec=VIOLET, ts=9.2, fs=7.2)
+    box(ax, 37, y1, 27, 18, "tokens.csv (repo) — CANONICAL",
+        ("single source of truth: color, type,", "spacing, radius, motion",
+         "tools/tokens-export.py → tokens.figma.json", "(Tokens Studio-compatible import)",
+         "Kotlin constants generated + unit-tested"),
+        fc=TEAL_L, ec=TEAL, ts=9.2, fs=7.2)
+    box(ax, 69, y1, 29, 18, "core/designsystem (Compose)",
+        ("token constants + theme()", "components + screenshot goldens",
+         "Roborazzi: light/dark × font 1.0/2.0", "detekt rule: no hardcoded colors"),
+        fc=BLUE_L, ec=BLUE, ts=9.2, fs=7.2)
+    ymid = y1 + 9
+    arrow(ax, 32.3, ymid, 36.7, ymid, color=SLATE, lw=1.6)
+    arrow(ax, 64.3, ymid, 68.7, ymid, color=SLATE, lw=1.6)
+    ax.text(34.5, ymid + 2.0, "inspect", fontsize=6.6, color=MUTE, ha="center")
+    ax.text(66.5, ymid + 2.0, "generate", fontsize=6.6, color=MUTE, ha="center")
+    # ---- one-way sync arrow (repo -> figma), routed in clear space ----
+    sy = y1 - 2.6
+    arrow(ax, 50, sy, 17, sy, color=TEAL, lw=1.7)
+    ax.text(33.5, sy + 1.5, "one-way sync · repo → Figma (Variables import / REST push)",
+            fontsize=7.0, color=TEAL, ha="center", fontweight="bold")
+    # ---- lane 2: acceptance loops ----
+    y2 = 17
+    box(ax, 2, y2, 44, 12.5, "Design QA acceptance loop",
+        ("Figma frame export (1080×1920) vs Roborazzi golden:",
+         "pHash ≥ 0.98 · token colors exact · spacing ±2 dp",
+         "diff report = side-by-side artifact, reviewed at gates"),
+        fc=AMBER_L, ec=AMBER, ts=9.0, fs=7.2)
+    box(ax, 52, y2, 46, 12.5, "Prototype flows → journey tests",
+        ("Figma prototype step names = harness step names",
+         "(J-01…J-10) · Dev Mode specs cite § refs;",
+         "every UI task row cites its frame ids"),
+        fc=WHITE, ec=SLATE, ts=9.0, fs=7.2)
+    arrow(ax, 24, sy - 0.3, 24, y2 + 12.9, color=AMBER, lw=1.5)
+    arrow(ax, 75, y2 + 12.9, 75, sy - 0.3, color=SLATE, lw=1.5)
+    # ---- lane 3: agent access policy (manual: light text on dark) ----
+    py, ph = 2, 12
+    ax.add_patch(FancyBboxPatch((2, py), 96, ph,
+                 boxstyle="round,pad=0,rounding_size=1.2",
+                 fc=DARK, ec=TEAL, lw=1.4, zorder=3))
+    ax.text(50, py + ph - 2.2, "AI agent access policy (§6.13)", ha="center",
+            fontsize=9.4, fontweight="bold", color="#5EEAD4", zorder=4)
+    for k, ln in enumerate([
+        "optional owner-issued read-only Figma REST token · may read: frame specs, exports, variables, component descriptions",
+        "may not: edit the file · treat Figma-only additions as scope · import plugin code",
+        "no access at all? build from this document alone — it is complete by design"]):
+        ax.text(50, py + ph - 4.8 - k * 2.5, ln, ha="center", fontsize=7.4,
+                color="#CBD5E1", zorder=4)
+    fig.savefig(os.path.join(OUT, "fig-figma-workflow.png"), bbox_inches="tight")
+    plt.close(fig)
+
+
 def main():
     fig_cover()
     fig_modules()
@@ -772,6 +835,7 @@ def main():
     fig_testing()
     fig_defects()
     fig_ai_ladder()
+    fig_figma_workflow()
     print("figures written to", os.path.abspath(OUT))
 
 

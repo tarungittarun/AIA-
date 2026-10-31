@@ -176,7 +176,7 @@ Fixed prefix of every law-suite corpus (TC-LAW-*). "Path" = arithmetic route (§
 | B-21 | `sin(90)` DEG | identity reduction | exact | 1 | `1` |
 | B-22 | `cos(0)` | identity | exact | 1 | `1` |
 | B-23 | `tan(90)` DEG | domain | — | — | `Error` card: undefined |
-| B-24 | `asin(0.5)` DEG | inexact→identity? no: exact-by-table 30° | exact | 30 | `30` |
+| B-24 | `asin(0.5)` DEG | exact-by-table (special angle) | exact | 30 | `30` |
 | B-25 | `sin(π÷6)` RAD | inexact | inexact≈0.49999999999999994 → reduction | 1/2 by identity table | `0.5` |
 | B-26 | `√2` | inexact | inexact | 1.414213562373… | `1.414213562` |
 | B-27 | `ln(−1)` | domain | — | — | `Error` card: outside domain |

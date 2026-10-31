@@ -26,7 +26,7 @@ The app should feel like a well-made pocket tool: quiet, precise, dependable. Co
 
 - Never show a spinner on a local operation that completes in < 100 ms; skeleton loaders are reserved for large indexes (first Files scan, first library import).
 - Never interrupt with a dialog except for: record-confirmation privacy notice (first mic use), uninstall-risk warning on encrypted backup, and genuine irreversibility (e.g., emptying trash).
-- Never ask for a permission at launch; permissions are requested at the moment of first use, with a one-line reason (§8.13).
+- Never ask for a permission at launch; permissions are requested at the moment of first use, with a one-line reason (§14.7).
 - Never autoplay sound (music resumes only by explicit play; recorder previews are muted until tapped).
 
 ## 4.4 Principle conflict resolution (worked cases)
@@ -60,7 +60,7 @@ Navigation rules:
 
 The hub contains, top to bottom:
 
-1. **Search field** (always focused-able with one tap from any module via a floating pill — actually: the search field lives on the hub only; modules are reachable by swipe-from-edge? No: keep it simple, see rule X1) — searches notes (FTS + semantic when pack installed), scans (OCR text), events, files, songs, recordings, transcripts, and calculator history. Results are grouped by module with module-accent icons; opening a result deep-links into the module screen.
+1. **Search field** — one query across everything: notes (FTS + semantic when the pack is installed), scans (OCR text), events, files, songs, recordings, transcripts, and calculator history. Results are grouped by module with module-accent icons; opening a result deep-links into the module screen. (The field lives on the hub only — rule X1 keeps module reachability through the grid, not duplicated search bars.)
 2. **Continue row**: the last-open module with its state thumbnail ("Draft — Field survey notes", "Recording 00:41 paused").
 3. **Module grid**: eight cells, fixed order (Calculator, Notes, Scanner, Calendar, Files, Music, Recorder, Diagnostics), each with name + one-line status ("2 events today", "62% free", "3 new scans").
 4. **Pinned strip**: user-pinned notes/events/playlists as horizontal cards.

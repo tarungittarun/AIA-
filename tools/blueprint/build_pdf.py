@@ -138,6 +138,22 @@ def build_styles():
     return s
 
 
+
+def split_row(line):
+    """Split a markdown table row on '|' but never inside `code spans`."""
+    cells, cur, in_code = [], [], False
+    for ch in line:
+        if ch == '`':
+            in_code = not in_code
+            cur.append(ch)
+        elif ch == '|' and not in_code:
+            cells.append(''.join(cur))
+            cur = []
+        else:
+            cur.append(ch)
+    cells.append(''.join(cur))
+    return [c.strip() for c in cells]
+
 # ------------------------------------------------------------ inline text --
 def esc(t):
     return t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -256,7 +272,7 @@ def footer(canv, doc):
     canv.setFont("DVS", 7.1)
     canv.setFillColor(MUTE)
     canv.drawString(M_L, 1.02 * cm,
-                    "MySpace One · Application Development Blueprint · v1.0 · offline-first / on-device / no sign-in")
+                    "MySpace One · Application Development Blueprint · v1.1 · offline-first / on-device / no sign-in")
     canv.drawRightString(PAGE_W - M_R, 1.02 * cm, "Page %d" % doc.page)
     canv.restoreState()
 
@@ -374,7 +390,7 @@ def parse_md(path, styles, doc, story, state):
             flush_para(); flush_quote()
             rows = []
             while i < n and lines[i].strip().startswith("|"):
-                cells = [c.strip() for c in lines[i].strip().strip("|").split("|")]
+                cells = split_row(lines[i].strip().strip("|"))
                 if not all(re.fullmatch(r":?-{2,}:?", c or "---") for c in cells):
                     rows.append(cells)
                 i += 1
@@ -486,7 +502,7 @@ def main():
     story.append(Spacer(1, 6.2 * cm))
     meta = [
         ["Document", "MySpace One — combined-app development blueprint"],
-        ["Version / status", "1.0 · approved for build execution"],
+        ["Version / status", "1.1 · approved for build execution"],
         ["Date", "31 October 2026"],
         ["Primary reader", "Autonomous AI build agent (secondary: human reviewers)"],
         ["Target platform", "Android 8.0+ · phones and tablets · no internet, no sign-in"],

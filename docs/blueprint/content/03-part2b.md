@@ -33,7 +33,7 @@ Long-press (≈ 300 ms, stationary) on the expression field opens selection mode
 
 ### 7.2.3 Keypad
 
-Basic pad: `AC ( ) % ÷ / 7 8 9 × / 4 5 6 − / 1 2 3 + / 0 . ⌫ =`. Scientific pad adds rows above (`INV sin cos tan / π e ^ √ / ln log !`) and replaces the layout per the wireframe; `INV` reveals `sin⁻¹ cos⁻¹ tan⁻¹` and `eˣ 10ˣ`. Key behaviors: press haptic (if enabled) + 120 ms scale; `⌫` deletes one character at the caret (or the whole selection); press-and-hold `⌫` repeats after 400 ms at 15 Hz; `AC` long-press clears history? No — long-press `AC` does nothing (dangerous); history clearing lives only in the history sheet with confirm.
+Basic pad: `AC ( ) % ÷ / 7 8 9 × / 4 5 6 − / 1 2 3 + / 0 . ⌫ =`. Scientific pad adds rows above (`INV sin cos tan / π e ^ √ / ln log !`) and replaces the layout per the wireframe; `INV` reveals `sin⁻¹ cos⁻¹ tan⁻¹` and `eˣ 10ˣ`. Key behaviors: press haptic (if enabled) + 120 ms scale; `⌫` deletes one character at the caret (or the whole selection); press-and-hold `⌫` repeats after 400 ms at 15 Hz; Long-press on `AC` does nothing — destructive shortcuts are deliberate omissions, and history clearing lives only in the history sheet behind a confirmation.
 
 ![Calculator basic pad and scientific panel with engine and persistence contracts annotated.](figures/fig-calc-wireframe.png)
 
@@ -187,7 +187,7 @@ App lock (optional, off by default): locks on background>2 min; uses `BiometricP
 | Empty | One icon + one sentence + one action. Calculator history empty: "Solved calculations appear here." |
 | Loading | Only for > 100 ms local work: first Files scan, first music import, OCR runs (progress on card), LLM runs (streaming preview). |
 | Error | Local errors only; message + one action ("Try again" only when retry can succeed; otherwise "Open Diagnostics"). |
-| Permission denied | Feature degrades per §8.13; never dead-ends. |
+| Permission denied | Feature degrades per §7.11 (this table); never dead-ends. |
 | Storage full | Global banner once: "Storage is full — recordings and scans will fail. Clean up in Files." Writes fail soft with per-operation messages. |
 | Battery saver | Effects default to None; AI jobs above size threshold deferred with a visible chip. |
 | Process death | All drafts/expressions/selections restored (§12.6). |
@@ -213,7 +213,7 @@ Notes (TC-NOTE-edge*):
 | Paste of 1 MB text | import as one block with cap notice at 100k chars |
 | Concurrent edit impossible (single user) — but process death mid-keystroke | last good autosave + draft restore |
 | Title-only note | allowed; list shows title, snippet placeholder "No additional text" |
-| Empty note closed | discarded without trash entry (with undo? no: empty = nothing to keep; no dialog) |
+| Empty note closed | discarded entirely — nothing was written, so there is no trash entry and no confirmation dialog |
 | Checkbox spam (50 toggles/s stress) | progress recomputes, no dropped toggles |
 | Markdown import of unknown syntax | preserved as raw block, rendered plain, one-time notice |
 | Export note with image attachments | images included in export archive |
