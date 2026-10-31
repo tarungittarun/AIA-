@@ -2,7 +2,6 @@ package app.space.one
 
 import android.content.Intent
 import android.media.MediaPlayer
-import android.media.MediaRecorder
 import android.content.pm.PackageManager
 import java.io.File
 import java.time.LocalDateTime
@@ -269,40 +268,73 @@ private fun MusicScreen(context: android.content.Context, back: () -> Unit) {
 
 @Composable
 private fun RecorderScreen(context: android.content.Context, back: () -> Unit) {
-    var recorder by remember { mutableStateOf<MediaRecorder?>(null) }
     var recordingFile by remember { mutableStateOf<File?>(null) }
     var recording by remember { mutableStateOf(false) }
+    var paused by remember { mutableStateOf(false) }
+    var elapsedSeconds by remember { mutableStateOf(0) }
+    var markers by remember { mutableStateOf(listOf<Int>()) }
     var playback by remember { mutableStateOf<MediaPlayer?>(null) }
     var playing by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf("") }
-    fun startRecording() {
+
+    fun beginService() {
+        val output = File(File(context.filesDir, "Recordings"), "REC-${System.currentTimeMillis()}.m4a")
+        val intent = Intent(context, RecorderService::class.java).setAction(RecorderService.ACTION_START)
+            .putExtra(RecorderService.EXTRA_PATH, output.absolutePath)
         runCatching {
-            val output = File(context.filesDir, "recording-${System.currentTimeMillis()}.m4a")
-            val r = MediaRecorder()
-            r.setAudioSource(MediaRecorder.AudioSource.MIC)
-            r.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            r.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            r.setOutputFile(output.absolutePath)
-            r.prepare(); r.start()
-            recorder = r; recordingFile = output; recording = true; error = ""
-        }.onFailure { error = it.message ?: "Could not start recording" }
+            if (Build.VERSION.SDK_INT >= 26) context.startForegroundService(intent) else context.startService(intent)
+            recordingFile = output; recording = true; paused = false; elapsedSeconds = 0; markers = emptyList(); error = ""
+        }.onFailure { error = it.message ?: "Could not start the recording service" }
     }
-    val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        if (granted) startRecording() else error = "Microphone permission was denied."
+    val notificationPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { beginService() }
+    val microphonePermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (!granted) error = "Microphone access is off. You can enable it in Settings."
+        else if (Build.VERSION.SDK_INT >= 33 && context.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            notificationPermission.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+        } else beginService()
     }
-    androidx.compose.runtime.DisposableEffect(Unit) { onDispose { runCatching { recorder?.stop() }; recorder?.release(); playback?.release() } }
+    androidx.compose.runtime.LaunchedEffect(recording) {
+        while (recording) {
+            kotlinx.coroutines.delay(1000)
+            if (!RecorderService.active) { recording = false; paused = false; error = "Recording stopped unexpectedly. Check the saved file." }
+            else {
+                paused = RecorderService.paused
+                if (!paused) elapsedSeconds += 1
+            }
+        }
+    }
+    androidx.compose.runtime.DisposableEffect(Unit) { onDispose { playback?.release() } }
     Column(Modifier.fillMaxSize().padding(20.dp)) {
         AppTopBar("Recorder", back)
         Text("Voice recorder", fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
-        Text("Recordings are saved in app-private storage on this device.", modifier = Modifier.padding(top = 8.dp))
-        Button(onClick = {
-            if (recording) {
-                runCatching { recorder?.stop() }.onFailure { error = "Recording was too short to save." }
-                recorder?.release(); recorder = null; recording = false
-            } else if (context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) startRecording()
-            else permission.launch(android.Manifest.permission.RECORD_AUDIO)
-        }, modifier = Modifier.padding(top = 18.dp)) { Text(if (recording) "Stop recording" else "Start recording") }
-        if (recordingFile != null && !recording) {
+        Text("Audio is stored only on this device.", modifier = Modifier.padding(top = 8.dp))
+        Text(String.format(Locale.ROOT, "%02d:%02d", elapsedSeconds / 60, elapsedSeconds % 60), fontSize = 44.sp, fontWeight = FontWeight.Light, modifier = Modifier.padding(vertical = 20.dp))
+        if (!recording) {
+            Button(onClick = {
+                if (context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                    if (Build.VERSION.SDK_INT >= 33 && context.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) notificationPermission.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                    else beginService()
+                } else microphonePermission.launch(android.Manifest.permission.RECORD_AUDIO)
+            }) { Text("Start recording") }
+        } else {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = {
+                    val action = if (paused) RecorderService.ACTION_RESUME else RecorderService.ACTION_PAUSE
+                    context.startService(Intent(context, RecorderService::class.java).setAction(action))
+                    paused = !paused
+                }) { Text(if (paused) "Resume" else "Pause") }
+                OutlinedButton(onClick = {
+                    context.startService(Intent(context, RecorderService::class.java).setAction(RecorderService.ACTION_MARK))
+                    markers = markers + elapsedSeconds
+                }) { Text("Flag") }
+                Button(onClick = {
+                    context.startService(Intent(context, RecorderService::class.java).setAction(RecorderService.ACTION_STOP))
+                    recording = false; paused = false
+                }) { Text("Done") }
+            }
+        }
+        markers.forEachIndexed { index, second -> Text("Marker ${index + 1} · %02d:%02d".format(second / 60, second % 60)) }
+        if (recordingFile != null && !recording && recordingFile!!.exists()) {
             Text("Saved: ${recordingFile?.name}", modifier = Modifier.padding(top = 12.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = {
