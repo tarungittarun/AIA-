@@ -28,5 +28,11 @@ Entry format:
 
 ---
 
-*(No live decisions yet. First entries expected during G1 — e.g., exact CI runner image
-pins, wrapper version confirmation against §23.1, any tool the sandbox lacks.)*
+### D-001 — Resolve contradictory auto-balance example
+- Date / phase: 31 Oct 2026 / G1
+- Binding sections that could be affected: §7.2.1, §17.1.4, §20.6, Appendix B B-15
+- Options considered: a) return `25` for `(2+3` as repeated in the examples; b) close the unmatched parenthesis and return the arithmetic result `5`.
+- Decision: b) implement normal auto-balancing: `(2+3` becomes `(2+3)` and evaluates to `5`. The spec's repeated expected value `25` contradicts the grammar and its stated meaning (“auto-balance”). This discrepancy is flagged for owner clarification; no expression-specific special case is added.
+- Consequence / revisit-if: adjust the calculator if the owner confirms an intentional nonstandard rule.
+
+*(Future decisions are appended; never rewrite prior entries.)*

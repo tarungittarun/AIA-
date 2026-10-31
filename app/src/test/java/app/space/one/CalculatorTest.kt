@@ -16,8 +16,11 @@ class CalculatorTest {
     @Test fun additionPercentUsesAccumulatedLeft() = assertEquals("242", evaluate("200+10%+10%"))
     @Test fun multiplicationPercentIsPlainPercent() = assertEquals("20", evaluate("200×10%"))
     @Test fun standalonePercentDividesByOneHundred() = assertEquals("0.5", evaluate("50%"))
-    @Test fun equalsBalancesOpenParentheses() = assertEquals("25", evaluate("(2+3"))
+    @Test fun equalsBalancesOpenParentheses() = assertEquals("5", evaluate("(2+3"))
     @Test fun factorialSupportsZero() = assertEquals("1", evaluate("0!"))
+    @Test fun squareRootWorks() = assertEquals("3", evaluate("√(9)"))
+    @Test fun sineOfPiUsesExactIdentity() = assertEquals("0", evaluate("sin(π)"))
+    @Test fun degreesModeIsTheDefault() = assertEquals("0.5", evaluate("sin(30)"))
     @Test fun invalidDivisionIsRejected() {
         assertThrows(IllegalArgumentException::class.java) { evaluate("1/0") }
     }

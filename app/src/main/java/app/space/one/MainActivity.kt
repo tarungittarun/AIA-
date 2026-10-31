@@ -1,6 +1,12 @@
 package app.space.one
 
 import android.content.Intent
+import android.media.MediaPlayer
+import android.media.MediaRecorder
+import android.content.pm.PackageManager
+import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -65,7 +71,7 @@ class MainActivity : ComponentActivity() {
                         "Home" -> HubScreen(open = { route = it })
                         "Calculator" -> CalculatorScreen(store, back = { route = if (BuildConfig.IS_STANDALONE) "Calculator" else "Home" }, standalone = BuildConfig.IS_STANDALONE)
                         "Notes" -> NotesScreen(store, back = { route = "Home" })
-                        else -> ModuleScreen(route, back = { route = "Home" })
+                        else -> ModuleScreen(route, store, back = { route = "Home" })
                     }
                 }
             }
@@ -256,41 +262,160 @@ private fun NotesScreen(store: LocalStore, back: () -> Unit) {
 }
 
 @Composable
-private fun ModuleScreen(module: String, back: () -> Unit) {
+private fun ModuleScreen(module: String, store: LocalStore, back: () -> Unit) {
     val context = LocalContext.current
     var pickedUri by remember { mutableStateOf<Uri?>(null) }
-    var detail by remember { mutableStateOf("") }
+    var message by remember { mutableStateOf("") }
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         pickedUri = uri
         if (uri != null) runCatching { context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) }
     }
-    Column(Modifier.fillMaxSize().padding(20.dp)) {
-        AppTopBar(module, back)
-        when (module) {
-            "Files" -> {
-                Text("Choose a file using Android's document picker. Access is limited to items you select.")
-                Spacer(Modifier.height(16.dp)); Button(onClick = { picker.launch(arrayOf("*/*")) }) { Text("Browse files") }
-                pickedUri?.let { Text("Selected: ${it.lastPathSegment ?: it}", modifier = Modifier.padding(top = 12.dp)) }
+    when (module) {
+        "Calendar" -> CalendarScreen(store, back)
+        "Music" -> MusicScreen(context, back)
+        "Recorder" -> RecorderScreen(context, back)
+        else -> Column(Modifier.fillMaxSize().padding(20.dp)) {
+            AppTopBar(module, back)
+            when (module) {
+                "Files" -> {
+                    Text("Browse files using Android's document picker. The app sees only items you select.")
+                    Spacer(Modifier.height(16.dp)); Button(onClick = { picker.launch(arrayOf("*/*")) }) { Text("Browse files") }
+                    pickedUri?.let { Text("Selected: ${it.lastPathSegment ?: it}", modifier = Modifier.padding(top = 12.dp)) }
+                }
+                "Scanner" -> {
+                    Text("Import a page image or PDF from this device.")
+                    Spacer(Modifier.height(16.dp)); Button(onClick = { picker.launch(arrayOf("image/*", "application/pdf")) }) { Text("Import document") }
+                    pickedUri?.let { Text("Imported source: ${it.lastPathSegment ?: it}") }
+                }
+                "Diagnostics" -> {
+                    Text("MySpace One diagnostics", fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Version ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
+                    Text("Build time: ${BuildConfig.BUILD_TIME}")
+                    Text("Source revision: ${BuildConfig.PROVENANCE_SHA}")
+                    Text("Network permission: absent")
+                }
+                else -> Text("Settings", fontSize = 22.sp)
             }
-            "Scanner" -> {
-                Text("Import a page image from this device. Camera capture and document export are next in the build plan.")
-                Spacer(Modifier.height(16.dp)); Button(onClick = { picker.launch(arrayOf("image/*", "application/pdf")) }) { Text("Import document") }
-                pickedUri?.let { Text("Ready to process: ${it.lastPathSegment ?: it}") }
-            }
-            "Calendar" -> {
-                Text("Local reminders and events", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
-                OutlinedTextField(detail, { detail = it }, modifier = Modifier.fillMaxWidth().padding(top = 12.dp), label = { Text("Event title") })
-                Button(onClick = { detail = "Saved locally: $detail" }, modifier = Modifier.padding(top = 8.dp), enabled = detail.isNotBlank()) { Text("Save event") }
-                Text("Calendar event persistence and reminder scheduling are being implemented.", modifier = Modifier.padding(top = 12.dp))
-            }
-            "Music" -> {
-                Text("Select audio using Android's document picker; media stays local.")
-                Button(onClick = { picker.launch(arrayOf("audio/*")) }, modifier = Modifier.padding(top = 16.dp)) { Text("Choose audio") }
-                pickedUri?.let { Text("Selected: ${it.lastPathSegment ?: it}") }
-            }
-            "Recorder" -> Text("Voice recording is being implemented as an on-device feature. No microphone access is requested yet.")
-            "Diagnostics" -> Text("Build ${BuildConfig.VERSION_NAME}\nCommit ${BuildConfig.PROVENANCE_SHA}\nOffline mode: enforced by manifest")
-            else -> Text("Settings and local app preferences are being added.")
         }
+    }
+}
+
+@Composable
+private fun CalendarScreen(store: LocalStore, back: () -> Unit) {
+    val events = remember { mutableStateListOf<SavedEvent>().apply { addAll(store.events()) } }
+    var title by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))) }
+    var error by remember { mutableStateOf("") }
+    Column(Modifier.fillMaxSize().padding(18.dp)) {
+        AppTopBar("Calendar", back)
+        Text("Local events", fontSize = 23.sp, fontWeight = FontWeight.SemiBold)
+        OutlinedTextField(title, { title = it }, modifier = Modifier.fillMaxWidth().padding(top = 12.dp), label = { Text("Event title") }, singleLine = true)
+        OutlinedTextField(date, { date = it }, modifier = Modifier.fillMaxWidth().padding(top = 8.dp), label = { Text("Date and time · yyyy-MM-dd HH:mm") }, singleLine = true)
+        if (error.isNotEmpty()) Text(error, color = MaterialTheme.colorScheme.error)
+        Button(onClick = {
+            val valid = runCatching { LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) }.isSuccess
+            if (!valid || title.isBlank()) error = "Enter a title and a valid local date/time."
+            else {
+                val event = SavedEvent(System.currentTimeMillis(), title.trim(), date)
+                store.saveEvent(event); events.add(event); events.sortBy { it.whenText }; title = ""; error = "Saved on this device."
+            }
+        }, modifier = Modifier.padding(top = 8.dp), enabled = title.isNotBlank()) { Text("Save event") }
+        Text("Events are stored locally. Reminder scheduling is not enabled yet.", modifier = Modifier.padding(vertical = 12.dp), color = MaterialTheme.colorScheme.onSurfaceVariant)
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            items(events, key = { it.id }) { event ->
+                Card(Modifier.fillMaxWidth()) { Row(Modifier.fillMaxWidth().padding(14.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) { Text(event.title, fontWeight = FontWeight.SemiBold); Text(event.whenText, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                    TextButton(onClick = { store.deleteEvent(event.id); events.remove(event) }) { Text("Delete") }
+                } }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MusicScreen(context: android.content.Context, back: () -> Unit) {
+    var audioUri by remember { mutableStateOf<Uri?>(null) }
+    var player by remember { mutableStateOf<MediaPlayer?>(null) }
+    var playing by remember { mutableStateOf(false) }
+    var ready by remember { mutableStateOf(false) }
+    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        audioUri = uri; ready = false; playing = false
+        player?.release(); player = null
+        if (uri != null) {
+            runCatching {
+                MediaPlayer().also { mp ->
+                    player = mp
+                    mp.setDataSource(context, uri)
+                    mp.setOnPreparedListener { ready = true }
+                    mp.setOnCompletionListener { playing = false; it.seekTo(0) }
+                    mp.prepareAsync()
+                }
+            }.onFailure { ready = false }
+        }
+    }
+    androidx.compose.runtime.DisposableEffect(Unit) { onDispose { player?.release(); player = null } }
+    Column(Modifier.fillMaxSize().padding(20.dp)) {
+        AppTopBar("Music", back)
+        Text("Play audio stored on your device", fontSize = 21.sp, fontWeight = FontWeight.SemiBold)
+        Button(onClick = { picker.launch(arrayOf("audio/*")) }, modifier = Modifier.padding(top = 16.dp)) { Text("Choose audio") }
+        audioUri?.let { uri ->
+            Text(uri.lastPathSegment ?: "Selected audio", modifier = Modifier.padding(top = 12.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
+                Button(enabled = ready, onClick = { player?.let { if (playing) { it.pause(); playing = false } else { it.start(); playing = true } } }) { Text(if (playing) "Pause" else "Play") }
+                OutlinedButton(enabled = player != null, onClick = { player?.seekTo(0); player?.pause(); playing = false }) { Text("Stop") }
+            }
+            if (!ready) Text("Preparing selected audio…")
+        }
+    }
+}
+
+@Composable
+private fun RecorderScreen(context: android.content.Context, back: () -> Unit) {
+    var recorder by remember { mutableStateOf<MediaRecorder?>(null) }
+    var recordingFile by remember { mutableStateOf<File?>(null) }
+    var recording by remember { mutableStateOf(false) }
+    var playback by remember { mutableStateOf<MediaPlayer?>(null) }
+    var playing by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf("") }
+    fun startRecording() {
+        runCatching {
+            val output = File(context.filesDir, "recording-${System.currentTimeMillis()}.m4a")
+            val r = MediaRecorder()
+            r.setAudioSource(MediaRecorder.AudioSource.MIC)
+            r.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            r.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            r.setOutputFile(output.absolutePath)
+            r.prepare(); r.start()
+            recorder = r; recordingFile = output; recording = true; error = ""
+        }.onFailure { error = it.message ?: "Could not start recording" }
+    }
+    val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) startRecording() else error = "Microphone permission was denied."
+    }
+    androidx.compose.runtime.DisposableEffect(Unit) { onDispose { runCatching { recorder?.stop() }; recorder?.release(); playback?.release() } }
+    Column(Modifier.fillMaxSize().padding(20.dp)) {
+        AppTopBar("Recorder", back)
+        Text("Voice recorder", fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
+        Text("Recordings are saved in app-private storage on this device.", modifier = Modifier.padding(top = 8.dp))
+        Button(onClick = {
+            if (recording) {
+                runCatching { recorder?.stop() }.onFailure { error = "Recording was too short to save." }
+                recorder?.release(); recorder = null; recording = false
+            } else if (context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) startRecording()
+            else permission.launch(android.Manifest.permission.RECORD_AUDIO)
+        }, modifier = Modifier.padding(top = 18.dp)) { Text(if (recording) "Stop recording" else "Start recording") }
+        if (recordingFile != null && !recording) {
+            Text("Saved: ${recordingFile?.name}", modifier = Modifier.padding(top = 12.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = {
+                    runCatching {
+                        playback?.release()
+                        MediaPlayer().also { mp -> playback = mp; mp.setDataSource(recordingFile!!.absolutePath); mp.setOnCompletionListener { playing = false }; mp.prepare(); mp.start(); playing = true }
+                    }.onFailure { error = it.message ?: "Could not play recording" }
+                }) { Text(if (playing) "Playing" else "Play recording") }
+                OutlinedButton(onClick = { recordingFile?.delete(); recordingFile = null; playback?.release(); playback = null; playing = false }) { Text("Delete") }
+            }
+        }
+        if (error.isNotEmpty()) Text(error, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
     }
 }

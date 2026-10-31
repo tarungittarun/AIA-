@@ -43,7 +43,7 @@ internal object CalculatorEngine {
     private data class NumberValue(val exact: Rational?, val approximate: BigDecimal? = null, val isPi: Boolean = false) {
         fun decimal(): BigDecimal = exact?.decimal() ?: approximate!!
         fun render(): String {
-            val d = decimal().stripTrailingZeros()
+            val d = (if (exact == null) decimal().round(MathContext(10, RoundingMode.HALF_EVEN)) else decimal()).stripTrailingZeros()
             if (d.signum() == 0) return "0"
             val abs = d.abs()
             return if (abs >= BigDecimal("1e15") || abs < BigDecimal("1e-9")) d.round(MathContext(10, RoundingMode.HALF_EVEN)).toString()
