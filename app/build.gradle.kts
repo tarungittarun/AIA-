@@ -49,6 +49,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
+    androidResources { localeFilters += listOf("en", "en-IN") }
     packaging { resources.excludes += "/META-INF/{AL2.0,LGPL2.1}" }
 }
 

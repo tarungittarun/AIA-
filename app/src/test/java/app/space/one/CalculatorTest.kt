@@ -15,6 +15,8 @@ class CalculatorTest {
     @Test fun powerIsRightAssociative() = assertEquals("512", evaluate("2^3^2"))
     @Test fun additionPercentUsesAccumulatedLeft() = assertEquals("242", evaluate("200+10%+10%"))
     @Test fun multiplicationPercentIsPlainPercent() = assertEquals("20", evaluate("200×10%"))
+    @Test fun divisionPercentIsReciprocalPercent() = assertEquals("2000", evaluate("200÷10%"))
+    @Test fun recurringDecimalIsRenderedCompactly() = assertEquals("0.1666666667", evaluate("1/6"))
     @Test fun standalonePercentDividesByOneHundred() = assertEquals("0.5", evaluate("50%"))
     @Test fun equalsBalancesOpenParentheses() = assertEquals("5", evaluate("(2+3"))
     @Test fun factorialSupportsZero() = assertEquals("1", evaluate("0!"))

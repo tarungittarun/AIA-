@@ -90,12 +90,15 @@ internal fun CalculatorScreen(store: LocalStore, back: () -> Unit, standalone: B
     var inverse by remember { mutableStateOf(false) }
     var showScientific by remember { mutableStateOf(false) }
     var lastResult by remember { mutableStateOf("") }
+    var lastExpression by remember { mutableStateOf("") }
+    var resultDisplayed by remember { mutableStateOf(false) }
     var repeatOperator by remember { mutableStateOf("") }
     var repeatOperand by remember { mutableStateOf("") }
     val history = remember { mutableStateListOf<SavedCalculation>().apply { addAll(store.calculations()) } }
     fun update(value: TextFieldValue) {
         if (value.text.length <= 512) {
             field = value
+            resultDisplayed = false
             lastResult = ""
             repeatOperator = ""
             repeatOperand = ""
@@ -104,6 +107,13 @@ internal fun CalculatorScreen(store: LocalStore, back: () -> Unit, standalone: B
         }
     }
     fun insert(token: String) {
+        if (resultDisplayed && field.selection.collapsed && field.selection.start == field.text.length) {
+            val isOperator = token in setOf("+", "−", "×", "÷", "^", "%", "!")
+            val base = if (isOperator) "($lastExpression)" else ""
+            val value = if (isOperator) base + token else token
+            update(TextFieldValue(value, TextRange(value.length)))
+            return
+        }
         val start = field.selection.min.coerceIn(0, field.text.length)
         val end = field.selection.max.coerceIn(start, field.text.length)
         val operators = setOf("+", "−", "×", "÷", "^")
@@ -142,6 +152,8 @@ internal fun CalculatorScreen(store: LocalStore, back: () -> Unit, standalone: B
         answer = result
         error = ""
         lastResult = result
+        lastExpression = evaluationInput
+        resultDisplayed = true
         if (!repeated && pending.isEmpty()) {
             val op = Regex("[+−×÷](?!.*[+−×÷])").find(expression)?.value.orEmpty()
             if (op.isNotEmpty()) {
@@ -241,7 +253,7 @@ internal fun CalculatorScreen(store: LocalStore, back: () -> Unit, standalone: B
             if (history.isEmpty()) Text("Solved calculations appear here.") else LazyColumn(Modifier.height(360.dp)) {
                 items(history) { item ->
                     Column(Modifier.fillMaxWidth().clickable {
-                        field = TextFieldValue(item.expression, TextRange(item.expression.length)); answer = item.result; error = ""; showHistory = false
+                        field = TextFieldValue(item.expression, TextRange(item.expression.length)); answer = item.result; error = ""; showHistory = false; resultDisplayed = false; lastResult = ""; lastExpression = ""; repeatOperator = ""
                     }.padding(vertical = 10.dp)) {
                         Text(item.expression, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Text(formatDisplay(item.result), fontSize = 20.sp)
